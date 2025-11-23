@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -189,10 +187,9 @@
             box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
             padding: 20px;
             z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
             transition: transform 0.3s ease;
+            max-height: 50vh;
+            overflow-y: auto;
         }
         
         .bottom-sheet.hidden {
@@ -211,13 +208,14 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             background-color: var(--mint);
             cursor: pointer;
             transition: all 0.3s ease;
-            margin: 0 10px;
+            margin: 0 5px;
+            padding: 5px;
         }
         
         .nav-button:hover {
@@ -228,6 +226,13 @@
         .nav-button .material-icons {
             font-size: 28px;
             color: var(--parakeet);
+            margin-bottom: 5px;
+        }
+        
+        .nav-button span {
+            font-size: 12px;
+            color: var(--black);
+            text-align: center;
         }
         
         .agent-status-button {
@@ -235,12 +240,15 @@
             color: var(--white);
             border: none;
             border-radius: 50px;
-            padding: 10px 20px;
+            padding: 12px 20px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             width: 100%;
             margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .agent-status-button:hover {
@@ -545,6 +553,9 @@
             margin: 0 10px;
             cursor: pointer;
             transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
         .report-type:hover {
@@ -554,6 +565,11 @@
         .report-type.selected {
             background-color: var(--parakeet);
             color: var(--white);
+        }
+        
+        .report-type .material-icons {
+            font-size: 24px;
+            margin-bottom: 5px;
         }
         
         .location-selector {
@@ -571,6 +587,9 @@
             margin: 0 10px;
             cursor: pointer;
             transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
         .location-option:hover {
@@ -580,6 +599,11 @@
         .location-option.selected {
             background-color: var(--parakeet);
             color: var(--white);
+        }
+        
+        .location-option .material-icons {
+            font-size: 24px;
+            margin-bottom: 5px;
         }
         
         .radio-group {
@@ -667,6 +691,87 @@
         .hidden {
             display: none;
         }
+        
+        .add-report-button {
+            position: absolute;
+            bottom: 100px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: var(--parakeet);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .add-report-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .add-report-button .material-icons {
+            font-size: 28px;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-button {
+                width: 60px;
+                height: 60px;
+                margin: 0 3px;
+            }
+            
+            .nav-button .material-icons {
+                font-size: 24px;
+            }
+            
+            .nav-button span {
+                font-size: 10px;
+            }
+            
+            .bottom-sheet {
+                padding: 15px;
+            }
+            
+            .report-form {
+                padding: 15px;
+            }
+            
+            .report-type, .location-option {
+                margin: 0 5px;
+                padding: 10px;
+            }
+            
+            .report-type .material-icons, .location-option .material-icons {
+                font-size: 20px;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .side-menu {
+                width: 350px;
+                left: -350px;
+            }
+            
+            .modal-content {
+                max-width: 600px;
+            }
+        }
+        
+        @media (max-height: 600px) {
+            .bottom-sheet {
+                max-height: 60vh;
+            }
+            
+            .report-form {
+                max-height: 70vh;
+            }
+        }
     </style>
 </head>
 <body>
@@ -708,6 +813,10 @@
                 <span class="material-icons">grass</span>
                 <span>Crops</span>
             </div>
+            <div class="menu-item" id="logoutMenu">
+                <span class="material-icons">logout</span>
+                <span>Log Out</span>
+            </div>
             <div class="menu-item" id="deleteAccountMenu">
                 <span class="material-icons">delete</span>
                 <span>Delete Account</span>
@@ -721,18 +830,29 @@
         <div class="nav-buttons">
             <div class="nav-button" id="alertsButton">
                 <span class="material-icons">notifications</span>
+                <span>Alerts</span>
             </div>
             <div class="nav-button" id="mapButton">
                 <span class="material-icons">map</span>
+                <span>Map</span>
             </div>
             <div class="nav-button" id="analyticsButton">
                 <span class="material-icons">analytics</span>
+                <span>Analytics</span>
             </div>
             <div class="nav-button" id="aiButton">
                 <span class="material-icons">smart_toy</span>
+                <span>AI Chat</span>
             </div>
         </div>
-        <button class="agent-status-button" id="agentStatusButton">Agent Status</button>
+        <button class="agent-status-button" id="agentStatusButton">
+            <span class="material-icons" style="margin-right: 8px;">verified_user</span>
+            Agent Status
+        </button>
+    </div>
+    
+    <div class="add-report-button" id="addReportButton">
+        <span class="material-icons">add</span>
     </div>
     
     <div class="report-form" id="reportForm">
@@ -958,10 +1078,8 @@
         let currentTileLayer;
         
         document.addEventListener('DOMContentLoaded', async () => {
-            // Show loader
             document.getElementById('loaderModal').style.display = 'flex';
             
-            // Check if EMA ID exists in localStorage
             emaId = localStorage.getItem('emaid');
             if (!emaId) {
                 window.location.href = 'index.html';
@@ -969,24 +1087,20 @@
             }
             
             try {
-                // Fetch user data from Firebase
                 const snapshot = await database.ref(`users/${emaId}/data`).once('value');
                 if (snapshot.exists()) {
                     userData = snapshot.val();
                     
-                    // Update UI with user data
                     if (userData.profileImageBase64) {
                         document.getElementById('userProfileImage').src = userData.profileImageBase64;
                     } else if (userData.profileImageUrl) {
                         document.getElementById('userProfileImage').src = userData.profileImageUrl;
                     }
                     
-                    // Check agent status
                     if (userData.agentData && userData.agentData.status) {
                         updateAgentStatusButton(userData.agentData.status);
                     }
                 } else {
-                    // User not found, redirect to login
                     localStorage.removeItem('emaid');
                     window.location.href = 'index.html';
                     return;
@@ -996,34 +1110,27 @@
                 showSnackbar('Error loading user data', 'error');
             }
             
-            // Initialize map
             initializeMap();
             
-            // Hide loader
             document.getElementById('loaderModal').style.display = 'none';
         });
         
         function initializeMap() {
-            // Create map
             map = L.map('map', {
-                zoomControl: false // Remove zoom controls
-            }).setView([7.8731, 80.7718], 10); // Default to Sri Lanka center
+                zoomControl: false
+            }).setView([7.8731, 80.7718], 10);
             
-            // Add tile layer (default: street view)
             currentTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
             
-            // Get user location
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     position => {
                         const { latitude, longitude } = position.coords;
                         
-                        // Set map view to user location
                         map.setView([latitude, longitude], 13);
                         
-                        // Add user location marker
                         const userIcon = L.divIcon({
                             className: 'user-location',
                             iconSize: [20, 20]
@@ -1038,29 +1145,8 @@
                 );
             }
             
-            // Add long press detection
-            let pressTimer;
-            let isLongPress = false;
-            
-            map.on('mousedown', function() {
-                pressTimer = setTimeout(function() {
-                    isLongPress = true;
-                    onMapLongPress();
-                }, 800);
-            });
-            
-            map.on('mouseup', function() {
-                clearTimeout(pressTimer);
-            });
-            
             map.on('click', function(e) {
-                if (isLongPress) {
-                    isLongPress = false;
-                    return;
-                }
-                
                 if (isSelectingLocation) {
-                    // Add marker at selected location
                     if (locationMarker) {
                         map.removeLayer(locationMarker);
                     }
@@ -1071,50 +1157,28 @@
                         longitude: e.latlng.lng
                     };
                     
-                    // Stop selecting location
                     isSelectingLocation = false;
                     map.getContainer().style.cursor = '';
                     
-                    // Update UI
                     document.getElementById('selectOnMap').classList.add('selected');
                     document.getElementById('selectOnMapAccident').classList.add('selected');
                 }
             });
-            
-            // Touch events for mobile
-            map.on('touchstart', function() {
-                pressTimer = setTimeout(function() {
-                    isLongPress = true;
-                    onMapLongPress();
-                }, 800);
-            });
-            
-            map.on('touchend', function() {
-                clearTimeout(pressTimer);
-            });
-        }
-        
-        function onMapLongPress() {
-            // Show report form
-            document.getElementById('bottomSheet').classList.add('hidden');
-            document.getElementById('reportForm').classList.add('show');
         }
         
         function updateAgentStatusButton(status) {
             const button = document.getElementById('agentStatusButton');
             
-            // Remove all status classes
             button.classList.remove('approved', 'pending', 'rejected');
             
-            // Add appropriate class based on status
             switch (status) {
-                case 'A': // Approved
+                case 'A':
                     button.classList.add('approved');
                     break;
-                case 'X': // Pending
+                case 'X':
                     button.classList.add('pending');
                     break;
-                case 'C': // Rejected
+                case 'C':
                     button.classList.add('rejected');
                     break;
             }
@@ -1125,12 +1189,10 @@
             const statusMessage = document.getElementById('statusMessage');
             const agentActions = document.getElementById('agentActions');
             
-            // Remove all status classes
             statusMessage.classList.remove('pending', 'rejected', 'approved');
             
-            // Set content based on status
             switch (status) {
-                case 'A': // Approved
+                case 'A':
                     statusMessage.classList.add('approved');
                     statusMessage.innerHTML = `
                         <h3>Registered as an Agent!</h3>
@@ -1140,7 +1202,7 @@
                         <button class="btn" id="goToAgentPage">Agent Dashboard</button>
                     `;
                     break;
-                case 'X': // Pending
+                case 'X':
                     statusMessage.classList.add('pending');
                     statusMessage.innerHTML = `
                         <h3>Application Under Review</h3>
@@ -1148,7 +1210,7 @@
                     `;
                     agentActions.innerHTML = '';
                     break;
-                case 'C': // Rejected
+                case 'C':
                     statusMessage.classList.add('rejected');
                     statusMessage.innerHTML = `
                         <h3>Application Rejected</h3>
@@ -1160,10 +1222,8 @@
                     break;
             }
             
-            // Show modal
             modal.style.display = 'flex';
             
-            // Add event listeners
             if (status === 'A') {
                 document.getElementById('goToAgentPage').addEventListener('click', () => {
                     window.location.href = 'agent.html';
@@ -1183,10 +1243,9 @@
                 const img = new Image();
                 
                 img.onload = function() {
-                    // Calculate new dimensions
                     let width = img.width;
                     let height = img.height;
-                    const maxSize = 800; // Max dimension
+                    const maxSize = 800;
                     
                     if (width > height) {
                         if (width > maxSize) {
@@ -1203,10 +1262,8 @@
                     canvas.width = width;
                     canvas.height = height;
                     
-                    // Draw and compress
                     ctx.drawImage(img, 0, 0, width, height);
                     
-                    // Try different quality levels to get under the size limit
                     let quality = 0.8;
                     const checkSize = () => {
                         canvas.toBlob((blob) => {
@@ -1214,7 +1271,6 @@
                                 quality -= 0.1;
                                 checkSize();
                             } else {
-                                // Convert to base64
                                 const reader = new FileReader();
                                 reader.onload = function() {
                                     resolve(reader.result);
@@ -1237,7 +1293,6 @@
         }
         
         function showSnackbar(message, type = '') {
-            // Create snackbar element if it doesn't exist
             let snackbar = document.getElementById('snackbar');
             if (!snackbar) {
                 snackbar = document.createElement('div');
@@ -1255,7 +1310,6 @@
             }, 3000);
         }
         
-        // Event Listeners
         document.getElementById('menuToggle').addEventListener('click', () => {
             document.getElementById('sideMenu').classList.add('open');
             document.getElementById('overlay').classList.add('show');
@@ -1278,19 +1332,21 @@
             window.location.href = 'crops.html';
         });
         
+        document.getElementById('logoutMenu').addEventListener('click', () => {
+            localStorage.removeItem('emaid');
+            window.location.href = 'index.html';
+        });
+        
         document.getElementById('deleteAccountMenu').addEventListener('click', () => {
             document.getElementById('deleteConfirmationModal').style.display = 'flex';
         });
         
         document.getElementById('confirmDelete').addEventListener('click', async () => {
             try {
-                // Delete user account from Firebase
                 await database.ref(`users/${emaId}`).remove();
                 
-                // Remove from localStorage
                 localStorage.removeItem('emaid');
                 
-                // Redirect to login
                 window.location.href = 'index.html';
             } catch (error) {
                 console.error('Error deleting account:', error);
@@ -1319,11 +1375,9 @@
         });
         
         document.getElementById('agentStatusButton').addEventListener('click', () => {
-            // Check if user is already registered as agent
             if (userData.agentData && userData.agentData.status) {
                 showAgentStatusModal(userData.agentData.status);
             } else {
-                // Show registration modal
                 document.getElementById('agentModal').style.display = 'flex';
             }
         });
@@ -1368,49 +1422,38 @@
                 return;
             }
             
-            // Show loader
             document.getElementById('loaderModal').style.display = 'flex';
             
             try {
-                // Compress NIC image and convert to base64
                 const nicImageBase64 = await compressImage(nicImageFile);
                 
-                // Save agent data to Firebase
                 await database.ref(`users/${emaId}/data/agentData`).set({
                     name: agentName,
                     nicImage: nicImageBase64,
-                    status: 'X', // Default status: pending
+                    status: 'X',
                     registrationDate: new Date().toISOString()
                 });
                 
-                // Update local data
                 userData.agentData = {
                     name: agentName,
                     status: 'X'
                 };
                 
-                // Update button status
                 updateAgentStatusButton('X');
                 
-                // Hide loader
                 document.getElementById('loaderModal').style.display = 'none';
                 
-                // Close registration modal
                 document.getElementById('agentModal').style.display = 'none';
                 
-                // Show status modal
                 showAgentStatusModal('X');
                 
-                // Show success message
                 showSnackbar('Registration submitted successfully', 'success');
                 
-                // Refresh page after a short delay
                 setTimeout(() => {
                     window.location.reload();
                 }, 2000);
                 
             } catch (error) {
-                // Hide loader
                 document.getElementById('loaderModal').style.display = 'none';
                 
                 console.error('Error registering as agent:', error);
@@ -1418,7 +1461,6 @@
             }
         });
         
-        // Terrain selector
         document.getElementById('terrainStreet').addEventListener('click', () => {
             if (currentTileLayer) {
                 map.removeLayer(currentTileLayer);
@@ -1439,12 +1481,15 @@
             }).addTo(map);
         });
         
-        // Report form
+        document.getElementById('addReportButton').addEventListener('click', () => {
+            document.getElementById('bottomSheet').classList.add('hidden');
+            document.getElementById('reportForm').classList.add('show');
+        });
+        
         document.getElementById('closeReportForm').addEventListener('click', () => {
             document.getElementById('reportForm').classList.remove('show');
             document.getElementById('bottomSheet').classList.remove('hidden');
             
-            // Reset form
             reportImages = [];
             accidentImages = [];
             selectedLocation = null;
@@ -1455,11 +1500,9 @@
             isSelectingLocation = false;
             map.getContainer().style.cursor = '';
             
-            // Clear image previews
             document.getElementById('imageUploadContainer').innerHTML = '<div class="image-upload" id="addImage"><span class="material-icons">add</span></div>';
             document.getElementById('imageUploadContainerAccident').innerHTML = '<div class="image-upload" id="addImageAccident"><span class="material-icons">add</span></div>';
             
-            // Reset form values
             document.getElementById('description').value = '';
             document.getElementById('descriptionAccident').value = '';
             document.getElementById('elephantCount').value = '';
@@ -1467,7 +1510,6 @@
             document.getElementById('elephant').checked = true;
             document.getElementById('injuredElephant').checked = true;
             
-            // Reset location selection
             document.getElementById('selectOnMap').classList.remove('selected');
             document.getElementById('currentLocation').classList.remove('selected');
             document.getElementById('selectOnMapAccident').classList.remove('selected');
@@ -1493,7 +1535,7 @@
         document.getElementById('selectOnMap').addEventListener('click', () => {
             isSelectingLocation = true;
             map.getContainer().style.cursor = 'crosshair';
-            showSnackbar('Click on the map to select a location', 'info');
+            showSnackbar('Click on map to select a location', 'info');
         });
         
         document.getElementById('currentLocation').addEventListener('click', () => {
@@ -1505,14 +1547,12 @@
                             longitude: position.coords.longitude
                         };
                         
-                        // Add marker at current location
                         if (locationMarker) {
                             map.removeLayer(locationMarker);
                         }
                         
                         locationMarker = L.marker([selectedLocation.latitude, selectedLocation.longitude]).addTo(map);
                         
-                        // Update UI
                         document.getElementById('currentLocation').classList.add('selected');
                         document.getElementById('selectOnMap').classList.remove('selected');
                         
@@ -1529,7 +1569,7 @@
         document.getElementById('selectOnMapAccident').addEventListener('click', () => {
             isSelectingLocation = true;
             map.getContainer().style.cursor = 'crosshair';
-            showSnackbar('Click on the map to select a location', 'info');
+            showSnackbar('Click on map to select a location', 'info');
         });
         
         document.getElementById('currentLocationAccident').addEventListener('click', () => {
@@ -1541,14 +1581,12 @@
                             longitude: position.coords.longitude
                         };
                         
-                        // Add marker at current location
                         if (locationMarker) {
                             map.removeLayer(locationMarker);
                         }
                         
                         locationMarker = L.marker([selectedLocation.latitude, selectedLocation.longitude]).addTo(map);
                         
-                        // Update UI
                         document.getElementById('currentLocationAccident').classList.add('selected');
                         document.getElementById('selectOnMapAccident').classList.remove('selected');
                         
@@ -1562,7 +1600,6 @@
             }
         });
         
-        // Elephant type change
         document.getElementById('elephant').addEventListener('change', () => {
             document.querySelector('label[for="elephantCount"]').textContent = 'Number of Elephants';
         });
@@ -1571,7 +1608,6 @@
             document.querySelector('label[for="elephantCount"]').textContent = 'Number of Tuskers';
         });
         
-        // Image upload for sighting
         document.getElementById('addImage').addEventListener('click', () => {
             document.getElementById('imageInput').click();
         });
@@ -1584,12 +1620,10 @@
                 return;
             }
             
-            // Process each image
             for (const file of files) {
                 const compressedImage = await compressImage(file);
                 reportImages.push(compressedImage);
                 
-                // Add preview
                 const previewContainer = document.createElement('div');
                 previewContainer.className = 'image-preview';
                 previewContainer.style.position = 'relative';
@@ -1612,11 +1646,9 @@
                 document.getElementById('imageUploadContainer').appendChild(previewContainer);
             }
             
-            // Reset input
             e.target.value = '';
         });
         
-        // Image upload for accident
         document.getElementById('addImageAccident').addEventListener('click', () => {
             document.getElementById('imageInputAccident').click();
         });
@@ -1629,12 +1661,10 @@
                 return;
             }
             
-            // Process each image
             for (const file of files) {
                 const compressedImage = await compressImage(file);
                 accidentImages.push(compressedImage);
                 
-                // Add preview
                 const previewContainer = document.createElement('div');
                 previewContainer.className = 'image-preview';
                 previewContainer.style.position = 'relative';
@@ -1657,11 +1687,9 @@
                 document.getElementById('imageUploadContainerAccident').appendChild(previewContainer);
             }
             
-            // Reset input
             e.target.value = '';
         });
         
-        // Submit report
         document.getElementById('submitReport').addEventListener('click', () => {
             document.getElementById('confirmationModal').style.display = 'flex';
         });
@@ -1675,7 +1703,6 @@
                 let reportKey = '';
                 
                 if (reportType === 'sighting') {
-                    // Validate sighting form
                     if (!selectedLocation) {
                         showSnackbar('Please select a location', 'error');
                         document.getElementById('loaderModal').style.display = 'none';
@@ -1692,10 +1719,8 @@
                         return;
                     }
                     
-                    // Generate report key
                     reportKey = generateReportKey('S');
                     
-                    // Prepare report data
                     reportData = {
                         type: 'sighting',
                         elephantType,
@@ -1709,16 +1734,13 @@
                         timestamp: new Date().toISOString()
                     };
                     
-                    // Save to database
                     await database.ref(`reports/sightings/${reportKey}/data`).set(reportData);
                     
-                    // Save reference to user
                     await database.ref(`users/${emaId}/data/reports/${reportKey}`).set({
                         type: 'sighting',
                         timestamp: new Date().toISOString()
                     });
                 } else if (reportType === 'accident') {
-                    // Validate accident form
                     if (!selectedLocation) {
                         showSnackbar('Please select a location', 'error');
                         document.getElementById('loaderModal').style.display = 'none';
@@ -1735,10 +1757,8 @@
                         return;
                     }
                     
-                    // Generate report key
                     reportKey = generateReportKey('A');
                     
-                    // Prepare report data
                     reportData = {
                         type: 'accident',
                         injuredTo,
@@ -1752,23 +1772,18 @@
                         timestamp: new Date().toISOString()
                     };
                     
-                    // Save to database
                     await database.ref(`reports/accidents/${reportKey}/data`).set(reportData);
                     
-                    // Save reference to user
                     await database.ref(`users/${emaId}/data/reports/${reportKey}`).set({
                         type: 'accident',
                         timestamp: new Date().toISOString()
                     });
                 }
                 
-                // Hide loader
                 document.getElementById('loaderModal').style.display = 'none';
                 
-                // Close report form
                 document.getElementById('closeReportForm').click();
                 
-                // Show thank you modal
                 document.getElementById('thankYouModal').style.display = 'flex';
                 
             } catch (error) {
