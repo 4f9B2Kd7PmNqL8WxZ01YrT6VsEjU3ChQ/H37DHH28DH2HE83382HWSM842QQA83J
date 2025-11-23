@@ -4,22 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EMA - Elephant Monitoring App</title>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Mona+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
     <style>
         :root {
-            --parakeet: #2ECC71;
-            --pistachio: #A9DFBF;
-            --mint: #D5F4E6;
-            --brown: #5D4037;
-            --light-brown: #8D6E63;
-            --white: #FFFFFF;
-            --black: #000000;
-            --error: #E53935;
-            --success: #43A047;
+            --primary-green: #2a9d8f;
+            --mint-green: #81b29a;
+            --grayish-blue: #3d405b;
+            --light-gray: #f4f1de;
+            --dark-green: #264653;
+            --accent: #e76f51;
         }
         
         * {
@@ -30,115 +25,226 @@
         }
         
         body {
-            background: linear-gradient(135deg, var(--mint) 0%, var(--pistachio) 100%);
-            color: var(--black);
-            height: 100vh;
-            overflow: hidden;
-            position: relative;
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
+            background-color: #ffffff;
+            min-height: 100vh;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #000;
+            position: relative;
+            overflow-x: hidden;
         }
         
         .container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            flex-grow: 1;
-            padding: 20px;
-        }
-        
-        .login-card {
-            background-color: var(--white);
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            padding: 40px;
-            width: 100%;
+            width: 90%;
             max-width: 450px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .logo-container {
+            background-color: var(--primary-green);
+            padding: 20px;
             text-align: center;
+            color: white;
         }
         
-        .logo {
-            margin-bottom: 24px;
-        }
-        
-        .logo h1 {
-            color: var(--black);
-            font-size: 32px;
+        .logo-container h1 {
+            font-size: 24px;
             font-weight: 700;
-            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        .logo p {
-            color: var(--black);
-            font-size: 16px;
+        .logo-container h1 .material-icons {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        .form-container {
+            padding: 30px;
+        }
+        
+        .form-toggle {
+            display: flex;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-toggle button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background-color: var(--light-gray);
+            color: var(--grayish-blue);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .form-toggle button.active {
+            background-color: var(--primary-green);
+            color: white;
         }
         
         .form-group {
             margin-bottom: 20px;
-            text-align: left;
         }
         
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: var(--black);
             font-weight: 500;
+            color: var(--grayish-blue);
         }
         
-        .form-control {
+        .form-group input,
+        .form-group select {
             width: 100%;
-            padding: 12px 16px;
-            border: 2px solid var(--pistachio);
+            padding: 12px 15px;
+            border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 16px;
             transition: all 0.3s ease;
         }
         
-        .form-control:focus {
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--primary-green);
             outline: none;
-            border-color: var(--parakeet);
-            box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.2);
+            box-shadow: 0 0 0 2px rgba(42, 157, 143, 0.2);
         }
         
-        .btn {
-            display: inline-block;
-            padding: 12px 24px;
-            background-color: var(--parakeet);
-            color: var(--white);
+        .profile-pic-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            overflow: hidden;
+            border: 3px solid var(--primary-green);
+        }
+        
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-pic .material-icons {
+            font-size: 40px;
+            color: var(--grayish-blue);
+        }
+        
+        .profile-pic-btn {
+            background-color: var(--mint-green);
+            color: white;
             border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .profile-pic-btn .material-icons {
+            font-size: 18px;
+            margin-right: 5px;
+        }
+        
+        .profile-pic-btn:hover {
+            background-color: var(--primary-green);
+        }
+        
+        .password-strength {
+            height: 5px;
+            margin-top: 5px;
+            border-radius: 5px;
+            background-color: #eee;
+            overflow: hidden;
+        }
+        
+        .password-strength-meter {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s ease;
+        }
+        
+        .password-strength-text {
+            font-size: 12px;
+            margin-top: 5px;
+            color: var(--grayish-blue);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-green);
+            color: white;
+            border: none;
+            padding: 12px 20px;
             border-radius: 8px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 8px;
             width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        .btn:hover {
-            background-color: #27AE60;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+        .btn-primary .material-icons {
+            margin-right: 8px;
         }
         
-        .btn-secondary {
-            background-color: var(--light-brown);
+        .btn-primary:hover {
+            background-color: var(--dark-green);
         }
         
-        .btn-secondary:hover {
-            background-color: var(--brown);
+        .btn-primary:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
         }
         
-        .divider {
-            margin: 24px 0;
-            color: var(--black);
-            font-size: 14px;
-            position: relative;
+        .forgot-password {
+            text-align: right;
+            margin-top: 15px;
+        }
+        
+        .forgot-password a {
+            color: var(--primary-green);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding: 15px;
+            font-size: 12px;
+            color: var(--grayish-blue);
+            background-color: rgba(255, 255, 255, 0.7);
         }
         
         .modal {
@@ -150,198 +256,52 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
             z-index: 1000;
-            padding: 20px;
+            justify-content: center;
+            align-items: center;
         }
         
         .modal-content {
-            background-color: var(--white);
-            border-radius: 16px;
+            background-color: white;
             padding: 30px;
-            width: 100%;
-            max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
         }
         
-        .close {
+        .close-modal {
             position: absolute;
             top: 15px;
             right: 15px;
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--light-brown);
+            font-size: 20px;
             cursor: pointer;
+            color: var(--grayish-blue);
         }
         
-        .close:hover {
-            color: var(--brown);
-        }
-        
-        .profile-upload {
-            position: relative;
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background-color: var(--pistachio);
-            margin: 0 auto 20px;
-            overflow: hidden;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .profile-upload img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .profile-upload .material-icons {
-            font-size: 40px;
-            color: var(--white);
-        }
-        
-        .profile-upload input {
-            display: none;
-        }
-        
-        .snackbar {
+        .notification {
             position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background-color: var(--brown);
-            color: var(--white);
-            padding: 16px 24px;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
             z-index: 2000;
-            opacity: 0;
-            transition: all 0.3s ease;
-            max-width: 90%;
-            text-align: center;
         }
         
-        .snackbar.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
+        .notification.success {
+            background-color: var(--primary-green);
         }
         
-        .snackbar.error {
-            background-color: var(--error);
+        .notification.error {
+            background-color: var(--accent);
         }
         
-        .snackbar.success {
-            background-color: var(--success);
-        }
-        
-        .loader-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-        
-        .loader-content {
-            background-color: var(--white);
-            border-radius: 16px;
-            padding: 30px;
-            text-align: center;
-            max-width: 400px;
-        }
-        
-        .loader {
-            border: 4px solid var(--pistachio);
-            border-top: 4px solid var(--parakeet);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .ema-id-card {
-            background-color: var(--mint);
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-            text-align: center;
-            border: 2px dashed var(--parakeet);
-        }
-        
-        .ema-id-card h2 {
-            color: var(--parakeet);
-            margin-bottom: 10px;
-            font-size: 24px;
-        }
-        
-        .ema-id-card p {
-            margin-bottom: 15px;
-            color: var(--black);
-        }
-        
-        .ema-id-display {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--brown);
-            margin: 15px 0;
-            letter-spacing: 1px;
-        }
-        
-        .result-card {
-            background-color: var(--white);
-            border-radius: 12px;
-            padding: 15px;
-            margin: 15px 0;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .result-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-        
-        .result-card img {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 15px;
-        }
-        
-        .result-card-info {
-            flex-grow: 1;
-        }
-        
-        .result-card-info h3 {
-            color: var(--parakeet);
-            margin-bottom: 5px;
-        }
-        
-        .result-card-info p {
-            color: var(--black);
-            font-size: 14px;
+        .notification.show {
+            transform: translateX(0);
         }
         
         .form-row {
@@ -353,207 +313,354 @@
             flex: 1;
         }
         
-        .hidden {
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(42, 157, 143, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-green);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        .loading-text {
+            margin-top: 15px;
+            font-weight: 500;
+            color: var(--grayish-blue);
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .progress-bar {
+            width: 80%;
+            height: 6px;
+            background-color: #eee;
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            width: 0;
+            background-color: var(--primary-green);
+            transition: width 0.3s ease;
+        }
+        
+        .confirmation-dialog {
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2500;
+            justify-content: center;
+            align-items: center;
         }
         
-        .footer {
+        .confirmation-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
             text-align: center;
-            padding: 10px;
-            color: var(--black);
-            font-size: 14px;
         }
         
-        @media (max-width: 768px) {
-            .login-card {
-                padding: 30px 20px;
-            }
-            
+        .confirmation-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--grayish-blue);
+        }
+        
+        .confirmation-message {
+            margin-bottom: 25px;
+            color: #555;
+        }
+        
+        .confirmation-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .confirmation-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .confirmation-btn.cancel {
+            background-color: #eee;
+            color: var(--grayish-blue);
+        }
+        
+        .confirmation-btn.confirm {
+            background-color: var(--primary-green);
+            color: white;
+        }
+        
+        .crop-container {
+            max-width: 100%;
+            max-height: 400px;
+            margin: 0 auto;
+        }
+        
+        .crop-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .crop-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .crop-btn.cancel {
+            background-color: #eee;
+            color: var(--grayish-blue);
+        }
+        
+        .crop-btn.confirm {
+            background-color: var(--primary-green);
+            color: white;
+        }
+        
+        @media (max-width: 480px) {
             .form-row {
                 flex-direction: column;
                 gap: 0;
-            }
-            
-            .modal-content {
-                padding: 20px;
-                width: 90%;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="login-card">
-            <div class="logo">
-                <h1>EMA - Elephant Monitoring App</h1>
-                <p>Welcome to the Elephant Monitoring Application</p>
-            </div>
-            
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="emaId">EMA ID</label>
-                    <input type="text" id="emaId" class="form-control" placeholder="123456-E" required>
-                </div>
-                
-                <button type="submit" class="btn">Login</button>
-            </form>
-            
-            <div class="divider">or still not registered?</div>
-            
-            <button id="registerBtn" class="btn btn-secondary">Register</button>
-            <button id="retrieveBtn" class="btn btn-secondary">Retrieve EMA ID</button>
+        <div class="logo-container">
+            <h1><span class="material-icons">pets</span> EMA - Elephant Monitoring App</h1>
         </div>
-    </div>
-    
-    <div class="footer">Project EMA 2025 by Aveesha Ninsara</div>
-    
-    <div id="registerModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2 style="color: var(--parakeet); margin-bottom: 20px; text-align: center;">Register for EMA</h2>
-            
-            <form id="registerForm">
-                <div class="profile-upload" id="profileUpload">
-                    <input type="file" id="profileImage" accept="image/*">
-                    <span class="material-icons">person</span>
-                </div>
-                
-                <div class="form-group">
-                    <label for="fullName">Full Name</label>
-                    <input type="text" id="fullName" class="form-control" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="phoneNumber">Phone Number</label>
-                    <input type="tel" id="phoneNumber" class="form-control" placeholder="07XXXXXXXX" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="nicNumber">NIC Number</label>
-                    <input type="text" id="nicNumber" class="form-control" placeholder="810509871V or 197747564758" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" class="form-control" required>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="province">Province</label>
-                        <select id="province" class="form-control" required>
-                            <option value="">Select Province</option>
-                            <option value="Central">Central</option>
-                            <option value="Eastern">Eastern</option>
-                            <option value="North Central">North Central</option>
-                            <option value="Northern">Northern</option>
-                            <option value="North Western">North Western</option>
-                            <option value="Sabaragamuwa">Sabaragamuwa</option>
-                            <option value="Southern">Southern</option>
-                            <option value="Uva">Uva</option>
-                            <option value="Western">Western</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="district">District</label>
-                        <select id="district" class="form-control" required>
-                            <option value="">Select District</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <button type="submit" class="btn">Register</button>
-            </form>
-        </div>
-    </div>
-    
-    <div id="emaIdModal" class="modal">
-        <div class="modal-content">
-            <h2 style="color: var(--parakeet); margin-bottom: 20px; text-align: center;">Your EMA ID</h2>
-            
-            <div class="ema-id-card" id="emaIdCard">
-                <h2>EMA ID</h2>
-                <div class="ema-id-display" id="generatedEmaId"></div>
-                <p>මෙය ඔබගේ EMA ID එකයි, ඔබගේ ගිණුමට ප්‍රවේශ වීමට යතුර, මෙය මතක තබා ගැනීමට වග බලා ගන්න</p>
-                <p>This is your EMA ID, the key to accessing your account, make sure to remember this.</p>
-            </div>
-            
-            <div style="display: flex; gap: 10px;">
-                <button id="saveEmaIdBtn" class="btn">Save</button>
-                <button id="doneEmaIdBtn" class="btn btn-secondary">Done</button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="retrieveModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2 style="color: var(--parakeet); margin-bottom: 20px; text-align: center;">Retrieve Your EMA ID</h2>
-            
-            <form id="retrieveForm">
-                <div class="form-group">
-                    <label for="retrieveNic">NIC Number</label>
-                    <input type="text" id="retrieveNic" class="form-control" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="retrieveEmail">Email</label>
-                    <input type="email" id="retrieveEmail" class="form-control" required>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="retrieveProvince">Province</label>
-                        <select id="retrieveProvince" class="form-control" required>
-                            <option value="">Select Province</option>
-                            <option value="Central">Central</option>
-                            <option value="Eastern">Eastern</option>
-                            <option value="North Central">North Central</option>
-                            <option value="Northern">Northern</option>
-                            <option value="North Western">North Western</option>
-                            <option value="Sabaragamuwa">Sabaragamuwa</option>
-                            <option value="Southern">Southern</option>
-                            <option value="Uva">Uva</option>
-                            <option value="Western">Western</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="retrieveDistrict">District</label>
-                        <select id="retrieveDistrict" class="form-control" required>
-                            <option value="">Select District</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <button type="submit" class="btn">Retrieve</button>
-            </form>
-            
-            <div id="retrieveResults" class="hidden"></div>
-        </div>
-    </div>
-    
-    <div id="loaderModal" class="loader-modal">
-        <div class="loader-content">
-            <div class="loader"></div>
-            <p id="loaderMessage" style="text-align: center; color: var(--black); margin-top: 10px;">
-                Processing your request...
-            </p>
-        </div>
-    </div>
-    
-    <div id="snackbar" class="snackbar"></div>
-    
-    <script>
-        // Check if EMA ID exists in localStorage and redirect to home.html if it does
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedEmaId = localStorage.getItem('emaid');
-            if (savedEmaId) {
-                window.location.href = 'home.html';
-            }
-        });
         
+        <div class="form-container">
+            <div class="form-toggle">
+                <button id="loginTab" class="active">Login</button>
+                <button id="registerTab">Register</button>
+            </div>
+            
+            <div id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" placeholder="Enter your email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password">
+                </div>
+                
+                <button class="btn-primary" id="loginBtn">
+                    <span class="material-icons">login</span> Login
+                </button>
+                
+                <div class="forgot-password">
+                    <a href="#" id="forgotPasswordLink">Forgot Password?</a>
+                </div>
+            </div>
+            
+            <div id="registerForm" style="display: none;">
+                <div class="profile-pic-container">
+                    <div class="profile-pic" id="profilePicPreview">
+                        <span class="material-icons">person</span>
+                    </div>
+                    <input type="file" id="profilePicInput" accept="image/*" style="display: none;">
+                    <button class="profile-pic-btn" id="profilePicBtn">
+                        <span class="material-icons">photo_camera</span> Choose Profile Picture
+                    </button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="regName">Full Name</label>
+                    <input type="text" id="regName" placeholder="Enter your full name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="regPhone">Phone Number</label>
+                    <input type="tel" id="regPhone" placeholder="Enter your phone number (e.g., 0711234567)">
+                </div>
+                
+                <div class="form-group">
+                    <label for="regNIC">NIC Number</label>
+                    <input type="text" id="regNIC" placeholder="Enter your NIC number">
+                </div>
+                
+                <div class="form-group">
+                    <label for="regEmail">Email</label>
+                    <input type="email" id="regEmail" placeholder="Enter your email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="regPassword">Password</label>
+                    <input type="password" id="regPassword" placeholder="Enter your password">
+                    <div class="password-strength">
+                        <div class="password-strength-meter" id="passwordStrengthMeter"></div>
+                    </div>
+                    <div class="password-strength-text" id="passwordStrengthText">Password strength</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="regConfirmPassword">Confirm Password</label>
+                    <input type="password" id="regConfirmPassword" placeholder="Confirm your password">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="regProvince">Province</label>
+                        <select id="regProvince">
+                            <option value="">Select Province</option>
+                            <option value="Western">Western</option>
+                            <option value="Central">Central</option>
+                            <option value="Southern">Southern</option>
+                            <option value="Northern">Northern</option>
+                            <option value="Eastern">Eastern</option>
+                            <option value="North Western">North Western</option>
+                            <option value="North Central">North Central</option>
+                            <option value="Uva">Uva</option>
+                            <option value="Sabaragamuwa">Sabaragamuwa</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="regDistrict">District</label>
+                        <select id="regDistrict">
+                            <option value="">Select District</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button class="btn-primary" id="registerBtn">
+                    <span class="material-icons">person_add</span> Register
+                </button>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            Project EMA by Aveesha Ninsara @2025
+        </div>
+    </div>
+    
+    <div class="modal" id="forgotPasswordModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <h2 style="margin-bottom: 20px; color: var(--grayish-blue);">Forgot Password</h2>
+            
+            <div class="form-group">
+                <label for="forgotEmail">Email</label>
+                <input type="email" id="forgotEmail" placeholder="Enter your email">
+            </div>
+            
+            <div class="form-group">
+                <label for="forgotNIC">NIC Number</label>
+                <input type="text" id="forgotNIC" placeholder="Enter your NIC number">
+            </div>
+            
+            <div class="form-group">
+                <label for="forgotProvince">Province</label>
+                <select id="forgotProvince">
+                    <option value="">Select Province</option>
+                    <option value="Western">Western</option>
+                    <option value="Central">Central</option>
+                    <option value="Southern">Southern</option>
+                    <option value="Northern">Northern</option>
+                    <option value="Eastern">Eastern</option>
+                    <option value="North Western">North Western</option>
+                    <option value="North Central">North Central</option>
+                    <option value="Uva">Uva</option>
+                    <option value="Sabaragamuwa">Sabaragamuwa</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="forgotDistrict">District</label>
+                <select id="forgotDistrict">
+                    <option value="">Select District</option>
+                </select>
+            </div>
+            
+            <button class="btn-primary" id="forgotPasswordBtn">
+                <span class="material-icons">lock_reset</span> Recover Password
+            </button>
+        </div>
+    </div>
+    
+    <div class="modal" id="cropModal">
+        <div class="modal-content" style="max-width: 600px;">
+            <h2 style="margin-bottom: 20px; color: var(--grayish-blue);">Crop Profile Picture</h2>
+            <div class="crop-container">
+                <img id="cropImage" style="max-width: 100%;">
+            </div>
+            <div class="crop-buttons">
+                <button class="crop-btn cancel" id="cropCancel">Cancel</button>
+                <button class="crop-btn confirm" id="cropConfirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="confirmation-dialog" id="passwordConfirmationDialog">
+        <div class="confirmation-content">
+            <div class="confirmation-title">Password Usage Confirmation</div>
+            <div class="confirmation-message">
+                Are you sure you want to use this password? Make sure it's strong and not easily guessable.
+            </div>
+            <div class="confirmation-buttons">
+                <button class="confirmation-btn cancel" id="passwordCancel">Cancel</button>
+                <button class="confirmation-btn confirm" id="passwordConfirm">Yes, Use This Password</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <div class="loading-text" id="loadingText">Processing...</div>
+        <div class="progress-bar">
+            <div class="progress" id="progressBar"></div>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification"></div>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <script>
+        // Designed and developed by Aveesha Ninsara. Copyright Prohibited
+        
+        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCtIvVHA0Q_iuTIFNanoU8RhV4oC60L_YM",
             authDomain: "emausers-9837a.firebaseapp.com",
@@ -565,493 +672,519 @@
             databaseURL: "https://emausers-9837a-default-rtdb.asia-southeast1.firebasedatabase.app/"
         };
         
+        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-        const storage = firebase.storage();
         
-        const districts = {
+        // Sri Lanka districts by province
+        const districtsByProvince = {
+            "Western": ["Colombo", "Gampaha", "Kalutara"],
             "Central": ["Kandy", "Matale", "Nuwara Eliya"],
-            "Eastern": ["Ampara", "Batticaloa", "Trincomalee"],
-            "North Central": ["Anuradhapura", "Polonnaruwa"],
-            "Northern": ["Jaffna", "Kilinochchi", "Mannar", "Mullaitivu", "Vavuniya"],
+            "Southern": ["Galle", "Matara", "Hambantota"],
+            "Northern": ["Jaffna", "Kilinochchi", "Mannar", "Vavuniya", "Mullaitivu"],
+            "Eastern": ["Batticaloa", "Ampara", "Trincomalee"],
             "North Western": ["Kurunegala", "Puttalam"],
-            "Sabaragamuwa": ["Kegalle", "Ratnapura"],
-            "Southern": ["Galle", "Hambantota", "Matara"],
+            "North Central": ["Anuradhapura", "Polonnaruwa"],
             "Uva": ["Badulla", "Monaragala"],
-            "Western": ["Colombo", "Gampaha", "Kalutara"]
+            "Sabaragamuwa": ["Ratnapura", "Kegalle"]
         };
         
+        // DOM elements
+        const loginTab = document.getElementById('loginTab');
+        const registerTab = document.getElementById('registerTab');
         const loginForm = document.getElementById('loginForm');
-        const emaIdInput = document.getElementById('emaId');
-        const registerBtn = document.getElementById('registerBtn');
-        const retrieveBtn = document.getElementById('retrieveBtn');
-        const registerModal = document.getElementById('registerModal');
-        const emaIdModal = document.getElementById('emaIdModal');
-        const retrieveModal = document.getElementById('retrieveModal');
         const registerForm = document.getElementById('registerForm');
-        const retrieveForm = document.getElementById('retrieveForm');
-        const profileUpload = document.getElementById('profileUpload');
-        const profileImageInput = document.getElementById('profileImage');
-        const provinceSelect = document.getElementById('province');
-        const districtSelect = document.getElementById('district');
-        const retrieveProvinceSelect = document.getElementById('retrieveProvince');
-        const retrieveDistrictSelect = document.getElementById('retrieveDistrict');
-        const snackbar = document.getElementById('snackbar');
-        const retrieveResults = document.getElementById('retrieveResults');
-        const loaderModal = document.getElementById('loaderModal');
-        const loaderMessage = document.getElementById('loaderMessage');
+        const loginBtn = document.getElementById('loginBtn');
+        const registerBtn = document.getElementById('registerBtn');
+        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+        const forgotPasswordModal = document.getElementById('forgotPasswordModal');
+        const closeModal = document.getElementById('closeModal');
+        const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
+        const notification = document.getElementById('notification');
+        const profilePicInput = document.getElementById('profilePicInput');
+        const profilePicBtn = document.getElementById('profilePicBtn');
+        const profilePicPreview = document.getElementById('profilePicPreview');
+        const regPassword = document.getElementById('regPassword');
+        const passwordStrengthMeter = document.getElementById('passwordStrengthMeter');
+        const passwordStrengthText = document.getElementById('passwordStrengthText');
+        const regProvince = document.getElementById('regProvince');
+        const regDistrict = document.getElementById('regDistrict');
+        const forgotProvince = document.getElementById('forgotProvince');
+        const forgotDistrict = document.getElementById('forgotDistrict');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const loadingText = document.getElementById('loadingText');
+        const progressBar = document.getElementById('progressBar');
+        const passwordConfirmationDialog = document.getElementById('passwordConfirmationDialog');
+        const passwordCancel = document.getElementById('passwordCancel');
+        const passwordConfirm = document.getElementById('passwordConfirm');
+        const cropModal = document.getElementById('cropModal');
+        const cropImage = document.getElementById('cropImage');
+        const cropCancel = document.getElementById('cropCancel');
+        const cropConfirm = document.getElementById('cropConfirm');
         
-        document.querySelectorAll('.close').forEach(btn => {
-            btn.addEventListener('click', function() {
-                this.closest('.modal').style.display = 'none';
-            });
-        });
+        // Variables
+        let profilePicBase64 = '';
+        let cropper;
+        let passwordConfirmed = false;
         
-        document.addEventListener('contextmenu', e => e.preventDefault());
-        document.addEventListener('keydown', e => {
-            if (e.key === 'F12' || 
-                (e.ctrlKey && e.shiftKey && e.key === 'I') || 
-                (e.ctrlKey && e.shiftKey && e.key === 'C') || 
-                (e.ctrlKey && e.key === 'u') ||
-                (e.ctrlKey && e.key === 's')) {
-                e.preventDefault();
+        // Check if user is already logged in
+        window.addEventListener('load', () => {
+            const userEmail = localStorage.getItem('emaUserEmail');
+            if (userEmail) {
+                window.location.href = 'home.html';
             }
         });
         
-        function showSnackbar(message, type = '') {
-            snackbar.textContent = message;
-            snackbar.className = 'snackbar show';
-            if (type) snackbar.classList.add(type);
-            
-            setTimeout(() => {
-                snackbar.className = 'snackbar';
-            }, 3000);
-        }
-        
-        function showLoader(message) {
-            loaderMessage.textContent = message;
-            loaderModal.style.display = 'flex';
-        }
-        
-        function hideLoader() {
-            loaderModal.style.display = 'none';
-        }
-        
-        function generateEmaId() {
-            const randomNum = Math.floor(100000 + Math.random() * 900000);
-            return `${randomNum}-E`;
-        }
-        
-        function validatePhoneNumber(phone) {
-            const pattern = /^07[0-9]{8}$/;
-            return pattern.test(phone);
-        }
-        
-        function validateNic(nic) {
-            const oldPattern = /^[0-9]{9}[VX]$/;
-            const newPattern = /^[0-9]{12}$/;
-            return oldPattern.test(nic) || newPattern.test(nic);
-        }
-        
-        function validateEmail(email) {
-            const validDomains = ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'icloud.com'];
-            const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!pattern.test(email)) return false;
-            
-            const domain = email.split('@')[1];
-            return validDomains.includes(domain);
-        }
-        
-        profileUpload.addEventListener('click', () => {
-            profileImageInput.click();
+        // Tab switching
+        loginTab.addEventListener('click', () => {
+            loginTab.classList.add('active');
+            registerTab.classList.remove('active');
+            loginForm.style.display = 'block';
+            registerForm.style.display = 'none';
         });
         
-        profileImageInput.addEventListener('change', function(e) {
+        registerTab.addEventListener('click', () => {
+            registerTab.classList.add('active');
+            loginTab.classList.remove('active');
+            registerForm.style.display = 'block';
+            loginForm.style.display = 'none';
+        });
+        
+        // Profile picture handling
+        profilePicBtn.addEventListener('click', () => {
+            profilePicInput.click();
+        });
+        
+        profilePicInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
+                if (file.size > 2 * 1024 * 1024) { // 2MB limit
+                    showNotification('Image size should be less than 2MB', 'error');
+                    return;
+                }
+                
                 const reader = new FileReader();
-                reader.onload = function(event) {
-                    profileUpload.innerHTML = `<img src="${event.target.result}" alt="Profile">`;
+                reader.onload = (event) => {
+                    cropImage.src = event.target.result;
+                    cropModal.style.display = 'flex';
+                    
+                    // Initialize cropper
+                    if (cropper) {
+                        cropper.destroy();
+                    }
+                    
+                    cropper = new Cropper(cropImage, {
+                        aspectRatio: 1,
+                        viewMode: 1,
+                        guides: true,
+                        center: true,
+                        highlight: false,
+                        background: true,
+                        autoCrop: true,
+                        autoCropArea: 0.8,
+                        movable: true,
+                        rotatable: false,
+                        scalable: true,
+                        zoomable: true,
+                        cropBoxMovable: true,
+                        cropBoxResizable: true,
+                        toggleDragModeOnDblclick: false,
+                    });
                 };
                 reader.readAsDataURL(file);
             }
         });
         
-        function populateDistricts(provinceSelect, districtSelect) {
-            const province = provinceSelect.value;
-            districtSelect.innerHTML = '<option value="">Select District</option>';
+        // Crop confirmation
+        cropConfirm.addEventListener('click', () => {
+            if (cropper) {
+                const canvas = cropper.getCroppedCanvas({
+                    width: 300,
+                    height: 300,
+                });
+                
+                canvas.toBlob((blob) => {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        // Try to get base64 under 20KB by adjusting quality
+                        let quality = 0.7;
+                        let base64 = canvas.toDataURL('image/jpeg', quality);
+                        
+                        while (base64.length > 20000 && quality > 0.1) {
+                            quality -= 0.1;
+                            base64 = canvas.toDataURL('image/jpeg', quality);
+                        }
+                        
+                        profilePicBase64 = base64;
+                        profilePicPreview.innerHTML = `<img src="${base64}" alt="Profile">`;
+                        
+                        if (base64.length > 20000) {
+                            showNotification('Image is still too large. Please choose a smaller image.', 'error');
+                            profilePicBase64 = '';
+                            profilePicPreview.innerHTML = '<span class="material-icons">person</span>';
+                        }
+                        
+                        cropModal.style.display = 'none';
+                        cropper.destroy();
+                        cropper = null;
+                    };
+                    reader.readAsDataURL(blob);
+                }, 'image/jpeg');
+            }
+        });
+        
+        // Crop cancellation
+        cropCancel.addEventListener('click', () => {
+            cropModal.style.display = 'none';
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+        });
+        
+        // Password strength indicator
+        regPassword.addEventListener('input', () => {
+            const password = regPassword.value;
+            let strength = 0;
             
-            if (province && districts[province]) {
-                districts[province].forEach(district => {
+            if (password.length >= 8) strength++;
+            if (password.match(/[a-z]+/)) strength++;
+            if (password.match(/[A-Z]+/)) strength++;
+            if (password.match(/[0-9]+/)) strength++;
+            if (password.match(/[$@#&!]+/)) strength++;
+            
+            const strengthPercentage = (strength / 5) * 100;
+            passwordStrengthMeter.style.width = `${strengthPercentage}%`;
+            
+            if (strength < 2) {
+                passwordStrengthMeter.style.backgroundColor = '#e74c3c';
+                passwordStrengthText.textContent = 'Weak password';
+            } else if (strength < 4) {
+                passwordStrengthMeter.style.backgroundColor = '#f39c12';
+                passwordStrengthText.textContent = 'Medium password';
+            } else {
+                passwordStrengthMeter.style.backgroundColor = '#2ecc71';
+                passwordStrengthText.textContent = 'Strong password';
+            }
+            
+            // Reset password confirmation when password changes
+            passwordConfirmed = false;
+        });
+        
+        // District dropdown update based on province selection
+        regProvince.addEventListener('change', () => {
+            const province = regProvince.value;
+            regDistrict.innerHTML = '<option value="">Select District</option>';
+            
+            if (province && districtsByProvince[province]) {
+                districtsByProvince[province].forEach(district => {
                     const option = document.createElement('option');
                     option.value = district;
                     option.textContent = district;
-                    districtSelect.appendChild(option);
+                    regDistrict.appendChild(option);
                 });
+            }
+        });
+        
+        forgotProvince.addEventListener('change', () => {
+            const province = forgotProvince.value;
+            forgotDistrict.innerHTML = '<option value="">Select District</option>';
+            
+            if (province && districtsByProvince[province]) {
+                districtsByProvince[province].forEach(district => {
+                    const option = document.createElement('option');
+                    option.value = district;
+                    option.textContent = district;
+                    forgotDistrict.appendChild(option);
+                });
+            }
+        });
+        
+        // Show notification
+        function showNotification(message, type) {
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Show loading overlay
+        function showLoading(text, progressInterval) {
+            loadingText.textContent = text;
+            loadingOverlay.style.display = 'flex';
+            
+            if (progressInterval) {
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 10;
+                    progressBar.style.width = `${progress}%`;
+                    
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                    }
+                }, progressInterval);
             }
         }
         
-        provinceSelect.addEventListener('change', () => {
-            populateDistricts(provinceSelect, districtSelect);
-        });
+        // Hide loading overlay
+        function hideLoading() {
+            loadingOverlay.style.display = 'none';
+            progressBar.style.width = '0%';
+        }
         
-        retrieveProvinceSelect.addEventListener('change', () => {
-            populateDistricts(retrieveProvinceSelect, retrieveDistrictSelect);
-        });
+        // Validate Sri Lankan phone number
+        function validatePhoneNumber(phone) {
+            // Remove all non-digit characters
+            const digitsOnly = phone.replace(/\D/g, '');
+            
+            // Check if it starts with 0, 94, or +94 and has the correct prefix
+            if (digitsOnly.startsWith('94')) {
+                // Format: 94xxxxxxxxx
+                const prefix = digitsOnly.substring(2, 4);
+                return (digitsOnly.length === 11) && 
+                       ['71', '72', '74', '75', '76', '77', '78', '11'].includes(prefix);
+            } else if (digitsOnly.startsWith('0')) {
+                // Format: 0xxxxxxxxx
+                const prefix = digitsOnly.substring(1, 3);
+                return (digitsOnly.length === 10) && 
+                       ['71', '72', '74', '75', '76', '77', '78', '11'].includes(prefix);
+            } else {
+                return false;
+            }
+        }
         
-        function compressImage(file, maxWidth = 300, maxHeight = 300, quality = 0.5) {
-            return new Promise((resolve) => {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                const img = new Image();
-                
-                img.onload = function() {
-                    let width = img.width;
-                    let height = img.height;
-                    
-                    if (width > height) {
-                        if (width > maxWidth) {
-                            height *= maxWidth / width;
-                            width = maxWidth;
+        // Validate Sri Lankan NIC
+        function validateNIC(nic) {
+            const oldNICRegex = /^[0-9]{9}[vVxX]$/;
+            const newNICRegex = /^[0-9]{12}$/;
+            return oldNICRegex.test(nic) || newNICRegex.test(nic);
+        }
+        
+        // Login functionality
+        loginBtn.addEventListener('click', () => {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!email || !password) {
+                showNotification('Please enter both email and password', 'error');
+                return;
+            }
+            
+            showLoading('Logging in...', 100);
+            
+            // Query Firebase for user
+            database.ref('users').orderByChild('email').equalTo(email).once('value')
+                .then((snapshot) => {
+                    if (snapshot.exists()) {
+                        const userData = snapshot.val();
+                        const userKey = Object.keys(userData)[0];
+                        const user = userData[userKey];
+                        
+                        if (user.password === password) {
+                            localStorage.setItem('emaUserEmail', email);
+                            showNotification('Login successful! Redirecting...', 'success');
+                            setTimeout(() => {
+                                hideLoading();
+                                window.location.href = 'home.html';
+                            }, 1500);
+                        } else {
+                            hideLoading();
+                            showNotification('Incorrect password', 'error');
                         }
                     } else {
-                        if (height > maxHeight) {
-                            width *= maxHeight / height;
-                            height = maxHeight;
-                        }
+                        hideLoading();
+                        showNotification('User not found', 'error');
                     }
-                    
-                    canvas.width = width;
-                    canvas.height = height;
-                    
-                    ctx.drawImage(img, 0, 0, width, height);
-                    canvas.toBlob(resolve, 'image/jpeg', quality);
-                };
-                
-                img.src = URL.createObjectURL(file);
-            });
-        }
-        
-        // Alternative image upload method using Base64 encoding
-        function uploadImageAsBase64(file, emaId) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                
-                reader.onload = function(event) {
-                    // Store the base64 string in the database instead of Firebase Storage
-                    // This bypasses the CORS issue with Firebase Storage
-                    resolve({
-                        base64: event.target.result,
-                        fileName: file.name
-                    });
-                };
-                
-                reader.onerror = function(error) {
-                    reject(error);
-                };
-                
-                reader.readAsDataURL(file);
-            });
-        }
-        
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const emaId = emaIdInput.value.trim();
-            
-            if (!emaId) {
-                showSnackbar('Please enter your EMA ID', 'error');
-                return;
-            }
-            
-            showLoader('Checking your EMA ID...');
-            
-            try {
-                const snapshot = await database.ref(`users/${emaId}/data`).once('value');
-                hideLoader();
-                
-                if (snapshot.exists()) {
-                    localStorage.setItem('emaid', emaId);
-                    showSnackbar('Login successful! Redirecting...', 'success');
-                    setTimeout(() => {
-                        window.location.href = 'home.html';
-                    }, 1500);
-                } else {
-                    showSnackbar('Wrong ID, Check and try again', 'error');
-                }
-            } catch (error) {
-                hideLoader();
-                console.error(error);
-                showSnackbar('An error occurred. Please try again.', 'error');
-            }
+                })
+                .catch((error) => {
+                    hideLoading();
+                    showNotification('Login failed: ' + error.message, 'error');
+                });
         });
         
+        // Register functionality
         registerBtn.addEventListener('click', () => {
-            registerModal.style.display = 'block';
+            const name = document.getElementById('regName').value;
+            const phone = document.getElementById('regPhone').value;
+            const nic = document.getElementById('regNIC').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            const province = document.getElementById('regProvince').value;
+            const district = document.getElementById('regDistrict').value;
+            
+            // Validation
+            if (!name || !phone || !nic || !email || !password || !confirmPassword || !province || !district) {
+                showNotification('Please fill in all fields', 'error');
+                return;
+            }
+            
+            if (!validatePhoneNumber(phone)) {
+                showNotification('Please enter a valid Sri Lankan phone number (starting with 0, 94, or +94 followed by 71, 72, 74, 75, 76, 77, 78, or 11)', 'error');
+                return;
+            }
+            
+            if (!validateNIC(nic)) {
+                showNotification('Please enter a valid Sri Lankan NIC number', 'error');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showNotification('Passwords do not match', 'error');
+                return;
+            }
+            
+            if (password.length < 8) {
+                showNotification('Password must be at least 8 characters', 'error');
+                return;
+            }
+            
+            // Show password confirmation dialog if not already confirmed
+            if (!passwordConfirmed) {
+                passwordConfirmationDialog.style.display = 'flex';
+                return;
+            }
+            
+            // If password is confirmed, proceed with registration
+            performRegistration(name, phone, nic, email, password, province, district);
         });
         
-        retrieveBtn.addEventListener('click', () => {
-            retrieveModal.style.display = 'block';
+        // Password confirmation dialog handlers
+        passwordConfirm.addEventListener('click', () => {
+            passwordConfirmed = true;
+            passwordConfirmationDialog.style.display = 'none';
+            
+            // Trigger register button click again to continue registration
+            registerBtn.click();
         });
         
-        registerForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const fullName = document.getElementById('fullName').value.trim();
-            const phoneNumber = document.getElementById('phoneNumber').value.trim();
-            const nicNumber = document.getElementById('nicNumber').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const province = provinceSelect.value;
-            const district = districtSelect.value;
-            const profileImage = profileImageInput.files[0];
-            
-            if (fullName.length < 5) {
-                showSnackbar('Full name must be at least 5 characters', 'error');
-                return;
-            }
-            
-            if (!validatePhoneNumber(phoneNumber)) {
-                showSnackbar('Please enter a valid Sri Lankan phone number (07XXXXXXXX)', 'error');
-                return;
-            }
-            
-            if (!validateNic(nicNumber)) {
-                showSnackbar('Please enter a valid NIC number', 'error');
-                return;
-            }
-            
-            if (!validateEmail(email)) {
-                showSnackbar('Please enter a valid email address with popular domain', 'error');
-                return;
-            }
-            
-            if (!province || !district) {
-                showSnackbar('Please select both province and district', 'error');
-                return;
-            }
-            
-            showLoader('Processing your registration...');
-            
-            try {
-                let emaId;
-                let isUnique = false;
-                
-                while (!isUnique) {
-                    emaId = generateEmaId();
-                    const snapshot = await database.ref(`users/${emaId}`).once('value');
-                    if (!snapshot.exists()) {
-                        isUnique = true;
-                    }
-                }
-                
-                let profileData = null;
-                
-                // Handle image upload with Base64 encoding to avoid CORS issues
-                if (profileImage) {
-                    try {
-                        // First try the Firebase Storage approach
-                        const compressedImage = await compressImage(profileImage);
-                        const storageRef = storage.ref(`profiles/${emaId}`);
-                        
-                        // Set custom metadata to help with CORS
-                        const metadata = {
-                            contentType: 'image/jpeg',
-                            cacheControl: 'public,max-age=31536000'
-                        };
-                        
-                        // Try to upload with timeout
-                        const uploadPromise = storageRef.put(compressedImage, metadata);
-                        const timeoutPromise = new Promise((_, reject) => 
-                            setTimeout(() => reject(new Error('Upload timeout')), 10000)
-                        );
-                        
-                        await Promise.race([uploadPromise, timeoutPromise]);
-                        profileData = {
-                            type: 'storage',
-                            url: await storageRef.getDownloadURL()
-                        };
-                    } catch (uploadError) {
-                        console.error('Image upload to storage failed:', uploadError);
-                        
-                        // Fallback to Base64 encoding
-                        try {
-                            showLoader('Image upload failed, trying alternative method...');
-                            profileData = await uploadImageAsBase64(profileImage, emaId);
-                            profileData.type = 'base64';
-                        } catch (base64Error) {
-                            console.error('Base64 encoding failed:', base64Error);
-                            // Continue with registration even if image upload fails
-                            showSnackbar('Registration successful, but profile image could not be uploaded', 'success');
-                        }
-                    }
-                }
-                
-                // Prepare user data
-                const userData = {
-                    fullName,
-                    phoneNumber,
-                    nicNumber,
-                    email,
-                    province,
-                    district,
-                    registrationDate: new Date().toISOString()
-                };
-                
-                // Add profile data based on the upload method
-                if (profileData) {
-                    if (profileData.type === 'storage') {
-                        userData.profileImageUrl = profileData.url;
-                    } else if (profileData.type === 'base64') {
-                        userData.profileImageBase64 = profileData.base64;
-                        userData.profileImageName = profileData.fileName;
-                    }
-                }
-                
-                // Save user data to Firebase Database
-                await database.ref(`users/${emaId}/data`).set(userData);
-                
-                hideLoader();
-                document.getElementById('generatedEmaId').textContent = emaId;
-                registerModal.style.display = 'none';
-                emaIdModal.style.display = 'block';
-                
-                document.getElementById('saveEmaIdBtn').addEventListener('click', () => {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    canvas.width = 400;
-                    canvas.height = 200;
-                    
-                    ctx.fillStyle = '#D5F4E6';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    
-                    ctx.strokeStyle = '#2ECC71';
-                    ctx.lineWidth = 3;
-                    ctx.setLineDash([10, 5]);
-                    ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
-                    
-                    ctx.fillStyle = '#000000';
-                    ctx.font = 'bold 24px Mona Sans';
-                    ctx.textAlign = 'center';
-                    ctx.fillText('EMA ID', canvas.width / 2, 60);
-                    
-                    ctx.font = 'bold 36px Mona Sans';
-                    ctx.fillStyle = '#5D4037';
-                    ctx.fillText(emaId, canvas.width / 2, 120);
-                    
-                    ctx.font = '14px Mona Sans';
-                    ctx.fillStyle = '#000000';
-                    ctx.fillText('Elephant Monitoring Application', canvas.width / 2, 160);
-                    
-                    const link = document.createElement('a');
-                    link.download = `EMA_ID_${emaId}.png`;
-                    link.href = canvas.toDataURL();
-                    link.click();
-                    
-                    showSnackbar('EMA ID saved successfully', 'success');
-                });
-                
-                document.getElementById('doneEmaIdBtn').addEventListener('click', () => {
-                    emaIdModal.style.display = 'none';
-                    emaIdInput.value = emaId;
-                    showSnackbar('Registration successful! You can now login with your EMA ID', 'success');
-                });
-                
-            } catch (error) {
-                hideLoader();
-                console.error(error);
-                showSnackbar('An error occurred during registration. Please try again.', 'error');
-            }
+        passwordCancel.addEventListener('click', () => {
+            passwordConfirmationDialog.style.display = 'none';
+            regPassword.focus();
         });
         
-        retrieveForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
+        // Function to perform registration
+        function performRegistration(name, phone, nic, email, password, province, district) {
+            showLoading('Creating your account...', 150);
             
-            const nic = document.getElementById('retrieveNic').value.trim();
-            const email = document.getElementById('retrieveEmail').value.trim();
-            const province = retrieveProvinceSelect.value;
-            const district = retrieveDistrictSelect.value;
-            
-            if (!validateNic(nic)) {
-                showSnackbar('Please enter a valid NIC number', 'error');
-                return;
-            }
-            
-            if (!validateEmail(email)) {
-                showSnackbar('Please enter a valid email address', 'error');
-                return;
-            }
-            
-            if (!province || !district) {
-                showSnackbar('Please select both province and district', 'error');
-                return;
-            }
-            
-            showLoader('මෙම ක්‍රියාවලියට යම් කාලයක් ගතවේ, මන්ද දැනට ගබඩාවේ බොහෝ දත්ත ඇති බැවිනි.');
-            
-            try {
-                const usersSnapshot = await database.ref('users').once('value');
-                const users = usersSnapshot.val();
-                const matchedUsers = [];
-                
-                for (const emaId in users) {
-                    const userData = users[emaId].data;
-                    if (userData &&
-                        userData.nicNumber === nic &&
-                        userData.email === email &&
-                        userData.province === province &&
-                        userData.district === district) {
-                        matchedUsers.push({
-                            emaId,
-                            ...userData
+            // Check if user already exists
+            database.ref('users').orderByChild('email').equalTo(email).once('value')
+                .then((snapshot) => {
+                    if (snapshot.exists()) {
+                        hideLoading();
+                        showNotification('User with this email already exists', 'error');
+                        return;
+                    }
+                    
+                    // Create new user
+                    const newUser = {
+                        name,
+                        phone,
+                        nic,
+                        email,
+                        password,
+                        province,
+                        district,
+                        profilePicture: profilePicBase64 || ''
+                    };
+                    
+                    database.ref('users').push(newUser)
+                        .then(() => {
+                            hideLoading();
+                            showNotification('Registration successful! Please login.', 'success');
+                            
+                            // Reset form
+                            document.getElementById('regName').value = '';
+                            document.getElementById('regPhone').value = '';
+                            document.getElementById('regNIC').value = '';
+                            document.getElementById('regEmail').value = '';
+                            document.getElementById('regPassword').value = '';
+                            document.getElementById('regConfirmPassword').value = '';
+                            document.getElementById('regProvince').value = '';
+                            document.getElementById('regDistrict').value = '';
+                            profilePicBase64 = '';
+                            profilePicPreview.innerHTML = '<span class="material-icons">person</span>';
+                            passwordConfirmed = false;
+                            
+                            // Switch to login tab
+                            loginTab.click();
+                        })
+                        .catch((error) => {
+                            hideLoading();
+                            showNotification('Registration failed: ' + error.message, 'error');
                         });
-                    }
-                }
-                
-                hideLoader();
-                
-                if (matchedUsers.length === 0) {
-                    showSnackbar('No matching records found', 'error');
-                } else {
-                    retrieveResults.classList.remove('hidden');
-                    retrieveResults.innerHTML = '<h3 style="color: var(--parakeet); margin-bottom: 15px;">Matching Records</h3>';
-                    
-                    matchedUsers.forEach(user => {
-                        const card = document.createElement('div');
-                        card.className = 'result-card';
+                })
+                .catch((error) => {
+                    hideLoading();
+                    showNotification('Registration failed: ' + error.message, 'error');
+                });
+        }
+        
+        // Forgot password functionality
+        forgotPasswordLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            forgotPasswordModal.style.display = 'flex';
+        });
+        
+        closeModal.addEventListener('click', () => {
+            forgotPasswordModal.style.display = 'none';
+        });
+        
+        window.addEventListener('click', (e) => {
+            if (e.target === forgotPasswordModal) {
+                forgotPasswordModal.style.display = 'none';
+            }
+        });
+        
+        forgotPasswordBtn.addEventListener('click', () => {
+            const email = document.getElementById('forgotEmail').value;
+            const nic = document.getElementById('forgotNIC').value;
+            const province = document.getElementById('forgotProvince').value;
+            const district = document.getElementById('forgotDistrict').value;
+            
+            if (!email || !nic || !province || !district) {
+                showNotification('Please fill in all fields', 'error');
+                return;
+            }
+            
+            if (!validateNIC(nic)) {
+                showNotification('Please enter a valid Sri Lankan NIC number', 'error');
+                return;
+            }
+            
+            showLoading('Verifying your information...', 200);
+            
+            // Query Firebase for user
+            database.ref('users').orderByChild('email').equalTo(email).once('value')
+                .then((snapshot) => {
+                    if (snapshot.exists()) {
+                        const userData = snapshot.val();
+                        const userKey = Object.keys(userData)[0];
+                        const user = userData[userKey];
                         
-                        // Handle both storage URL and base64 image
-                        let profileImg;
-                        if (user.profileImageUrl) {
-                            profileImg = user.profileImageUrl;
-                        } else if (user.profileImageBase64) {
-                            profileImg = user.profileImageBase64;
+                        if (user.nic === nic && user.province === province && user.district === district) {
+                            localStorage.setItem('emaUserEmail', email);
+                            showNotification('Verification successful! Redirecting...', 'success');
+                            setTimeout(() => {
+                                hideLoading();
+                                window.location.href = 'home.html';
+                            }, 1500);
                         } else {
-                            profileImg = 'https://picsum.photos/seed/default/60/60.jpg';
+                            hideLoading();
+                            showNotification('The provided information does not match our records', 'error');
                         }
-                        
-                        card.innerHTML = `
-                            <img src="${profileImg}" alt="Profile">
-                            <div class="result-card-info">
-                                <h3>${user.fullName}</h3>
-                                <p>EMA ID: ${user.emaId}</p>
-                                <p>${user.phoneNumber}</p>
-                            </div>
-                        `;
-                        
-                        card.addEventListener('click', () => {
-                            retrieveModal.style.display = 'none';
-                            emaIdInput.value = user.emaId;
-                            showSnackbar(`EMA ID ${user.emaId} selected. You can now login.`, 'success');
-                        });
-                        
-                        retrieveResults.appendChild(card);
-                    });
-                }
-                
-            } catch (error) {
-                hideLoader();
-                console.error(error);
-                showSnackbar('An error occurred while retrieving your EMA ID. Please try again.', 'error');
-            }
+                    } else {
+                        hideLoading();
+                        showNotification('User not found', 'error');
+                    }
+                })
+                .catch((error) => {
+                    hideLoading();
+                    showNotification('Verification failed: ' + error.message, 'error');
+                });
         });
     </script>
 </body>
