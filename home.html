@@ -192,6 +192,18 @@
             display: flex;
             align-items: center;
             justify-content: space-around;
+            transition: transform 0.3s ease;
+        }
+        
+        .bottom-sheet.hidden {
+            transform: translateY(100%);
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-bottom: 15px;
         }
         
         .nav-button {
@@ -205,6 +217,7 @@
             background-color: var(--mint);
             cursor: pointer;
             transition: all 0.3s ease;
+            margin: 0 10px;
         }
         
         .nav-button:hover {
@@ -226,6 +239,8 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
         }
         
         .agent-status-button:hover {
@@ -465,6 +480,193 @@
             display: flex;
             gap: 10px;
         }
+        
+        .terrain-selector {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 8px;
+            z-index: 1000;
+        }
+        
+        .terrain-option {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .terrain-option:hover {
+            background-color: var(--mint);
+        }
+        
+        .terrain-option .material-icons {
+            margin-right: 8px;
+            color: var(--parakeet);
+        }
+        
+        .report-form {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--white);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .report-form.show {
+            transform: translateY(0);
+        }
+        
+        .report-type-selector {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        
+        .report-type {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background-color: var(--mint);
+            border-radius: 8px;
+            margin: 0 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .report-type:hover {
+            background-color: var(--pistachio);
+        }
+        
+        .report-type.selected {
+            background-color: var(--parakeet);
+            color: var(--white);
+        }
+        
+        .location-selector {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        
+        .location-option {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background-color: var(--mint);
+            border-radius: 8px;
+            margin: 0 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .location-option:hover {
+            background-color: var(--pistachio);
+        }
+        
+        .location-option.selected {
+            background-color: var(--parakeet);
+            color: var(--white);
+        }
+        
+        .radio-group {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+        
+        .radio-option input {
+            margin-right: 8px;
+        }
+        
+        .image-upload-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .image-upload {
+            width: 80px;
+            height: 80px;
+            border: 2px dashed var(--pistachio);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .image-upload:hover {
+            background-color: var(--mint);
+        }
+        
+        .image-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            position: relative;
+        }
+        
+        .image-preview .remove {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--error);
+            color: var(--white);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .checkbox-group input {
+            margin-right: 10px;
+        }
+        
+        .thank-you-modal {
+            text-align: center;
+        }
+        
+        .thank-you-modal img {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 20px;
+        }
+        
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -475,6 +677,17 @@
             <span class="material-icons">menu</span>
         </div>
         <img id="userProfileImage" class="profile-image" src="https://picsum.photos/seed/defaultprofile/100/100.jpg" alt="Profile">
+    </div>
+    
+    <div class="terrain-selector">
+        <div class="terrain-option" id="terrainStreet">
+            <span class="material-icons">map</span>
+            <span>Street</span>
+        </div>
+        <div class="terrain-option" id="terrainSatellite">
+            <span class="material-icons">satellite</span>
+            <span>Satellite</span>
+        </div>
     </div>
     
     <div class="side-menu" id="sideMenu">
@@ -495,29 +708,143 @@
                 <span class="material-icons">grass</span>
                 <span>Crops</span>
             </div>
-            <div class="menu-item" id="logoutMenu">
-                <span class="material-icons">logout</span>
-                <span>Log Out</span>
+            <div class="menu-item" id="deleteAccountMenu">
+                <span class="material-icons">delete</span>
+                <span>Delete Account</span>
             </div>
         </div>
     </div>
     
     <div class="overlay" id="overlay"></div>
     
-    <div class="bottom-sheet">
-        <div class="nav-button" id="alertsButton">
-            <span class="material-icons">notifications</span>
-        </div>
-        <div class="nav-button" id="mapButton">
-            <span class="material-icons">map</span>
-        </div>
-        <div class="nav-button" id="analyticsButton">
-            <span class="material-icons">analytics</span>
-        </div>
-        <div class="nav-button" id="aiButton">
-            <span class="material-icons">smart_toy</span>
+    <div class="bottom-sheet" id="bottomSheet">
+        <div class="nav-buttons">
+            <div class="nav-button" id="alertsButton">
+                <span class="material-icons">notifications</span>
+            </div>
+            <div class="nav-button" id="mapButton">
+                <span class="material-icons">map</span>
+            </div>
+            <div class="nav-button" id="analyticsButton">
+                <span class="material-icons">analytics</span>
+            </div>
+            <div class="nav-button" id="aiButton">
+                <span class="material-icons">smart_toy</span>
+            </div>
         </div>
         <button class="agent-status-button" id="agentStatusButton">Agent Status</button>
+    </div>
+    
+    <div class="report-form" id="reportForm">
+        <span class="close" id="closeReportForm">&times;</span>
+        <h2 style="color: var(--parakeet); margin-bottom: 20px; text-align: center;">Report</h2>
+        
+        <div class="report-type-selector">
+            <div class="report-type" id="sightingType">
+                <span class="material-icons">visibility</span>
+                <span>Sighting</span>
+            </div>
+            <div class="report-type" id="accidentType">
+                <span class="material-icons">warning</span>
+                <span>Accident</span>
+            </div>
+        </div>
+        
+        <div id="sightingForm" class="report-form-content hidden">
+            <div class="location-selector">
+                <div class="location-option" id="selectOnMap">
+                    <span class="material-icons">place</span>
+                    <span>Select on Map</span>
+                </div>
+                <div class="location-option" id="currentLocation">
+                    <span class="material-icons">my_location</span>
+                    <span>Current Location</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Elephant Type</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="elephant" name="elephantType" value="elephant" checked>
+                        <label for="elephant">Elephant</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="tusker" name="elephantType" value="tusker">
+                        <label for="tusker">Tusker</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="elephantCount">Number of Elephants</label>
+                <input type="number" id="elephantCount" class="form-control" min="1" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Images (up to 5)</label>
+                <div class="image-upload-container" id="imageUploadContainer">
+                    <div class="image-upload" id="addImage">
+                        <span class="material-icons">add</span>
+                    </div>
+                </div>
+                <input type="file" id="imageInput" accept="image/*" style="display: none;" multiple>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Brief Description</label>
+                <textarea id="description" class="form-control" rows="3" required></textarea>
+            </div>
+        </div>
+        
+        <div id="accidentForm" class="report-form-content hidden">
+            <div class="location-selector">
+                <div class="location-option" id="selectOnMapAccident">
+                    <span class="material-icons">place</span>
+                    <span>Select on Map</span>
+                </div>
+                <div class="location-option" id="currentLocationAccident">
+                    <span class="material-icons">my_location</span>
+                    <span>Current Location</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Injured to</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="injuredElephant" name="injuredTo" value="elephant" checked>
+                        <label for="injuredElephant">Elephant</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="injuredHuman" name="injuredTo" value="human">
+                        <label for="injuredHuman">Human</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="medicalHelp">
+                <label for="medicalHelp">Needed medical help</label>
+            </div>
+            
+            <div class="form-group">
+                <label>Images (up to 5)</label>
+                <div class="image-upload-container" id="imageUploadContainerAccident">
+                    <div class="image-upload" id="addImageAccident">
+                        <span class="material-icons">add</span>
+                    </div>
+                </div>
+                <input type="file" id="imageInputAccident" accept="image/*" style="display: none;" multiple>
+            </div>
+            
+            <div class="form-group">
+                <label for="descriptionAccident">Brief Description</label>
+                <textarea id="descriptionAccident" class="form-control" rows="3" required></textarea>
+            </div>
+        </div>
+        
+        <button class="btn" id="submitReport">Submit Report</button>
     </div>
     
     <div class="modal" id="agentModal">
@@ -565,18 +892,6 @@
         </div>
     </div>
     
-    <div class="modal" id="logoutModal">
-        <div class="confirmation-dialog">
-            <h3>Log Out Options</h3>
-            <p>Choose how you want to log out:</p>
-            <div class="confirmation-buttons">
-                <button class="btn" id="logoutOnly">Log Out</button>
-                <button class="btn btn-danger" id="deleteAccount">Delete Account and Log Out</button>
-            </div>
-            <button class="btn btn-secondary" id="cancelLogout" style="margin-top: 10px;">Cancel</button>
-        </div>
-    </div>
-    
     <div class="modal" id="deleteConfirmationModal">
         <div class="confirmation-dialog">
             <h3>Delete Account</h3>
@@ -585,6 +900,25 @@
                 <button class="btn btn-danger" id="confirmDelete">Yes, Delete</button>
                 <button class="btn btn-secondary" id="cancelDelete">No, Cancel</button>
             </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="confirmationModal">
+        <div class="confirmation-dialog">
+            <h3>Submit Report</h3>
+            <p>You're now uploading a report which is public to all users, Continue?</p>
+            <div class="confirmation-buttons">
+                <button class="btn" id="confirmSubmit">Yes, Submit</button>
+                <button class="btn btn-secondary" id="cancelSubmit">No, Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal thank-you-modal" id="thankYouModal">
+        <div class="modal-content">
+            <img src="https://i.pinimg.com/originals/06/ae/07/06ae072fb343a704ee80c2c55d2da80a.gif" alt="Thank you">
+            <h3>Thank you for contributing to save both humans and elephants</h3>
+            <button class="btn" id="closeThankYou">Close</button>
         </div>
     </div>
     
@@ -615,6 +949,13 @@
         let userMarker;
         let userData = {};
         let emaId;
+        let reportType = 'sighting';
+        let selectedLocation = null;
+        let reportImages = [];
+        let accidentImages = [];
+        let isSelectingLocation = false;
+        let locationMarker = null;
+        let currentTileLayer;
         
         document.addEventListener('DOMContentLoaded', async () => {
             // Show loader
@@ -634,7 +975,9 @@
                     userData = snapshot.val();
                     
                     // Update UI with user data
-                    if (userData.profileImageUrl) {
+                    if (userData.profileImageBase64) {
+                        document.getElementById('userProfileImage').src = userData.profileImageBase64;
+                    } else if (userData.profileImageUrl) {
                         document.getElementById('userProfileImage').src = userData.profileImageUrl;
                     }
                     
@@ -662,10 +1005,12 @@
         
         function initializeMap() {
             // Create map
-            map = L.map('map').setView([7.8731, 80.7718], 10); // Default to Sri Lanka center
+            map = L.map('map', {
+                zoomControl: false // Remove zoom controls
+            }).setView([7.8731, 80.7718], 10); // Default to Sri Lanka center
             
-            // Add tile layer
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            // Add tile layer (default: street view)
+            currentTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
             
@@ -692,6 +1037,67 @@
                     }
                 );
             }
+            
+            // Add long press detection
+            let pressTimer;
+            let isLongPress = false;
+            
+            map.on('mousedown', function() {
+                pressTimer = setTimeout(function() {
+                    isLongPress = true;
+                    onMapLongPress();
+                }, 800);
+            });
+            
+            map.on('mouseup', function() {
+                clearTimeout(pressTimer);
+            });
+            
+            map.on('click', function(e) {
+                if (isLongPress) {
+                    isLongPress = false;
+                    return;
+                }
+                
+                if (isSelectingLocation) {
+                    // Add marker at selected location
+                    if (locationMarker) {
+                        map.removeLayer(locationMarker);
+                    }
+                    
+                    locationMarker = L.marker(e.latlng).addTo(map);
+                    selectedLocation = {
+                        latitude: e.latlng.lat,
+                        longitude: e.latlng.lng
+                    };
+                    
+                    // Stop selecting location
+                    isSelectingLocation = false;
+                    map.getContainer().style.cursor = '';
+                    
+                    // Update UI
+                    document.getElementById('selectOnMap').classList.add('selected');
+                    document.getElementById('selectOnMapAccident').classList.add('selected');
+                }
+            });
+            
+            // Touch events for mobile
+            map.on('touchstart', function() {
+                pressTimer = setTimeout(function() {
+                    isLongPress = true;
+                    onMapLongPress();
+                }, 800);
+            });
+            
+            map.on('touchend', function() {
+                clearTimeout(pressTimer);
+            });
+        }
+        
+        function onMapLongPress() {
+            // Show report form
+            document.getElementById('bottomSheet').classList.add('hidden');
+            document.getElementById('reportForm').classList.add('show');
         }
         
         function updateAgentStatusButton(status) {
@@ -770,7 +1176,7 @@
             }
         }
         
-        function compressImage(file, maxSizeKB = 30) {
+        function compressImage(file, maxSizeKB = 50) {
             return new Promise((resolve) => {
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
@@ -825,6 +1231,11 @@
             });
         }
         
+        function generateReportKey(suffix) {
+            const randomNum = Math.floor(100000000000 + Math.random() * 900000000000);
+            return `${randomNum}-${suffix}`;
+        }
+        
         function showSnackbar(message, type = '') {
             // Create snackbar element if it doesn't exist
             let snackbar = document.getElementById('snackbar');
@@ -867,22 +1278,8 @@
             window.location.href = 'crops.html';
         });
         
-        document.getElementById('logoutMenu').addEventListener('click', () => {
-            document.getElementById('logoutModal').style.display = 'flex';
-        });
-        
-        document.getElementById('logoutOnly').addEventListener('click', () => {
-            localStorage.removeItem('emaid');
-            window.location.href = 'index.html';
-        });
-        
-        document.getElementById('deleteAccount').addEventListener('click', () => {
-            document.getElementById('logoutModal').style.display = 'none';
+        document.getElementById('deleteAccountMenu').addEventListener('click', () => {
             document.getElementById('deleteConfirmationModal').style.display = 'flex';
-        });
-        
-        document.getElementById('cancelLogout').addEventListener('click', () => {
-            document.getElementById('logoutModal').style.display = 'none';
         });
         
         document.getElementById('confirmDelete').addEventListener('click', async () => {
@@ -1019,6 +1416,374 @@
                 console.error('Error registering as agent:', error);
                 showSnackbar('Error registering as agent', 'error');
             }
+        });
+        
+        // Terrain selector
+        document.getElementById('terrainStreet').addEventListener('click', () => {
+            if (currentTileLayer) {
+                map.removeLayer(currentTileLayer);
+            }
+            
+            currentTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+        });
+        
+        document.getElementById('terrainSatellite').addEventListener('click', () => {
+            if (currentTileLayer) {
+                map.removeLayer(currentTileLayer);
+            }
+            
+            currentTileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: 'Tiles &copy; Esri'
+            }).addTo(map);
+        });
+        
+        // Report form
+        document.getElementById('closeReportForm').addEventListener('click', () => {
+            document.getElementById('reportForm').classList.remove('show');
+            document.getElementById('bottomSheet').classList.remove('hidden');
+            
+            // Reset form
+            reportImages = [];
+            accidentImages = [];
+            selectedLocation = null;
+            if (locationMarker) {
+                map.removeLayer(locationMarker);
+                locationMarker = null;
+            }
+            isSelectingLocation = false;
+            map.getContainer().style.cursor = '';
+            
+            // Clear image previews
+            document.getElementById('imageUploadContainer').innerHTML = '<div class="image-upload" id="addImage"><span class="material-icons">add</span></div>';
+            document.getElementById('imageUploadContainerAccident').innerHTML = '<div class="image-upload" id="addImageAccident"><span class="material-icons">add</span></div>';
+            
+            // Reset form values
+            document.getElementById('description').value = '';
+            document.getElementById('descriptionAccident').value = '';
+            document.getElementById('elephantCount').value = '';
+            document.getElementById('medicalHelp').checked = false;
+            document.getElementById('elephant').checked = true;
+            document.getElementById('injuredElephant').checked = true;
+            
+            // Reset location selection
+            document.getElementById('selectOnMap').classList.remove('selected');
+            document.getElementById('currentLocation').classList.remove('selected');
+            document.getElementById('selectOnMapAccident').classList.remove('selected');
+            document.getElementById('currentLocationAccident').classList.remove('selected');
+        });
+        
+        document.getElementById('sightingType').addEventListener('click', () => {
+            reportType = 'sighting';
+            document.getElementById('sightingType').classList.add('selected');
+            document.getElementById('accidentType').classList.remove('selected');
+            document.getElementById('sightingForm').classList.remove('hidden');
+            document.getElementById('accidentForm').classList.add('hidden');
+        });
+        
+        document.getElementById('accidentType').addEventListener('click', () => {
+            reportType = 'accident';
+            document.getElementById('accidentType').classList.add('selected');
+            document.getElementById('sightingType').classList.remove('selected');
+            document.getElementById('accidentForm').classList.remove('hidden');
+            document.getElementById('sightingForm').classList.add('hidden');
+        });
+        
+        document.getElementById('selectOnMap').addEventListener('click', () => {
+            isSelectingLocation = true;
+            map.getContainer().style.cursor = 'crosshair';
+            showSnackbar('Click on the map to select a location', 'info');
+        });
+        
+        document.getElementById('currentLocation').addEventListener('click', () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        selectedLocation = {
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude
+                        };
+                        
+                        // Add marker at current location
+                        if (locationMarker) {
+                            map.removeLayer(locationMarker);
+                        }
+                        
+                        locationMarker = L.marker([selectedLocation.latitude, selectedLocation.longitude]).addTo(map);
+                        
+                        // Update UI
+                        document.getElementById('currentLocation').classList.add('selected');
+                        document.getElementById('selectOnMap').classList.remove('selected');
+                        
+                        showSnackbar('Current location selected', 'success');
+                    },
+                    error => {
+                        console.error('Error getting location:', error);
+                        showSnackbar('Could not get your location', 'error');
+                    }
+                );
+            }
+        });
+        
+        document.getElementById('selectOnMapAccident').addEventListener('click', () => {
+            isSelectingLocation = true;
+            map.getContainer().style.cursor = 'crosshair';
+            showSnackbar('Click on the map to select a location', 'info');
+        });
+        
+        document.getElementById('currentLocationAccident').addEventListener('click', () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        selectedLocation = {
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude
+                        };
+                        
+                        // Add marker at current location
+                        if (locationMarker) {
+                            map.removeLayer(locationMarker);
+                        }
+                        
+                        locationMarker = L.marker([selectedLocation.latitude, selectedLocation.longitude]).addTo(map);
+                        
+                        // Update UI
+                        document.getElementById('currentLocationAccident').classList.add('selected');
+                        document.getElementById('selectOnMapAccident').classList.remove('selected');
+                        
+                        showSnackbar('Current location selected', 'success');
+                    },
+                    error => {
+                        console.error('Error getting location:', error);
+                        showSnackbar('Could not get your location', 'error');
+                    }
+                );
+            }
+        });
+        
+        // Elephant type change
+        document.getElementById('elephant').addEventListener('change', () => {
+            document.querySelector('label[for="elephantCount"]').textContent = 'Number of Elephants';
+        });
+        
+        document.getElementById('tusker').addEventListener('change', () => {
+            document.querySelector('label[for="elephantCount"]').textContent = 'Number of Tuskers';
+        });
+        
+        // Image upload for sighting
+        document.getElementById('addImage').addEventListener('click', () => {
+            document.getElementById('imageInput').click();
+        });
+        
+        document.getElementById('imageInput').addEventListener('change', async (e) => {
+            const files = Array.from(e.target.files);
+            
+            if (reportImages.length + files.length > 5) {
+                showSnackbar('You can upload a maximum of 5 images', 'error');
+                return;
+            }
+            
+            // Process each image
+            for (const file of files) {
+                const compressedImage = await compressImage(file);
+                reportImages.push(compressedImage);
+                
+                // Add preview
+                const previewContainer = document.createElement('div');
+                previewContainer.className = 'image-preview';
+                previewContainer.style.position = 'relative';
+                previewContainer.style.backgroundImage = `url(${compressedImage})`;
+                previewContainer.style.backgroundSize = 'cover';
+                previewContainer.style.backgroundPosition = 'center';
+                
+                const removeBtn = document.createElement('div');
+                removeBtn.className = 'remove';
+                removeBtn.innerHTML = '&times;';
+                removeBtn.addEventListener('click', () => {
+                    const index = reportImages.indexOf(compressedImage);
+                    if (index > -1) {
+                        reportImages.splice(index, 1);
+                    }
+                    previewContainer.remove();
+                });
+                
+                previewContainer.appendChild(removeBtn);
+                document.getElementById('imageUploadContainer').appendChild(previewContainer);
+            }
+            
+            // Reset input
+            e.target.value = '';
+        });
+        
+        // Image upload for accident
+        document.getElementById('addImageAccident').addEventListener('click', () => {
+            document.getElementById('imageInputAccident').click();
+        });
+        
+        document.getElementById('imageInputAccident').addEventListener('change', async (e) => {
+            const files = Array.from(e.target.files);
+            
+            if (accidentImages.length + files.length > 5) {
+                showSnackbar('You can upload a maximum of 5 images', 'error');
+                return;
+            }
+            
+            // Process each image
+            for (const file of files) {
+                const compressedImage = await compressImage(file);
+                accidentImages.push(compressedImage);
+                
+                // Add preview
+                const previewContainer = document.createElement('div');
+                previewContainer.className = 'image-preview';
+                previewContainer.style.position = 'relative';
+                previewContainer.style.backgroundImage = `url(${compressedImage})`;
+                previewContainer.style.backgroundSize = 'cover';
+                previewContainer.style.backgroundPosition = 'center';
+                
+                const removeBtn = document.createElement('div');
+                removeBtn.className = 'remove';
+                removeBtn.innerHTML = '&times;';
+                removeBtn.addEventListener('click', () => {
+                    const index = accidentImages.indexOf(compressedImage);
+                    if (index > -1) {
+                        accidentImages.splice(index, 1);
+                    }
+                    previewContainer.remove();
+                });
+                
+                previewContainer.appendChild(removeBtn);
+                document.getElementById('imageUploadContainerAccident').appendChild(previewContainer);
+            }
+            
+            // Reset input
+            e.target.value = '';
+        });
+        
+        // Submit report
+        document.getElementById('submitReport').addEventListener('click', () => {
+            document.getElementById('confirmationModal').style.display = 'flex';
+        });
+        
+        document.getElementById('confirmSubmit').addEventListener('click', async () => {
+            document.getElementById('confirmationModal').style.display = 'none';
+            document.getElementById('loaderModal').style.display = 'flex';
+            
+            try {
+                let reportData = {};
+                let reportKey = '';
+                
+                if (reportType === 'sighting') {
+                    // Validate sighting form
+                    if (!selectedLocation) {
+                        showSnackbar('Please select a location', 'error');
+                        document.getElementById('loaderModal').style.display = 'none';
+                        return;
+                    }
+                    
+                    const elephantType = document.querySelector('input[name="elephantType"]:checked').value;
+                    const elephantCount = document.getElementById('elephantCount').value;
+                    const description = document.getElementById('description').value;
+                    
+                    if (!elephantCount || !description) {
+                        showSnackbar('Please fill in all required fields', 'error');
+                        document.getElementById('loaderModal').style.display = 'none';
+                        return;
+                    }
+                    
+                    // Generate report key
+                    reportKey = generateReportKey('S');
+                    
+                    // Prepare report data
+                    reportData = {
+                        type: 'sighting',
+                        elephantType,
+                        elephantCount,
+                        description,
+                        images: reportImages,
+                        location: selectedLocation,
+                        reporterName: userData.fullName,
+                        reporterPhone: userData.phoneNumber,
+                        reporterEmaId: emaId,
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    // Save to database
+                    await database.ref(`reports/sightings/${reportKey}/data`).set(reportData);
+                    
+                    // Save reference to user
+                    await database.ref(`users/${emaId}/data/reports/${reportKey}`).set({
+                        type: 'sighting',
+                        timestamp: new Date().toISOString()
+                    });
+                } else if (reportType === 'accident') {
+                    // Validate accident form
+                    if (!selectedLocation) {
+                        showSnackbar('Please select a location', 'error');
+                        document.getElementById('loaderModal').style.display = 'none';
+                        return;
+                    }
+                    
+                    const injuredTo = document.querySelector('input[name="injuredTo"]:checked').value;
+                    const medicalHelp = document.getElementById('medicalHelp').checked;
+                    const description = document.getElementById('descriptionAccident').value;
+                    
+                    if (!description) {
+                        showSnackbar('Please fill in all required fields', 'error');
+                        document.getElementById('loaderModal').style.display = 'none';
+                        return;
+                    }
+                    
+                    // Generate report key
+                    reportKey = generateReportKey('A');
+                    
+                    // Prepare report data
+                    reportData = {
+                        type: 'accident',
+                        injuredTo,
+                        medicalHelp,
+                        description,
+                        images: accidentImages,
+                        location: selectedLocation,
+                        reporterName: userData.fullName,
+                        reporterPhone: userData.phoneNumber,
+                        reporterEmaId: emaId,
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    // Save to database
+                    await database.ref(`reports/accidents/${reportKey}/data`).set(reportData);
+                    
+                    // Save reference to user
+                    await database.ref(`users/${emaId}/data/reports/${reportKey}`).set({
+                        type: 'accident',
+                        timestamp: new Date().toISOString()
+                    });
+                }
+                
+                // Hide loader
+                document.getElementById('loaderModal').style.display = 'none';
+                
+                // Close report form
+                document.getElementById('closeReportForm').click();
+                
+                // Show thank you modal
+                document.getElementById('thankYouModal').style.display = 'flex';
+                
+            } catch (error) {
+                document.getElementById('loaderModal').style.display = 'none';
+                console.error('Error submitting report:', error);
+                showSnackbar('Error submitting report', 'error');
+            }
+        });
+        
+        document.getElementById('cancelSubmit').addEventListener('click', () => {
+            document.getElementById('confirmationModal').style.display = 'none';
+        });
+        
+        document.getElementById('closeThankYou').addEventListener('click', () => {
+            document.getElementById('thankYouModal').style.display = 'none';
         });
     </script>
 </body>
