@@ -339,6 +339,10 @@
             box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.2);
         }
         
+        .form-control.error {
+            border-color: var(--error);
+        }
+        
         .btn {
             display: inline-block;
             padding: 12px 24px;
@@ -358,6 +362,13 @@
             background-color: #27AE60;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+        }
+        
+        .btn:disabled {
+            background-color: var(--light-brown);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
         
         .btn-secondary {
@@ -697,54 +708,66 @@
             font-size: 28px;
         }
         
-        .info-pill {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: var(--white);
-            border-radius: 50px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            padding: 15px 20px;
-            display: flex;
-            z-index: 1000;
-            min-width: 300px;
+        .map-type-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 3000;
+            display: none;
+            justify-content: center;
+            align-items: center;
         }
         
-        .weather-section, .sightings-section {
-            flex: 1;
+        .map-type-content {
+            background-color: var(--white);
+            border-radius: 16px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .map-type-options {
             display: flex;
             flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .map-type-option {
+            display: flex;
             align-items: center;
-            padding: 0 10px;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
         
-        .weather-icon {
-            font-size: 32px;
-            margin-bottom: 5px;
+        .map-type-option:hover {
+            background-color: var(--mint);
         }
         
-        .weather-temp {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 5px;
+        .map-type-option.selected {
+            background-color: var(--pistachio);
         }
         
-        .weather-desc {
-            font-size: 14px;
-            text-align: center;
-        }
-        
-        .sightings-count {
-            font-size: 24px;
-            font-weight: 600;
+        .map-type-option .material-icons {
+            margin-right: 15px;
             color: var(--parakeet);
-            margin-bottom: 5px;
         }
         
-        .sightings-label {
+        .error-message {
+            color: var(--error);
             font-size: 14px;
-            text-align: center;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
         }
         
         @media (max-width: 768px) {
@@ -760,10 +783,12 @@
             
             .bottom-sheet {
                 padding: 15px;
+                height: 20vh;
             }
             
             .report-form {
                 padding: 15px;
+                max-height: 70vh;
             }
             
             .report-type, .location-option {
@@ -775,9 +800,15 @@
                 font-size: 20px;
             }
             
-            .info-pill {
-                min-width: 250px;
-                padding: 10px 15px;
+            .add-report-button {
+                top: 15px;
+                right: 15px;
+                width: 48px;
+                height: 48px;
+            }
+            
+            .add-report-button .material-icons {
+                font-size: 24px;
             }
         }
         
@@ -798,7 +829,36 @@
             }
             
             .report-form {
+                max-height: 60vh;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .bottom-sheet {
+                height: 25vh;
+            }
+            
+            .report-form {
                 max-height: 50vh;
+            }
+            
+            .nav-button {
+                width: 50px;
+                height: 50px;
+                margin: 0 2px;
+            }
+            
+            .nav-button .material-icons {
+                font-size: 20px;
+            }
+            
+            .add-report-button {
+                width: 42px;
+                height: 42px;
+            }
+            
+            .add-report-button .material-icons {
+                font-size: 20px;
             }
         }
     </style>
@@ -811,18 +871,6 @@
             <span class="material-icons">menu</span>
         </div>
         <img id="userProfileImage" class="profile-image" src="https://picsum.photos/seed/defaultprofile/100/100.jpg" alt="Profile">
-    </div>
-    
-    <div class="info-pill">
-        <div class="weather-section">
-            <div class="weather-icon" id="weatherIcon">🌤</div>
-            <div class="weather-temp" id="weatherTemp">--°C</div>
-            <div class="weather-desc" id="weatherDesc">Loading...</div>
-        </div>
-        <div class="sightings-section">
-            <div class="sightings-count" id="sightingsCount">0</div>
-            <div class="sightings-label">Latest Reports (24h)</div>
-        </div>
     </div>
     
     <div class="add-report-button" id="addReportButton">
@@ -858,16 +906,6 @@
             <div class="menu-item" id="deleteAccountMenu">
                 <span class="material-icons">delete</span>
                 <span>Delete Account</span>
-            </div>
-        </div>
-        <div class="map-type-selector hidden" id="mapTypeSelector">
-            <div class="map-type-option" id="streetMapOption">
-                <span class="material-icons">map</span>
-                <span>Street Map</span>
-            </div>
-            <div class="map-type-option" id="satelliteMapOption">
-                <span class="material-icons">satellite</span>
-                <span>Satellite Map</span>
             </div>
         </div>
     </div>
@@ -939,6 +977,7 @@
             <div class="form-group">
                 <label for="elephantCount">Number of Elephants</label>
                 <input type="number" id="elephantCount" class="form-control" min="1" required>
+                <div class="error-message" id="elephantCountError">Please enter the number of elephants</div>
             </div>
             
             <div class="form-group">
@@ -949,11 +988,13 @@
                     </div>
                 </div>
                 <input type="file" id="imageInput" accept="image/*" style="display: none;" multiple>
+                <div class="error-message" id="imagesError">Please upload at least one image</div>
             </div>
             
             <div class="form-group">
                 <label for="description">Brief Description</label>
                 <textarea id="description" class="form-control" rows="3" required></textarea>
+                <div class="error-message" id="descriptionError">Please provide a description</div>
             </div>
         </div>
         
@@ -996,11 +1037,13 @@
                     </div>
                 </div>
                 <input type="file" id="imageInputAccident" accept="image/*" style="display: none;" multiple>
+                <div class="error-message" id="accidentImagesError">Please upload at least one image</div>
             </div>
             
             <div class="form-group">
                 <label for="descriptionAccident">Brief Description</label>
                 <textarea id="descriptionAccident" class="form-control" rows="3" required></textarea>
+                <div class="error-message" id="accidentDescriptionError">Please provide a description</div>
             </div>
         </div>
         
@@ -1016,6 +1059,7 @@
                 <div class="form-group">
                     <label for="agentName">Full Name</label>
                     <input type="text" id="agentName" class="form-control" required>
+                    <div class="error-message" id="agentNameError">Please enter your full name</div>
                 </div>
                 
                 <div class="form-group">
@@ -1026,6 +1070,7 @@
                         <input type="file" id="nicImage" accept="image/*" style="display: none;">
                     </div>
                     <img id="nicPreview" class="nic-preview" style="display: none;">
+                    <div class="error-message" id="nicImageError">Please upload your NIC image</div>
                 </div>
                 
                 <div class="message">
@@ -1083,6 +1128,23 @@
         </div>
     </div>
     
+    <div class="map-type-modal" id="mapTypeModal">
+        <div class="map-type-content">
+            <h2 style="color: var(--parakeet); margin-bottom: 20px;">Select Map Type</h2>
+            <div class="map-type-options">
+                <div class="map-type-option" id="streetMapOption">
+                    <span class="material-icons">map</span>
+                    <span>Street Map</span>
+                </div>
+                <div class="map-type-option" id="satelliteMapOption">
+                    <span class="material-icons">satellite</span>
+                    <span>Satellite Map</span>
+                </div>
+            </div>
+            <button class="btn btn-secondary" id="closeMapTypeModal">Close</button>
+        </div>
+    </div>
+    
     <div class="loader-modal" id="loaderModal">
         <div class="loader-content">
             <div class="loader"></div>
@@ -1120,6 +1182,7 @@
         let mapType = localStorage.getItem('mapType') || 'street';
         let lastTapTime = 0;
         let tapTimeout;
+        let doubleTappedLocation = null;
         
         document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('loaderModal').style.display = 'flex';
@@ -1144,14 +1207,6 @@
                     if (userData.agentData && userData.agentData.status) {
                         updateAgentStatusButton(userData.agentData.status);
                     }
-                    
-                    // Load weather for user's district
-                    if (userData.district) {
-                        loadWeather(userData.district);
-                    }
-                    
-                    // Load recent sightings count
-                    loadRecentSightingsCount();
                 } else {
                     localStorage.removeItem('emaid');
                     window.location.href = 'index.html';
@@ -1195,24 +1250,6 @@
                 );
             }
             
-            // Add double tap detection
-            map.on('click', function(e) {
-                const currentTime = new Date().getTime();
-                const tapLength = currentTime - lastTapTime;
-                
-                if (tapLength < 300 && tapLength > 0) {
-                    clearTimeout(tapTimeout);
-                    // Double tap detected
-                    onMapDoubleTap(e);
-                } else {
-                    tapTimeout = setTimeout(function() {
-                        // Single tap - do nothing
-                    }, 300);
-                }
-                
-                lastTapTime = currentTime;
-            });
-            
             map.on('click', function(e) {
                 if (isSelectingLocation) {
                     if (locationMarker) {
@@ -1232,80 +1269,6 @@
                     document.getElementById('selectOnMapAccident').classList.add('selected');
                 }
             });
-        }
-        
-        function onMapDoubleTap(e) {
-            // Open report form on double tap
-            document.getElementById('bottomSheet').classList.add('hidden');
-            document.getElementById('reportForm').classList.add('show');
-        }
-        
-        function loadWeather(district) {
-            // Use OpenWeatherMap API (free tier, no API key required)
-            const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${district},LK&appid=439d4b804bc518dc95b271d5b974681d&units=metric`;
-            
-            fetch(weatherUrl)
-                .then(response => response.json())
-                .then(data => {
-                    if (data && data.weather && data.main) {
-                        const temp = Math.round(data.main.temp);
-                        const description = data.weather[0].description;
-                        const iconCode = data.weather[0].icon;
-                        
-                        // Set weather icon based on weather code
-                        let weatherEmoji = '🌤'; // Default
-                        
-                        if (iconCode.includes('01')) weatherEmoji = '☀️'; // clear sky
-                        else if (iconCode.includes('02')) weatherEmoji = '⛅'; // few clouds
-                        else if (iconCode.includes('03') || iconCode.includes('04')) weatherEmoji = '☁️'; // scattered/broken clouds
-                        else if (iconCode.includes('09') || iconCode.includes('10') || iconCode.includes('11')) weatherEmoji = '🌧️'; // shower/rain/thunderstorm
-                        else if (iconCode.includes('13')) weatherEmoji = '❄️'; // snow
-                        else if (iconCode.includes('50')) weatherEmoji = '🌫️'; // mist/fog
-                        
-                        document.getElementById('weatherIcon').textContent = weatherEmoji;
-                        document.getElementById('weatherTemp').textContent = `${temp}°C`;
-                        document.getElementById('weatherDesc').textContent = description;
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching weather:', error);
-                    document.getElementById('weatherIcon').textContent = '🌤';
-                    document.getElementById('weatherTemp').textContent = '--°C';
-                    document.getElementById('weatherDesc').textContent = 'Weather unavailable';
-                });
-        }
-        
-        async function loadRecentSightingsCount() {
-            try {
-                const now = new Date();
-                const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-                
-                const reportsSnapshot = await database.ref('reports/sightings').once('value');
-                const reports = reportsSnapshot.val();
-                
-                let count = 0;
-                
-                if (reports) {
-                    for (const key in reports) {
-                        const report = reports[key].data;
-                        if (report && report.timestamp) {
-                            const reportDate = new Date(report.timestamp);
-                            if (reportDate >= yesterday) {
-                                count++;
-                            // Only count the latest report per user
-                            break;
-                            // This is a simplification - in a real app, you might want to count all reports
-                            // or implement a more sophisticated filtering logic
-                        }
-                    }
-                }
-                }
-                
-                document.getElementById('sightingsCount').textContent = count;
-            } catch (error) {
-                console.error('Error loading sightings count:', error);
-                document.getElementById('sightingsCount').textContent = '0';
-            }
         }
         
         function setMapType(type) {
@@ -1477,6 +1440,81 @@
             }, 3000);
         }
         
+        function validateSightingForm() {
+            let isValid = true;
+            
+            const elephantCount = document.getElementById('elephantCount').value;
+            const description = document.getElementById('description').value;
+            
+            if (!elephantCount) {
+                document.getElementById('elephantCountError').classList.add('show');
+                isValid = false;
+            } else {
+                document.getElementById('elephantCountError').classList.remove('show');
+            }
+            
+            if (!description) {
+                document.getElementById('descriptionError').classList.add('show');
+                isValid = false;
+            } else {
+                document.getElementById('descriptionError').classList.remove('show');
+            }
+            
+            if (reportImages.length === 0) {
+                document.getElementById('imagesError').classList.add('show');
+                isValid = false;
+            } else {
+                document.getElementById('imagesError').classList.remove('show');
+            }
+            
+            return isValid;
+        }
+        
+        function validateAccidentForm() {
+            let isValid = true;
+            
+            const description = document.getElementById('descriptionAccident').value;
+            
+            if (!description) {
+                document.getElementById('accidentDescriptionError').classList.add('show');
+                isValid = false;
+            } else {
+                document.getElementById('accidentDescriptionError').classList.remove('show');
+            }
+            
+            if (accidentImages.length === 0) {
+                document.getElementById('accidentImagesError').classList.add('show');
+                isValid = false;
+            } else {
+                document.getElementById('accidentImagesError').classList.remove('show');
+            }
+            
+            return isValid;
+        }
+        
+        function validateAgentForm() {
+            let isValid = true;
+            
+            const agentName = document.getElementById('agentName').value.trim();
+            const nicImageFile = document.getElementById('nicImage').files[0];
+            
+            if (!agentName) {
+                document.getElementById('agentNameError').classList.add('show');
+                isValid = false;
+            } else {
+                document.getElementById('agentNameError').classList.remove('show');
+            }
+            
+            if (!nicImageFile) {
+                document.getElementById('nicImageError').classList.add('show');
+                isValid = false;
+            } else {
+                document.getElementById('nicImageError').classList.remove('show');
+            }
+            
+            return isValid;
+        }
+        
         document.getElementById('menuToggle').addEventListener('click', () => {
             document.getElementById('sideMenu').classList.add('open');
             document.getElementById('overlay').classList.add('show');
@@ -1485,7 +1523,6 @@
         document.getElementById('overlay').addEventListener('click', () => {
             document.getElementById('sideMenu').classList.remove('open');
             document.getElementById('overlay').classList.remove('show');
-            document.getElementById('mapTypeSelector').classList.add('hidden');
         });
         
         document.getElementById('profileMenu').addEventListener('click', () => {
@@ -1501,15 +1538,21 @@
         });
         
         document.getElementById('mapTypeMenu').addEventListener('click', () => {
-            document.getElementById('mapTypeSelector').classList.toggle('hidden');
+            document.getElementById('mapTypeModal').style.display = 'flex';
+        });
+        
+        document.getElementById('closeMapTypeModal').addEventListener('click', () => {
+            document.getElementById('mapTypeModal').style.display = 'none';
         });
         
         document.getElementById('streetMapOption').addEventListener('click', () => {
             setMapType('street');
+            document.getElementById('mapTypeModal').style.display = 'none';
         });
         
         document.getElementById('satelliteMapOption').addEventListener('click', () => {
             setMapType('satellite');
+            document.getElementById('mapTypeModal').style.display = 'none';
         });
         
         document.getElementById('logoutMenu').addEventListener('click', () => {
@@ -1589,18 +1632,12 @@
         document.getElementById('agentForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
+            if (!validateAgentForm()) {
+                return;
+            }
+            
             const agentName = document.getElementById('agentName').value.trim();
             const nicImageFile = document.getElementById('nicImage').files[0];
-            
-            if (!agentName) {
-                showSnackbar('Please enter your full name', 'error');
-                return;
-            }
-            
-            if (!nicImageFile) {
-                showSnackbar('Please upload your NIC image', 'error');
-                return;
-            }
             
             document.getElementById('loaderModal').style.display = 'flex';
             
@@ -1676,6 +1713,9 @@
             document.getElementById('currentLocation').classList.remove('selected');
             document.getElementById('selectOnMapAccident').classList.remove('selected');
             document.getElementById('currentLocationAccident').classList.remove('selected');
+            
+            // Hide all error messages
+            document.querySelectorAll('.error-message').forEach(el => el.classList.remove('show'));
         });
         
         document.getElementById('sightingType').addEventListener('click', () => {
@@ -1853,6 +1893,12 @@
         });
         
         document.getElementById('submitReport').addEventListener('click', () => {
+            let isValid = reportType === 'sighting' ? validateSightingForm() : validateAccidentForm();
+            
+            if (!isValid) {
+                return;
+            }
+            
             document.getElementById('confirmationModal').style.display = 'flex';
         });
         
@@ -1874,12 +1920,6 @@
                     const elephantType = document.querySelector('input[name="elephantType"]:checked').value;
                     const elephantCount = document.getElementById('elephantCount').value;
                     const description = document.getElementById('description').value;
-                    
-                    if (!elephantCount || !description) {
-                        showSnackbar('Please fill in all required fields', 'error');
-                        document.getElementById('loaderModal').style.display = 'none';
-                        return;
-                    }
                     
                     reportKey = generateReportKey('S');
                     
@@ -1912,12 +1952,6 @@
                     const injuredTo = document.querySelector('input[name="injuredTo"]:checked').value;
                     const medicalHelp = document.getElementById('medicalHelp').checked;
                     const description = document.getElementById('descriptionAccident').value;
-                    
-                    if (!description) {
-                        showSnackbar('Please fill in all required fields', 'error');
-                        document.getElementById('loaderModal').style.display = 'none';
-                        return;
-                    }
                     
                     reportKey = generateReportKey('A');
                     
@@ -1962,6 +1996,56 @@
         document.getElementById('closeThankYou').addEventListener('click', () => {
             document.getElementById('thankYouModal').style.display = 'none';
         });
+        
+        // Add double tap detection for map
+        map.on('click', function(e) {
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTapTime;
+            
+            if (tapLength < 300 && tapLength > 0) {
+                clearTimeout(tapTimeout);
+                // Double tap detected
+                doubleTappedLocation = e.latlng;
+                onMapDoubleTap();
+            } else {
+                tapTimeout = setTimeout(function() {
+                    // Single tap - do nothing
+                }, 300);
+            }
+            
+            lastTapTime = currentTime;
+        });
+        
+        function onMapDoubleTap() {
+            if (!doubleTappedLocation) return;
+            
+            // Open report form with double tapped location
+            document.getElementById('bottomSheet').classList.add('hidden');
+            document.getElementById('reportForm').classList.add('show');
+            document.getElementById('reportForm').classList.add('expanded');
+            
+            // Set the location
+            if (locationMarker) {
+                map.removeLayer(locationMarker);
+            }
+            
+            locationMarker = L.marker(doubleTappedLocation).addTo(map);
+            selectedLocation = {
+                latitude: doubleTappedLocation.lat,
+                longitude: doubleTappedLocation.lng
+            };
+            
+            // Update UI to show location is selected
+            if (reportType === 'sighting') {
+                document.getElementById('selectOnMap').classList.add('selected');
+                document.getElementById('currentLocation').classList.remove('selected');
+            } else if (reportType === 'accident') {
+                document.getElementById('selectOnMapAccident').classList.add('selected');
+                document.getElementById('currentLocationAccident').classList.remove('selected');
+            }
+            
+            doubleTappedLocation = null;
+        }
     </script>
 </body>
 </html>
