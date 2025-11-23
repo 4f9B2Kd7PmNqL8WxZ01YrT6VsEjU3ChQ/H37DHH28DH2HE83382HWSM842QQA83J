@@ -1,0 +1,1025 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMA - Home</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Mona+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <style>
+        :root {
+            --parakeet: #2ECC71;
+            --pistachio: #A9DFBF;
+            --mint: #D5F4E6;
+            --brown: #5D4037;
+            --light-brown: #8D6E63;
+            --white: #FFFFFF;
+            --black: #000000;
+            --error: #E53935;
+            --success: #43A047;
+            --warning: #FF9800;
+            --info: #2196F3;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Mona Sans', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--black);
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        
+        #map {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .user-location {
+            width: 20px;
+            height: 20px;
+            background-color: var(--info);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(33, 150, 243, 0.7);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(33, 150, 243, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(33, 150, 243, 0);
+            }
+        }
+        
+        .top-pill {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: var(--white);
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+            height: 50px;
+        }
+        
+        .menu-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .menu-icon:hover {
+            background-color: var(--mint);
+        }
+        
+        .profile-image {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 8px;
+        }
+        
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100%;
+            background-color: var(--white);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 2000;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+        }
+        
+        .side-menu.open {
+            left: 0;
+        }
+        
+        .side-menu-header {
+            padding: 20px;
+            background-color: var(--parakeet);
+            color: var(--white);
+        }
+        
+        .side-menu-header h2 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .menu-items {
+            padding: 20px 0;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .menu-item:hover {
+            background-color: var(--mint);
+        }
+        
+        .menu-item .material-icons {
+            margin-right: 15px;
+            color: var(--parakeet);
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1500;
+            display: none;
+        }
+        
+        .overlay.show {
+            display: block;
+        }
+        
+        .bottom-sheet {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--white);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+        
+        .nav-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--mint);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-button .material-icons {
+            font-size: 28px;
+            color: var(--parakeet);
+        }
+        
+        .agent-status-button {
+            background-color: var(--warning);
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            padding: 10px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .agent-status-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .agent-status-button.approved {
+            background-color: var(--success);
+        }
+        
+        .agent-status-button.pending {
+            background-color: var(--warning);
+        }
+        
+        .agent-status-button.rejected {
+            background-color: var(--error);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: var(--white);
+            border-radius: 16px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--light-brown);
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: var(--brown);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--black);
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--pistachio);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--parakeet);
+            box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.2);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--parakeet);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 8px;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            background-color: #27AE60;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: var(--light-brown);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--brown);
+        }
+        
+        .btn-danger {
+            background-color: var(--error);
+        }
+        
+        .btn-danger:hover {
+            background-color: #D32F2F;
+        }
+        
+        .loader-modal {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            z-index: 4000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        
+        .loader-content {
+            text-align: center;
+        }
+        
+        .loader {
+            border: 4px solid var(--pistachio);
+            border-top: 4px solid var(--parakeet);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .nic-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed var(--pistachio);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nic-upload:hover {
+            background-color: var(--mint);
+        }
+        
+        .nic-upload .material-icons {
+            font-size: 40px;
+            color: var(--parakeet);
+            margin-bottom: 10px;
+        }
+        
+        .nic-preview {
+            max-width: 100%;
+            max-height: 200px;
+            margin-top: 10px;
+            border-radius: 8px;
+        }
+        
+        .message {
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: var(--mint);
+            color: var(--black);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .status-message {
+            text-align: center;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .status-message.pending {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--warning);
+        }
+        
+        .status-message.rejected {
+            background-color: rgba(229, 57, 53, 0.1);
+            color: var(--error);
+        }
+        
+        .status-message.approved {
+            background-color: rgba(67, 160, 71, 0.1);
+            color: var(--success);
+        }
+        
+        .confirmation-dialog {
+            background-color: var(--white);
+            border-radius: 16px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .confirmation-dialog h3 {
+            margin-bottom: 20px;
+            color: var(--black);
+        }
+        
+        .confirmation-dialog p {
+            margin-bottom: 20px;
+            color: var(--black);
+        }
+        
+        .confirmation-buttons {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    
+    <div class="top-pill">
+        <div class="menu-icon" id="menuToggle">
+            <span class="material-icons">menu</span>
+        </div>
+        <img id="userProfileImage" class="profile-image" src="https://picsum.photos/seed/defaultprofile/100/100.jpg" alt="Profile">
+    </div>
+    
+    <div class="side-menu" id="sideMenu">
+        <div class="side-menu-header">
+            <h2>EMA Menu</h2>
+            <p>Elephant Monitoring App</p>
+        </div>
+        <div class="menu-items">
+            <div class="menu-item" id="profileMenu">
+                <span class="material-icons">person</span>
+                <span>Profile</span>
+            </div>
+            <div class="menu-item" id="statisticsMenu">
+                <span class="material-icons">bar_chart</span>
+                <span>Statistics</span>
+            </div>
+            <div class="menu-item" id="cropsMenu">
+                <span class="material-icons">grass</span>
+                <span>Crops</span>
+            </div>
+            <div class="menu-item" id="logoutMenu">
+                <span class="material-icons">logout</span>
+                <span>Log Out</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="overlay" id="overlay"></div>
+    
+    <div class="bottom-sheet">
+        <div class="nav-button" id="alertsButton">
+            <span class="material-icons">notifications</span>
+        </div>
+        <div class="nav-button" id="mapButton">
+            <span class="material-icons">map</span>
+        </div>
+        <div class="nav-button" id="analyticsButton">
+            <span class="material-icons">analytics</span>
+        </div>
+        <div class="nav-button" id="aiButton">
+            <span class="material-icons">smart_toy</span>
+        </div>
+        <button class="agent-status-button" id="agentStatusButton">Agent Status</button>
+    </div>
+    
+    <div class="modal" id="agentModal">
+        <div class="modal-content">
+            <span class="close" id="closeAgentModal">&times;</span>
+            <h2 style="color: var(--parakeet); margin-bottom: 20px; text-align: center;">Register as Agent</h2>
+            
+            <form id="agentForm">
+                <div class="form-group">
+                    <label for="agentName">Full Name</label>
+                    <input type="text" id="agentName" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Front View of NIC</label>
+                    <div class="nic-upload" id="nicUpload">
+                        <span class="material-icons">add_a_photo</span>
+                        <p>Upload NIC Image</p>
+                        <input type="file" id="nicImage" accept="image/*" style="display: none;">
+                    </div>
+                    <img id="nicPreview" class="nic-preview" style="display: none;">
+                </div>
+                
+                <div class="message">
+                    ලියාපදිංචි වීමෙන් පසු, අපගේ කණ්ඩායම ඔබගේ ජාතික හැඳුනුම්පත පරීක්ෂා කර ඉක්මනින් ඔබට දැනුම් දෙනු ඇත. | After registration, our team will check your National ID and notify you soon.
+                </div>
+                
+                <button type="submit" class="btn">Register</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="modal" id="agentStatusModal">
+        <div class="modal-content">
+            <span class="close" id="closeStatusModal">&times;</span>
+            <h2 style="color: var(--parakeet); margin-bottom: 20px; text-align: center;">Agent Status</h2>
+            
+            <div id="statusMessage" class="status-message">
+                <!-- Status message will be inserted here -->
+            </div>
+            
+            <div id="agentActions" style="text-align: center;">
+                <!-- Agent actions will be inserted here -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="logoutModal">
+        <div class="confirmation-dialog">
+            <h3>Log Out Options</h3>
+            <p>Choose how you want to log out:</p>
+            <div class="confirmation-buttons">
+                <button class="btn" id="logoutOnly">Log Out</button>
+                <button class="btn btn-danger" id="deleteAccount">Delete Account and Log Out</button>
+            </div>
+            <button class="btn btn-secondary" id="cancelLogout" style="margin-top: 10px;">Cancel</button>
+        </div>
+    </div>
+    
+    <div class="modal" id="deleteConfirmationModal">
+        <div class="confirmation-dialog">
+            <h3>Delete Account</h3>
+            <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+            <div class="confirmation-buttons">
+                <button class="btn btn-danger" id="confirmDelete">Yes, Delete</button>
+                <button class="btn btn-secondary" id="cancelDelete">No, Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="loader-modal" id="loaderModal">
+        <div class="loader-content">
+            <div class="loader"></div>
+            <p>Loading your data...</p>
+        </div>
+    </div>
+    
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCtIvVHA0Q_iuTIFNanoU8RhV4oC60L_YM",
+            authDomain: "emausers-9837a.firebaseapp.com",
+            projectId: "emausers-9837a",
+            storageBucket: "emausers-9837a.firebasestorage.app",
+            messagingSenderId: "418180372006",
+            appId: "1:418180372006:web:5534a07888222cdb0a78e7",
+            measurementId: "G-TRDREJFMQ9",
+            databaseURL: "https://emausers-9837a-default-rtdb.asia-southeast1.firebasedatabase.app/"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const storage = firebase.storage();
+        
+        let map;
+        let userMarker;
+        let userData = {};
+        let emaId;
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Show loader
+            document.getElementById('loaderModal').style.display = 'flex';
+            
+            // Check if EMA ID exists in localStorage
+            emaId = localStorage.getItem('emaid');
+            if (!emaId) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            try {
+                // Fetch user data from Firebase
+                const snapshot = await database.ref(`users/${emaId}/data`).once('value');
+                if (snapshot.exists()) {
+                    userData = snapshot.val();
+                    
+                    // Update UI with user data
+                    if (userData.profileImageUrl) {
+                        document.getElementById('userProfileImage').src = userData.profileImageUrl;
+                    }
+                    
+                    // Check agent status
+                    if (userData.agentData && userData.agentData.status) {
+                        updateAgentStatusButton(userData.agentData.status);
+                    }
+                } else {
+                    // User not found, redirect to login
+                    localStorage.removeItem('emaid');
+                    window.location.href = 'index.html';
+                    return;
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+                showSnackbar('Error loading user data', 'error');
+            }
+            
+            // Initialize map
+            initializeMap();
+            
+            // Hide loader
+            document.getElementById('loaderModal').style.display = 'none';
+        });
+        
+        function initializeMap() {
+            // Create map
+            map = L.map('map').setView([7.8731, 80.7718], 10); // Default to Sri Lanka center
+            
+            // Add tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            
+            // Get user location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        const { latitude, longitude } = position.coords;
+                        
+                        // Set map view to user location
+                        map.setView([latitude, longitude], 13);
+                        
+                        // Add user location marker
+                        const userIcon = L.divIcon({
+                            className: 'user-location',
+                            iconSize: [20, 20]
+                        });
+                        
+                        userMarker = L.marker([latitude, longitude], { icon: userIcon }).addTo(map);
+                    },
+                    error => {
+                        console.error('Error getting location:', error);
+                        showSnackbar('Could not get your location', 'error');
+                    }
+                );
+            }
+        }
+        
+        function updateAgentStatusButton(status) {
+            const button = document.getElementById('agentStatusButton');
+            
+            // Remove all status classes
+            button.classList.remove('approved', 'pending', 'rejected');
+            
+            // Add appropriate class based on status
+            switch (status) {
+                case 'A': // Approved
+                    button.classList.add('approved');
+                    break;
+                case 'X': // Pending
+                    button.classList.add('pending');
+                    break;
+                case 'C': // Rejected
+                    button.classList.add('rejected');
+                    break;
+            }
+        }
+        
+        function showAgentStatusModal(status) {
+            const modal = document.getElementById('agentStatusModal');
+            const statusMessage = document.getElementById('statusMessage');
+            const agentActions = document.getElementById('agentActions');
+            
+            // Remove all status classes
+            statusMessage.classList.remove('pending', 'rejected', 'approved');
+            
+            // Set content based on status
+            switch (status) {
+                case 'A': // Approved
+                    statusMessage.classList.add('approved');
+                    statusMessage.innerHTML = `
+                        <h3>Registered as an Agent!</h3>
+                        <p>You are now an official EMA Agent.</p>
+                    `;
+                    agentActions.innerHTML = `
+                        <button class="btn" id="goToAgentPage">Agent Dashboard</button>
+                    `;
+                    break;
+                case 'X': // Pending
+                    statusMessage.classList.add('pending');
+                    statusMessage.innerHTML = `
+                        <h3>Application Under Review</h3>
+                        <p>Your data is being reviewed, we'll notify you soon.</p>
+                    `;
+                    agentActions.innerHTML = '';
+                    break;
+                case 'C': // Rejected
+                    statusMessage.classList.add('rejected');
+                    statusMessage.innerHTML = `
+                        <h3>Application Rejected</h3>
+                        <p>There is a problem with your details. Try again later with a proper image of your NIC.</p>
+                    `;
+                    agentActions.innerHTML = `
+                        <button class="btn" id="retryRegistration">Try Again</button>
+                    `;
+                    break;
+            }
+            
+            // Show modal
+            modal.style.display = 'flex';
+            
+            // Add event listeners
+            if (status === 'A') {
+                document.getElementById('goToAgentPage').addEventListener('click', () => {
+                    window.location.href = 'agent.html';
+                });
+            } else if (status === 'C') {
+                document.getElementById('retryRegistration').addEventListener('click', () => {
+                    modal.style.display = 'none';
+                    document.getElementById('agentModal').style.display = 'flex';
+                });
+            }
+        }
+        
+        function compressImage(file, maxSizeKB = 30) {
+            return new Promise((resolve) => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                
+                img.onload = function() {
+                    // Calculate new dimensions
+                    let width = img.width;
+                    let height = img.height;
+                    const maxSize = 800; // Max dimension
+                    
+                    if (width > height) {
+                        if (width > maxSize) {
+                            height *= maxSize / width;
+                            width = maxSize;
+                        }
+                    } else {
+                        if (height > maxSize) {
+                            width *= maxSize / height;
+                            height = maxSize;
+                        }
+                    }
+                    
+                    canvas.width = width;
+                    canvas.height = height;
+                    
+                    // Draw and compress
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    // Try different quality levels to get under the size limit
+                    let quality = 0.8;
+                    const checkSize = () => {
+                        canvas.toBlob((blob) => {
+                            if (blob.size / 1024 > maxSizeKB && quality > 0.1) {
+                                quality -= 0.1;
+                                checkSize();
+                            } else {
+                                // Convert to base64
+                                const reader = new FileReader();
+                                reader.onload = function() {
+                                    resolve(reader.result);
+                                };
+                                reader.readAsDataURL(blob);
+                            }
+                        }, 'image/jpeg', quality);
+                    };
+                    
+                    checkSize();
+                };
+                
+                img.src = URL.createObjectURL(file);
+            });
+        }
+        
+        function showSnackbar(message, type = '') {
+            // Create snackbar element if it doesn't exist
+            let snackbar = document.getElementById('snackbar');
+            if (!snackbar) {
+                snackbar = document.createElement('div');
+                snackbar.id = 'snackbar';
+                snackbar.className = 'snackbar';
+                document.body.appendChild(snackbar);
+            }
+            
+            snackbar.textContent = message;
+            snackbar.className = 'snackbar show';
+            if (type) snackbar.classList.add(type);
+            
+            setTimeout(() => {
+                snackbar.className = 'snackbar';
+            }, 3000);
+        }
+        
+        // Event Listeners
+        document.getElementById('menuToggle').addEventListener('click', () => {
+            document.getElementById('sideMenu').classList.add('open');
+            document.getElementById('overlay').classList.add('show');
+        });
+        
+        document.getElementById('overlay').addEventListener('click', () => {
+            document.getElementById('sideMenu').classList.remove('open');
+            document.getElementById('overlay').classList.remove('show');
+        });
+        
+        document.getElementById('profileMenu').addEventListener('click', () => {
+            window.location.href = 'profile.html';
+        });
+        
+        document.getElementById('statisticsMenu').addEventListener('click', () => {
+            window.location.href = 'statics.html';
+        });
+        
+        document.getElementById('cropsMenu').addEventListener('click', () => {
+            window.location.href = 'crops.html';
+        });
+        
+        document.getElementById('logoutMenu').addEventListener('click', () => {
+            document.getElementById('logoutModal').style.display = 'flex';
+        });
+        
+        document.getElementById('logoutOnly').addEventListener('click', () => {
+            localStorage.removeItem('emaid');
+            window.location.href = 'index.html';
+        });
+        
+        document.getElementById('deleteAccount').addEventListener('click', () => {
+            document.getElementById('logoutModal').style.display = 'none';
+            document.getElementById('deleteConfirmationModal').style.display = 'flex';
+        });
+        
+        document.getElementById('cancelLogout').addEventListener('click', () => {
+            document.getElementById('logoutModal').style.display = 'none';
+        });
+        
+        document.getElementById('confirmDelete').addEventListener('click', async () => {
+            try {
+                // Delete user account from Firebase
+                await database.ref(`users/${emaId}`).remove();
+                
+                // Remove from localStorage
+                localStorage.removeItem('emaid');
+                
+                // Redirect to login
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Error deleting account:', error);
+                showSnackbar('Error deleting account', 'error');
+            }
+        });
+        
+        document.getElementById('cancelDelete').addEventListener('click', () => {
+            document.getElementById('deleteConfirmationModal').style.display = 'none';
+        });
+        
+        document.getElementById('alertsButton').addEventListener('click', () => {
+            window.location.href = 'alert.html';
+        });
+        
+        document.getElementById('mapButton').addEventListener('click', () => {
+            window.location.href = 'map.html';
+        });
+        
+        document.getElementById('analyticsButton').addEventListener('click', () => {
+            window.location.href = 'ana.html';
+        });
+        
+        document.getElementById('aiButton').addEventListener('click', () => {
+            window.location.href = 'ai.html';
+        });
+        
+        document.getElementById('agentStatusButton').addEventListener('click', () => {
+            // Check if user is already registered as agent
+            if (userData.agentData && userData.agentData.status) {
+                showAgentStatusModal(userData.agentData.status);
+            } else {
+                // Show registration modal
+                document.getElementById('agentModal').style.display = 'flex';
+            }
+        });
+        
+        document.getElementById('closeAgentModal').addEventListener('click', () => {
+            document.getElementById('agentModal').style.display = 'none';
+        });
+        
+        document.getElementById('closeStatusModal').addEventListener('click', () => {
+            document.getElementById('agentStatusModal').style.display = 'none';
+        });
+        
+        document.getElementById('nicUpload').addEventListener('click', () => {
+            document.getElementById('nicImage').click();
+        });
+        
+        document.getElementById('nicImage').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('nicPreview').src = event.target.result;
+                    document.getElementById('nicPreview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        document.getElementById('agentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const agentName = document.getElementById('agentName').value.trim();
+            const nicImageFile = document.getElementById('nicImage').files[0];
+            
+            if (!agentName) {
+                showSnackbar('Please enter your full name', 'error');
+                return;
+            }
+            
+            if (!nicImageFile) {
+                showSnackbar('Please upload your NIC image', 'error');
+                return;
+            }
+            
+            // Show loader
+            document.getElementById('loaderModal').style.display = 'flex';
+            
+            try {
+                // Compress NIC image and convert to base64
+                const nicImageBase64 = await compressImage(nicImageFile);
+                
+                // Save agent data to Firebase
+                await database.ref(`users/${emaId}/data/agentData`).set({
+                    name: agentName,
+                    nicImage: nicImageBase64,
+                    status: 'X', // Default status: pending
+                    registrationDate: new Date().toISOString()
+                });
+                
+                // Update local data
+                userData.agentData = {
+                    name: agentName,
+                    status: 'X'
+                };
+                
+                // Update button status
+                updateAgentStatusButton('X');
+                
+                // Hide loader
+                document.getElementById('loaderModal').style.display = 'none';
+                
+                // Close registration modal
+                document.getElementById('agentModal').style.display = 'none';
+                
+                // Show status modal
+                showAgentStatusModal('X');
+                
+                // Show success message
+                showSnackbar('Registration submitted successfully', 'success');
+                
+                // Refresh page after a short delay
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+                
+            } catch (error) {
+                // Hide loader
+                document.getElementById('loaderModal').style.display = 'none';
+                
+                console.error('Error registering as agent:', error);
+                showSnackbar('Error registering as agent', 'error');
+            }
+        });
+    </script>
+</body>
+</html>
