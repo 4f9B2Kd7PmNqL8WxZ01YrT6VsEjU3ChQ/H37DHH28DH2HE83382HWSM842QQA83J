@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -188,7 +190,7 @@
             padding: 20px;
             z-index: 1000;
             transition: transform 0.3s ease;
-            max-height: 50vh;
+            height: 50vh;
             overflow-y: auto;
         }
         
@@ -227,12 +229,6 @@
             font-size: 28px;
             color: var(--parakeet);
             margin-bottom: 5px;
-        }
-        
-        .nav-button span {
-            font-size: 12px;
-            color: var(--black);
-            text-align: center;
         }
         
         .agent-status-button {
@@ -489,34 +485,6 @@
             gap: 10px;
         }
         
-        .terrain-selector {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background-color: var(--white);
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            padding: 8px;
-            z-index: 1000;
-        }
-        
-        .terrain-option {
-            display: flex;
-            align-items: center;
-            padding: 8px 12px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        
-        .terrain-option:hover {
-            background-color: var(--mint);
-        }
-        
-        .terrain-option .material-icons {
-            margin-right: 8px;
-            color: var(--parakeet);
-        }
-        
         .report-form {
             position: absolute;
             bottom: 0;
@@ -719,6 +687,34 @@
             font-size: 28px;
         }
         
+        .map-type-selector {
+            display: flex;
+            flex-direction: column;
+            padding: 10px 0;
+            border-top: 1px solid var(--pistachio);
+        }
+        
+        .map-type-option {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .map-type-option:hover {
+            background-color: var(--mint);
+        }
+        
+        .map-type-option.selected {
+            background-color: var(--pistachio);
+        }
+        
+        .map-type-option .material-icons {
+            margin-right: 15px;
+            color: var(--parakeet);
+        }
+        
         @media (max-width: 768px) {
             .nav-button {
                 width: 60px;
@@ -728,10 +724,6 @@
             
             .nav-button .material-icons {
                 font-size: 24px;
-            }
-            
-            .nav-button span {
-                font-size: 10px;
             }
             
             .bottom-sheet {
@@ -784,17 +776,6 @@
         <img id="userProfileImage" class="profile-image" src="https://picsum.photos/seed/defaultprofile/100/100.jpg" alt="Profile">
     </div>
     
-    <div class="terrain-selector">
-        <div class="terrain-option" id="terrainStreet">
-            <span class="material-icons">map</span>
-            <span>Street</span>
-        </div>
-        <div class="terrain-option" id="terrainSatellite">
-            <span class="material-icons">satellite</span>
-            <span>Satellite</span>
-        </div>
-    </div>
-    
     <div class="side-menu" id="sideMenu">
         <div class="side-menu-header">
             <h2>EMA Menu</h2>
@@ -813,6 +794,10 @@
                 <span class="material-icons">grass</span>
                 <span>Crops</span>
             </div>
+            <div class="menu-item" id="mapTypeMenu">
+                <span class="material-icons">map</span>
+                <span>Map Type</span>
+            </div>
             <div class="menu-item" id="logoutMenu">
                 <span class="material-icons">logout</span>
                 <span>Log Out</span>
@@ -820,6 +805,16 @@
             <div class="menu-item" id="deleteAccountMenu">
                 <span class="material-icons">delete</span>
                 <span>Delete Account</span>
+            </div>
+        </div>
+        <div class="map-type-selector hidden" id="mapTypeSelector">
+            <div class="map-type-option" id="streetMapOption">
+                <span class="material-icons">map</span>
+                <span>Street Map</span>
+            </div>
+            <div class="map-type-option" id="satelliteMapOption">
+                <span class="material-icons">satellite</span>
+                <span>Satellite Map</span>
             </div>
         </div>
     </div>
@@ -830,19 +825,15 @@
         <div class="nav-buttons">
             <div class="nav-button" id="alertsButton">
                 <span class="material-icons">notifications</span>
-                <span>Alerts</span>
             </div>
             <div class="nav-button" id="mapButton">
                 <span class="material-icons">map</span>
-                <span>Map</span>
             </div>
             <div class="nav-button" id="analyticsButton">
                 <span class="material-icons">analytics</span>
-                <span>Analytics</span>
             </div>
             <div class="nav-button" id="aiButton">
                 <span class="material-icons">smart_toy</span>
-                <span>AI Chat</span>
             </div>
         </div>
         <button class="agent-status-button" id="agentStatusButton">
@@ -1038,6 +1029,7 @@
         <div class="modal-content">
             <img src="https://i.pinimg.com/originals/06/ae/07/06ae072fb343a704ee80c2c55d2da80a.gif" alt="Thank you">
             <h3>Thank you for contributing to save both humans and elephants</h3>
+            <p>ඔබ දෙන දායකරණයට ස්තුතියි. මිනිස්සුන් සහ අලිඇතියන්න් බේරාගැනීමට ඔබගේ දායකරණයට ස්තුතියි.</p>
             <button class="btn" id="closeThankYou">Close</button>
         </div>
     </div>
@@ -1076,6 +1068,7 @@
         let isSelectingLocation = false;
         let locationMarker = null;
         let currentTileLayer;
+        let mapType = localStorage.getItem('mapType') || 'street';
         
         document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('loaderModal').style.display = 'flex';
@@ -1120,9 +1113,7 @@
                 zoomControl: false
             }).setView([7.8731, 80.7718], 10);
             
-            currentTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
+            setMapType(mapType);
             
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
@@ -1166,6 +1157,28 @@
             });
         }
         
+        function setMapType(type) {
+            if (currentTileLayer) {
+                map.removeLayer(currentTileLayer);
+            }
+            
+            if (type === 'street') {
+                currentTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+            } else if (type === 'satellite') {
+                currentTileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: 'Tiles &copy; Esri'
+                }).addTo(map);
+            }
+            
+            localStorage.setItem('mapType', type);
+            mapType = type;
+            
+            document.getElementById('streetMapOption').classList.toggle('selected', type === 'street');
+            document.getElementById('satelliteMapOption').classList.toggle('selected', type === 'satellite');
+        }
+        
         function updateAgentStatusButton(status) {
             const button = document.getElementById('agentStatusButton');
             
@@ -1196,6 +1209,7 @@
                     statusMessage.classList.add('approved');
                     statusMessage.innerHTML = `
                         <h3>Registered as an Agent!</h3>
+                        <p>දැන් සිට ඔබ EMA නියෝජිතයෙක්.</p>
                         <p>You are now an official EMA Agent.</p>
                     `;
                     agentActions.innerHTML = `
@@ -1206,6 +1220,7 @@
                     statusMessage.classList.add('pending');
                     statusMessage.innerHTML = `
                         <h3>Application Under Review</h3>
+                        <p>ඔබගේ අයදුම්පත සමාලෝචනය වෙමින් පවතී.</p>
                         <p>Your data is being reviewed, we'll notify you soon.</p>
                     `;
                     agentActions.innerHTML = '';
@@ -1214,6 +1229,7 @@
                     statusMessage.classList.add('rejected');
                     statusMessage.innerHTML = `
                         <h3>Application Rejected</h3>
+                        <p>අයදුම්පත ප්‍රතික්ෂේප කරන ලදී, ඔබගේ විස්තර සමඟ ගැටළුවක් ඇත, කරුණාකර නැවත උත්සාහ කරන්න.</p>
                         <p>There is a problem with your details. Try again later with a proper image of your NIC.</p>
                     `;
                     agentActions.innerHTML = `
@@ -1318,6 +1334,7 @@
         document.getElementById('overlay').addEventListener('click', () => {
             document.getElementById('sideMenu').classList.remove('open');
             document.getElementById('overlay').classList.remove('show');
+            document.getElementById('mapTypeSelector').classList.add('hidden');
         });
         
         document.getElementById('profileMenu').addEventListener('click', () => {
@@ -1330,6 +1347,18 @@
         
         document.getElementById('cropsMenu').addEventListener('click', () => {
             window.location.href = 'crops.html';
+        });
+        
+        document.getElementById('mapTypeMenu').addEventListener('click', () => {
+            document.getElementById('mapTypeSelector').classList.toggle('hidden');
+        });
+        
+        document.getElementById('streetMapOption').addEventListener('click', () => {
+            setMapType('street');
+        });
+        
+        document.getElementById('satelliteMapOption').addEventListener('click', () => {
+            setMapType('satellite');
         });
         
         document.getElementById('logoutMenu').addEventListener('click', () => {
@@ -1459,26 +1488,6 @@
                 console.error('Error registering as agent:', error);
                 showSnackbar('Error registering as agent', 'error');
             }
-        });
-        
-        document.getElementById('terrainStreet').addEventListener('click', () => {
-            if (currentTileLayer) {
-                map.removeLayer(currentTileLayer);
-            }
-            
-            currentTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
-        });
-        
-        document.getElementById('terrainSatellite').addEventListener('click', () => {
-            if (currentTileLayer) {
-                map.removeLayer(currentTileLayer);
-            }
-            
-            currentTileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                attribution: 'Tiles &copy; Esri'
-            }).addTo(map);
         });
         
         document.getElementById('addReportButton').addEventListener('click', () => {
