@@ -732,6 +732,28 @@
             });
         }
         
+        // Alternative image upload method using Base64 encoding
+        function uploadImageAsBase64(file, emaId) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                
+                reader.onload = function(event) {
+                    // Store the base64 string in the database instead of Firebase Storage
+                    // This bypasses the CORS issue with Firebase Storage
+                    resolve({
+                        base64: event.target.result,
+                        fileName: file.name
+                    });
+                };
+                
+                reader.onerror = function(error) {
+                    reject(error);
+                };
+                
+                reader.readAsDataURL(file);
+            });
+        }
+        
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const emaId = emaIdInput.value.trim();
@@ -821,32 +843,71 @@
                     }
                 }
                 
-                let profileImageUrl = '';
+                let profileData = null;
                 
-                // Handle image upload with error handling for CORS issues
+                // Handle image upload with Base64 encoding to avoid CORS issues
                 if (profileImage) {
                     try {
+                        // First try the Firebase Storage approach
                         const compressedImage = await compressImage(profileImage);
                         const storageRef = storage.ref(`profiles/${emaId}`);
-                        await storageRef.put(compressedImage);
-                        profileImageUrl = await storageRef.getDownloadURL();
+                        
+                        // Set custom metadata to help with CORS
+                        const metadata = {
+                            contentType: 'image/jpeg',
+                            cacheControl: 'public,max-age=31536000'
+                        };
+                        
+                        // Try to upload with timeout
+                        const uploadPromise = storageRef.put(compressedImage, metadata);
+                        const timeoutPromise = new Promise((_, reject) => 
+                            setTimeout(() => reject(new Error('Upload timeout')), 10000)
+                        );
+                        
+                        await Promise.race([uploadPromise, timeoutPromise]);
+                        profileData = {
+                            type: 'storage',
+                            url: await storageRef.getDownloadURL()
+                        };
                     } catch (uploadError) {
-                        console.error('Image upload failed:', uploadError);
-                        // Continue with registration even if image upload fails
-                        showSnackbar('Registration successful, but profile image could not be uploaded', 'success');
+                        console.error('Image upload to storage failed:', uploadError);
+                        
+                        // Fallback to Base64 encoding
+                        try {
+                            showLoader('Image upload failed, trying alternative method...');
+                            profileData = await uploadImageAsBase64(profileImage, emaId);
+                            profileData.type = 'base64';
+                        } catch (base64Error) {
+                            console.error('Base64 encoding failed:', base64Error);
+                            // Continue with registration even if image upload fails
+                            showSnackbar('Registration successful, but profile image could not be uploaded', 'success');
+                        }
                     }
                 }
                 
-                await database.ref(`users/${emaId}/data`).set({
+                // Prepare user data
+                const userData = {
                     fullName,
                     phoneNumber,
                     nicNumber,
                     email,
                     province,
                     district,
-                    profileImageUrl,
                     registrationDate: new Date().toISOString()
-                });
+                };
+                
+                // Add profile data based on the upload method
+                if (profileData) {
+                    if (profileData.type === 'storage') {
+                        userData.profileImageUrl = profileData.url;
+                    } else if (profileData.type === 'base64') {
+                        userData.profileImageBase64 = profileData.base64;
+                        userData.profileImageName = profileData.fileName;
+                    }
+                }
+                
+                // Save user data to Firebase Database
+                await database.ref(`users/${emaId}/data`).set(userData);
                 
                 hideLoader();
                 document.getElementById('generatedEmaId').textContent = emaId;
@@ -957,8 +1018,15 @@
                         const card = document.createElement('div');
                         card.className = 'result-card';
                         
-                        const profileImg = user.profileImageUrl || 
-                                         'https://picsum.photos/seed/default/60/60.jpg';
+                        // Handle both storage URL and base64 image
+                        let profileImg;
+                        if (user.profileImageUrl) {
+                            profileImg = user.profileImageUrl;
+                        } else if (user.profileImageBase64) {
+                            profileImg = user.profileImageBase64;
+                        } else {
+                            profileImg = 'https://picsum.photos/seed/default/60/60.jpg';
+                        }
                         
                         card.innerHTML = `
                             <img src="${profileImg}" alt="Profile">
