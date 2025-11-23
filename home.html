@@ -17,6 +17,8 @@
             --pending-color: #f39c12;
             --rejected-color: #e74c3c;
             --accepted-color: #2ecc71;
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --border-radius: 16px;
         }
         
         * {
@@ -27,72 +29,103 @@
         }
         
         body {
-            background-color: #f5f5f5;
-            color: #000;
+            background-color: #f8f9fa;
+            color: #333;
             overflow-x: hidden;
-            padding-bottom: 70px;
+            padding-bottom: 80px;
             position: relative;
         }
         
         .app-header {
             background-color: var(--primary-green);
             color: white;
-            padding: 15px 20px;
+            padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             position: sticky;
             top: 0;
             z-index: 100;
         }
         
         .app-title {
-            font-size: 20px;
-            font-weight: 600;
+            font-size: 24px;
+            font-weight: 700;
             display: flex;
             align-items: center;
         }
         
         .app-title .material-icons {
-            margin-right: 8px;
+            margin-right: 10px;
+            font-size: 28px;
         }
         
-        .menu-btn {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            padding: 5px;
-        }
-        
-        .profile-card {
-            background-color: white;
-            margin: 15px;
-            border-radius: 15px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .profile-header {
-            background-color: var(--mint-green);
-            padding: 15px;
+        .header-actions {
             display: flex;
             align-items: center;
         }
         
-        .profile-pic {
-            width: 70px;
-            height: 70px;
+        .header-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 8px;
+            margin-left: 8px;
             border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+        
+        .header-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .welcome-section {
+            background: linear-gradient(135deg, var(--primary-green), var(--mint-green));
+            color: white;
+            padding: 25px 20px;
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 20px;
+        }
+        
+        .welcome-text {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .user-name {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .profile-card {
             background-color: white;
+            margin: 0 20px 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+        }
+        
+        .profile-header {
+            display: flex;
+            padding: 20px;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .profile-pic {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 15px;
             overflow: hidden;
-            border: 3px solid white;
+            border: 3px solid var(--primary-green);
         }
         
         .profile-pic img {
@@ -102,7 +135,7 @@
         }
         
         .profile-pic .material-icons {
-            font-size: 36px;
+            font-size: 40px;
             color: var(--grayish-blue);
         }
         
@@ -111,7 +144,7 @@
         }
         
         .profile-name {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 600;
             margin-bottom: 5px;
         }
@@ -120,33 +153,40 @@
             display: flex;
             align-items: center;
             font-size: 14px;
+            color: #666;
         }
         
         .profile-status .material-icons {
             font-size: 16px;
             margin-right: 5px;
+            color: var(--primary-green);
         }
         
         .profile-details {
-            padding: 15px;
+            padding: 20px;
         }
         
         .detail-row {
             display: flex;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             align-items: center;
+        }
+        
+        .detail-row:last-child {
+            margin-bottom: 0;
         }
         
         .detail-row .material-icons {
             font-size: 20px;
-            margin-right: 10px;
-            color: var(--grayish-blue);
+            margin-right: 15px;
+            color: var(--primary-green);
         }
         
         .detail-label {
             font-weight: 500;
             margin-right: 10px;
-            min-width: 70px;
+            min-width: 60px;
+            color: #666;
         }
         
         .detail-value {
@@ -161,7 +201,11 @@
             font-weight: 500;
             display: flex;
             align-items: center;
-            margin-top: 10px;
+            margin-top: 15px;
+            padding: 10px 0;
+            width: 100%;
+            justify-content: center;
+            border-top: 1px solid #f0f0f0;
         }
         
         .edit-profile-btn .material-icons {
@@ -169,55 +213,62 @@
             margin-right: 5px;
         }
         
-        .action-buttons {
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 20px 20px 15px;
+            color: var(--grayish-blue);
+        }
+        
+        .action-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 15px;
-            padding: 0 15px;
-            margin-top: 20px;
+            padding: 0 20px;
         }
         
-        .action-btn {
+        .action-card {
             background-color: white;
-            border: none;
-            border-radius: 15px;
-            padding: 20px 10px;
+            border-radius: var(--border-radius);
+            padding: 20px 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            box-shadow: var(--card-shadow);
             cursor: pointer;
             transition: all 0.3s ease;
+            height: 120px;
         }
         
-        .action-btn:active {
+        .action-card:active {
             transform: scale(0.95);
         }
         
-        .action-btn .material-icons {
-            font-size: 28px;
-            margin-bottom: 8px;
+        .action-card .material-icons {
+            font-size: 32px;
+            margin-bottom: 10px;
             color: var(--primary-green);
         }
         
-        .action-btn span {
+        .action-card span {
             font-size: 14px;
             font-weight: 500;
             color: var(--grayish-blue);
+            text-align: center;
         }
         
         .fab {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 25px;
+            right: 25px;
             width: 60px;
             height: 60px;
             border-radius: 50%;
             background-color: var(--accent);
             color: white;
             border: none;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -234,249 +285,11 @@
             font-size: 28px;
         }
         
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: white;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
-            z-index: 100;
-        }
-        
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: var(--grayish-blue);
-            text-decoration: none;
-            padding: 5px;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-item.active {
-            color: var(--primary-green);
-        }
-        
-        .nav-item .material-icons {
-            font-size: 24px;
-        }
-        
-        .nav-item span {
-            font-size: 12px;
-            margin-top: 2px;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 200;
-            justify-content: flex-end;
-        }
-        
-        .modal-content {
-            background-color: white;
-            width: 100%;
-            max-height: 80vh;
-            border-radius: 20px 20px 0 0;
-            padding: 20px;
-            overflow-y: auto;
-            position: relative;
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .modal-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--grayish-blue);
-        }
-        
-        .close-modal {
-            background: none;
-            border: none;
-            color: var(--grayish-blue);
-            cursor: pointer;
-            font-size: 24px;
-        }
-        
-        .report-options {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .report-option {
-            background-color: #f9f9f9;
-            border-radius: 15px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .report-option:active {
-            transform: scale(0.98);
-        }
-        
-        .report-option .material-icons {
-            font-size: 30px;
-            margin-right: 15px;
-            color: var(--primary-green);
-        }
-        
-        .report-option-content h3 {
-            font-size: 18px;
-            margin-bottom: 5px;
-        }
-        
-        .report-option-content p {
-            font-size: 14px;
-            color: #666;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--grayish-blue);
-        }
-        
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-        
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            border-color: var(--primary-green);
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(42, 157, 143, 0.2);
-        }
-        
-        .form-group textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-        
-        .image-upload-container {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .image-upload-box {
-            flex: 1;
-            height: 120px;
-            border: 2px dashed #ddd;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .image-upload-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .image-upload-box .material-icons {
-            font-size: 30px;
-            color: #aaa;
-        }
-        
-        .image-upload-box span {
-            font-size: 14px;
-            color: #aaa;
-            margin-top: 5px;
-        }
-        
-        .location-picker {
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .location-options {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .location-option {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .location-option.active {
-            background-color: var(--primary-green);
-            color: white;
-            border-color: var(--primary-green);
-        }
-        
-        .location-option .material-icons {
-            font-size: 20px;
-            margin-bottom: 5px;
-        }
-        
-        .submit-btn {
-            background-color: var(--primary-green);
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.3s ease;
-        }
-        
-        .submit-btn:active {
-            transform: scale(0.98);
-        }
-        
         .agent-card {
             background-color: white;
-            margin: 15px;
-            border-radius: 15px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin: 0 20px 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
             overflow: hidden;
             display: none;
         }
@@ -484,7 +297,7 @@
         .agent-header {
             background-color: var(--grayish-blue);
             color: white;
-            padding: 15px;
+            padding: 15px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -502,7 +315,7 @@
         }
         
         .agent-status {
-            padding: 5px 10px;
+            padding: 5px 12px;
             border-radius: 20px;
             font-size: 14px;
             font-weight: 500;
@@ -521,7 +334,7 @@
         }
         
         .agent-content {
-            padding: 15px;
+            padding: 20px;
         }
         
         .agent-description {
@@ -536,7 +349,7 @@
         
         .agent-btn {
             flex: 1;
-            padding: 10px;
+            padding: 12px;
             border: none;
             border-radius: 8px;
             font-weight: 500;
@@ -567,13 +380,316 @@
             color: white;
         }
         
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            justify-content: flex-end;
+        }
+        
+        .modal-content {
+            background-color: white;
+            width: 100%;
+            max-height: 90vh;
+            border-radius: 30px 30px 0 0;
+            padding: 25px;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--grayish-blue);
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--grayish-blue);
+            cursor: pointer;
+            font-size: 28px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+        
+        .close-modal:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .report-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .report-option {
+            background-color: #f9f9f9;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .report-option:active {
+            transform: scale(0.98);
+        }
+        
+        .report-option.selected {
+            border-color: var(--primary-green);
+            background-color: rgba(42, 157, 143, 0.1);
+        }
+        
+        .report-option .material-icons {
+            font-size: 32px;
+            margin-right: 15px;
+            color: var(--primary-green);
+        }
+        
+        .report-option-content h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .report-option-content p {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .location-picker {
+            background-color: #f9f9f9;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .location-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .location-header .material-icons {
+            font-size: 24px;
+            margin-right: 10px;
+            color: var(--primary-green);
+        }
+        
+        .location-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .location-options {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .location-option {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .location-option.active {
+            background-color: var(--primary-green);
+            color: white;
+            border-color: var(--primary-green);
+        }
+        
+        .location-option .material-icons {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .location-option span {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .map-container {
+            height: 200px;
+            background-color: #f0f0f0;
+            border-radius: var(--border-radius);
+            margin-top: 15px;
+            display: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .map-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+        }
+        
+        .map-placeholder .material-icons {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        
+        .form-section {
+            margin-bottom: 25px;
+        }
+        
+        .form-section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--grayish-blue);
+            display: flex;
+            align-items: center;
+        }
+        
+        .form-section-title .material-icons {
+            font-size: 20px;
+            margin-right: 8px;
+            color: var(--primary-green);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--grayish-blue);
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary-green);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(42, 157, 143, 0.1);
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .image-upload-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .image-upload-box {
+            flex: 1;
+            height: 120px;
+            border: 2px dashed #e0e0e0;
+            border-radius: var(--border-radius);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .image-upload-box:hover {
+            border-color: var(--primary-green);
+        }
+        
+        .image-upload-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .image-upload-box .material-icons {
+            font-size: 30px;
+            color: #aaa;
+        }
+        
+        .image-upload-box span {
+            font-size: 14px;
+            color: #aaa;
+            margin-top: 5px;
+        }
+        
+        .submit-btn {
+            background-color: var(--primary-green);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .submit-btn .material-icons {
+            margin-right: 8px;
+        }
+        
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+        
         .loading-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.9);
             display: none;
             flex-direction: column;
             justify-content: center;
@@ -605,10 +721,10 @@
             top: 20px;
             right: 20px;
             padding: 15px 20px;
-            border-radius: 8px;
+            border-radius: var(--border-radius);
             color: white;
             font-weight: 500;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             transform: translateX(150%);
             transition: transform 0.3s ease;
             z-index: 400;
@@ -648,8 +764,8 @@
             background-color: white;
             width: 90%;
             max-width: 400px;
-            border-radius: 15px;
-            padding: 20px;
+            border-radius: var(--border-radius);
+            padding: 25px;
             max-height: 80vh;
             overflow-y: auto;
         }
@@ -662,7 +778,7 @@
         }
         
         .edit-profile-title {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 600;
             color: var(--grayish-blue);
         }
@@ -673,6 +789,17 @@
             color: var(--grayish-blue);
             cursor: pointer;
             font-size: 24px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+        
+        .close-edit-profile:hover {
+            background-color: #f0f0f0;
         }
         
         .edit-profile-pic-container {
@@ -686,7 +813,7 @@
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            background-color: var(--light-gray);
+            background-color: #f0f0f0;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -737,41 +864,14 @@
             flex: 1;
         }
         
-        .map-container {
-            height: 200px;
-            background-color: #f0f0f0;
-            border-radius: 8px;
-            margin-top: 10px;
-            display: none;
-            position: relative;
-        }
-        
-        .map-placeholder {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #999;
-        }
-        
-        .map-placeholder .material-icons {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
-        
         .nic-upload-container {
             margin-bottom: 20px;
         }
         
         .nic-upload-box {
             height: 150px;
-            border: 2px dashed #ddd;
-            border-radius: 8px;
+            border: 2px dashed #e0e0e0;
+            border-radius: var(--border-radius);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -779,6 +879,11 @@
             cursor: pointer;
             position: relative;
             overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .nic-upload-box:hover {
+            border-color: var(--primary-green);
         }
         
         .nic-upload-box img {
@@ -798,8 +903,38 @@
             margin-top: 5px;
         }
         
+        .date-time-display {
+            background-color: #f9f9f9;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .date-time-display .material-icons {
+            font-size: 24px;
+            margin-right: 15px;
+            color: var(--primary-green);
+        }
+        
+        .date-time-info {
+            flex: 1;
+        }
+        
+        .date-time-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .date-time-value {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
         @media (max-width: 480px) {
-            .action-buttons {
+            .action-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
             
@@ -816,9 +951,19 @@
             <span class="material-icons">pets</span>
             EMA
         </h1>
-        <button class="menu-btn">
-            <span class="material-icons">menu</span>
-        </button>
+        <div class="header-actions">
+            <button class="header-btn">
+                <span class="material-icons">notifications</span>
+            </button>
+            <button class="header-btn">
+                <span class="material-icons">settings</span>
+            </button>
+        </div>
+    </div>
+    
+    <div class="welcome-section">
+        <div class="welcome-text">Welcome back,</div>
+        <div class="user-name" id="userName">Loading...</div>
     </div>
     
     <div class="profile-card">
@@ -827,7 +972,7 @@
                 <span class="material-icons">person</span>
             </div>
             <div class="profile-info">
-                <div class="profile-name" id="userName">Loading...</div>
+                <div class="profile-name" id="userProfileName">Loading...</div>
                 <div class="profile-status">
                     <span class="material-icons">verified_user</span>
                     <span>Registered User</span>
@@ -837,22 +982,14 @@
         <div class="profile-details">
             <div class="detail-row">
                 <span class="material-icons">phone</span>
-                <span class="detail-label">Phone:</span>
                 <span class="detail-value" id="userPhone">Loading...</span>
             </div>
             <div class="detail-row">
                 <span class="material-icons">badge</span>
-                <span class="detail-label">NIC:</span>
                 <span class="detail-value" id="userNIC">Loading...</span>
             </div>
             <div class="detail-row">
-                <span class="material-icons">email</span>
-                <span class="detail-label">Email:</span>
-                <span class="detail-value" id="userEmail">Loading...</span>
-            </div>
-            <div class="detail-row">
                 <span class="material-icons">location_on</span>
-                <span class="detail-label">Location:</span>
                 <span class="detail-value" id="userLocation">Loading...</span>
             </div>
             <button class="edit-profile-btn" id="editProfileBtn">
@@ -891,28 +1028,29 @@
         </div>
     </div>
     
-    <div class="action-buttons">
-        <button class="action-btn" onclick="window.location.href='alerts.html'">
+    <h2 class="section-title">Quick Actions</h2>
+    <div class="action-grid">
+        <button class="action-card" onclick="window.location.href='alerts.html'">
             <span class="material-icons">notifications</span>
             <span>Alerts</span>
         </button>
-        <button class="action-btn" onclick="window.location.href='map.html'">
+        <button class="action-card" onclick="window.location.href='map.html'">
             <span class="material-icons">map</span>
             <span>Map</span>
         </button>
-        <button class="action-btn" onclick="window.location.href='ai.html'">
+        <button class="action-card" onclick="window.location.href='ai.html'">
             <span class="material-icons">psychology</span>
             <span>AI</span>
         </button>
-        <button class="action-btn" onclick="window.location.href='ana.html'">
+        <button class="action-card" onclick="window.location.href='ana.html'">
             <span class="material-icons">analytics</span>
             <span>Analytics</span>
         </button>
-        <button class="action-btn" onclick="window.location.href='status.html'">
+        <button class="action-card" onclick="window.location.href='status.html'">
             <span class="material-icons">info</span>
             <span>Status</span>
         </button>
-        <button class="action-btn" onclick="window.location.href='crops.html'">
+        <button class="action-card" onclick="window.location.href='crops.html'">
             <span class="material-icons">grass</span>
             <span>Crops</span>
         </button>
@@ -922,31 +1060,35 @@
         <span class="material-icons">add</span>
     </button>
     
-    <div class="bottom-nav">
-        <a href="#" class="nav-item active">
-            <span class="material-icons">home</span>
-            <span>Home</span>
-        </a>
-        <a href="#" class="nav-item">
-            <span class="material-icons">search</span>
-            <span>Search</span>
-        </a>
-        <a href="#" class="nav-item">
-            <span class="material-icons">bookmark</span>
-            <span>Saved</span>
-        </a>
-        <a href="#" class="nav-item">
-            <span class="material-icons">person</span>
-            <span>Profile</span>
-        </a>
-    </div>
-    
     <!-- Report Modal -->
     <div class="modal" id="reportModal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title">Report an Incident</h2>
                 <button class="close-modal" id="closeReportModal">&times;</button>
+            </div>
+            
+            <div class="location-picker">
+                <div class="location-header">
+                    <span class="material-icons">location_on</span>
+                    <h3>Location</h3>
+                </div>
+                <div class="location-options">
+                    <div class="location-option active" id="currentLocation">
+                        <span class="material-icons">my_location</span>
+                        <span>Current Location</span>
+                    </div>
+                    <div class="location-option" id="mapLocation">
+                        <span class="material-icons">place</span>
+                        <span>Select on Map</span>
+                    </div>
+                </div>
+                <div class="map-container" id="mapContainer">
+                    <div class="map-placeholder">
+                        <span class="material-icons">map</span>
+                        <span>Map will be displayed here</span>
+                    </div>
+                </div>
             </div>
             
             <div class="report-options">
@@ -966,132 +1108,101 @@
                 </div>
             </div>
             
+            <!-- Date and Time Display -->
+            <div class="date-time-display">
+                <span class="material-icons">schedule</span>
+                <div class="date-time-info">
+                    <div class="date-time-label">Report Date & Time</div>
+                    <div class="date-time-value" id="reportDateTime">Loading...</div>
+                </div>
+            </div>
+            
             <!-- Sighting Form -->
             <div id="sightingForm" style="display: none;">
-                <div class="form-group">
-                    <label for="sightingDate">Date of Sighting</label>
-                    <input type="date" id="sightingDate" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="sightingTime">Time of Sighting</label>
-                    <input type="time" id="sightingTime" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="elephantCount">Number of Elephants</label>
-                    <input type="number" id="elephantCount" min="1" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="elephantDescription">Description</label>
-                    <textarea id="elephantDescription" placeholder="Describe the elephants (age, size, behavior, etc.)"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>Upload Images (max 2)</label>
-                    <div class="image-upload-container">
-                        <div class="image-upload-box" id="sightingImage1">
-                            <span class="material-icons">add_photo_alternate</span>
-                            <span>Tap to upload</span>
-                        </div>
-                        <div class="image-upload-box" id="sightingImage2">
-                            <span class="material-icons">add_photo_alternate</span>
-                            <span>Tap to upload</span>
-                        </div>
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <span class="material-icons">visibility</span>
+                        Sighting Details
                     </div>
-                    <input type="file" id="sightingImageInput1" accept="image/*" style="display: none;">
-                    <input type="file" id="sightingImageInput2" accept="image/*" style="display: none;">
-                </div>
-                
-                <div class="location-picker">
-                    <label>Location</label>
-                    <div class="location-options">
-                        <div class="location-option active" id="currentLocation">
-                            <span class="material-icons">my_location</span>
-                            <span>Current Location</span>
-                        </div>
-                        <div class="location-option" id="mapLocation">
-                            <span class="material-icons">place</span>
-                            <span>Select on Map</span>
-                        </div>
+                    
+                    <div class="form-group">
+                        <label for="elephantCount">Number of Elephants</label>
+                        <input type="number" id="elephantCount" min="1" placeholder="Enter number of elephants">
                     </div>
-                    <div class="map-container" id="mapContainer">
-                        <div class="map-placeholder">
-                            <span class="material-icons">map</span>
-                            <span>Map will be displayed here</span>
+                    
+                    <div class="form-group">
+                        <label for="elephantDescription">Description</label>
+                        <textarea id="elephantDescription" placeholder="Describe the elephants (age, size, behavior, etc.)"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Upload Images (max 2)</label>
+                        <div class="image-upload-container">
+                            <div class="image-upload-box" id="sightingImage1">
+                                <span class="material-icons">add_photo_alternate</span>
+                                <span>Tap to upload</span>
+                            </div>
+                            <div class="image-upload-box" id="sightingImage2">
+                                <span class="material-icons">add_photo_alternate</span>
+                                <span>Tap to upload</span>
+                            </div>
                         </div>
+                        <input type="file" id="sightingImageInput1" accept="image/*" style="display: none;">
+                        <input type="file" id="sightingImageInput2" accept="image/*" style="display: none;">
                     </div>
                 </div>
                 
-                <button class="submit-btn" id="submitSightingBtn">Submit Sighting Report</button>
+                <button class="submit-btn" id="submitSightingBtn">
+                    <span class="material-icons">send</span>
+                    Submit Sighting Report
+                </button>
             </div>
             
             <!-- Accident Form -->
             <div id="accidentForm" style="display: none;">
-                <div class="form-group">
-                    <label for="accidentDate">Date of Accident</label>
-                    <input type="date" id="accidentDate" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="accidentTime">Time of Accident</label>
-                    <input type="time" id="accidentTime" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="accidentType">Type of Accident</label>
-                    <select id="accidentType" required>
-                        <option value="">Select type</option>
-                        <option value="property">Property Damage</option>
-                        <option value="crop">Crop Damage</option>
-                        <option value="injury">Human Injury</option>
-                        <option value="fatal">Fatal Incident</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="accidentDescription">Description</label>
-                    <textarea id="accidentDescription" placeholder="Describe the accident in detail"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>Upload Images (max 2)</label>
-                    <div class="image-upload-container">
-                        <div class="image-upload-box" id="accidentImage1">
-                            <span class="material-icons">add_photo_alternate</span>
-                            <span>Tap to upload</span>
-                        </div>
-                        <div class="image-upload-box" id="accidentImage2">
-                            <span class="material-icons">add_photo_alternate</span>
-                            <span>Tap to upload</span>
-                        </div>
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <span class="material-icons">warning</span>
+                        Accident Details
                     </div>
-                    <input type="file" id="accidentImageInput1" accept="image/*" style="display: none;">
-                    <input type="file" id="accidentImageInput2" accept="image/*" style="display: none;">
-                </div>
-                
-                <div class="location-picker">
-                    <label>Location</label>
-                    <div class="location-options">
-                        <div class="location-option active" id="accidentCurrentLocation">
-                            <span class="material-icons">my_location</span>
-                            <span>Current Location</span>
-                        </div>
-                        <div class="location-option" id="accidentMapLocation">
-                            <span class="material-icons">place</span>
-                            <span>Select on Map</span>
-                        </div>
+                    
+                    <div class="form-group">
+                        <label for="accidentType">Type of Accident</label>
+                        <select id="accidentType">
+                            <option value="">Select type</option>
+                            <option value="property">Property Damage</option>
+                            <option value="crop">Crop Damage</option>
+                            <option value="injury">Human Injury</option>
+                            <option value="fatal">Fatal Incident</option>
+                        </select>
                     </div>
-                    <div class="map-container" id="accidentMapContainer">
-                        <div class="map-placeholder">
-                            <span class="material-icons">map</span>
-                            <span>Map will be displayed here</span>
+                    
+                    <div class="form-group">
+                        <label for="accidentDescription">Description</label>
+                        <textarea id="accidentDescription" placeholder="Describe the accident in detail"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Upload Images (max 2)</label>
+                        <div class="image-upload-container">
+                            <div class="image-upload-box" id="accidentImage1">
+                                <span class="material-icons">add_photo_alternate</span>
+                                <span>Tap to upload</span>
+                            </div>
+                            <div class="image-upload-box" id="accidentImage2">
+                                <span class="material-icons">add_photo_alternate</span>
+                                <span>Tap to upload</span>
+                            </div>
                         </div>
+                        <input type="file" id="accidentImageInput1" accept="image/*" style="display: none;">
+                        <input type="file" id="accidentImageInput2" accept="image/*" style="display: none;">
                     </div>
                 </div>
                 
-                <button class="submit-btn" id="submitAccidentBtn">Submit Accident Report</button>
+                <button class="submit-btn" id="submitAccidentBtn">
+                    <span class="material-icons">send</span>
+                    Submit Accident Report
+                </button>
             </div>
         </div>
     </div>
@@ -1106,22 +1217,12 @@
             
             <div class="form-group">
                 <label for="agentName">Full Name</label>
-                <input type="text" id="agentName" required>
+                <input type="text" id="agentName" placeholder="Enter your full name">
             </div>
             
             <div class="form-group">
                 <label for="agentNIC">NIC Number</label>
-                <input type="text" id="agentNIC" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="agentReason">Reason for Applying</label>
-                <textarea id="agentReason" placeholder="Why do you want to become an EMA agent?"></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="agentExperience">Relevant Experience</label>
-                <textarea id="agentExperience" placeholder="Describe any relevant experience with wildlife conservation or similar fields"></textarea>
+                <input type="text" id="agentNIC" placeholder="Enter your NIC number">
             </div>
             
             <div class="nic-upload-container">
@@ -1133,7 +1234,10 @@
                 <input type="file" id="nicFrontInput" accept="image/*" style="display: none;">
             </div>
             
-            <button class="submit-btn" id="submitAgentBtn">Submit Application</button>
+            <button class="submit-btn" id="submitAgentBtn">
+                <span class="material-icons">send</span>
+                Submit Application
+            </button>
         </div>
     </div>
     
@@ -1158,12 +1262,12 @@
             
             <div class="form-group">
                 <label for="editName">Full Name</label>
-                <input type="text" id="editName" required>
+                <input type="text" id="editName" placeholder="Enter your full name">
             </div>
             
             <div class="form-group">
                 <label for="editPhone">Phone Number</label>
-                <input type="tel" id="editPhone" required>
+                <input type="tel" id="editPhone" placeholder="Enter your phone number">
             </div>
             
             <div class="form-row">
@@ -1191,7 +1295,10 @@
                 </div>
             </div>
             
-            <button class="submit-btn" id="saveProfileBtn">Save Changes</button>
+            <button class="submit-btn" id="saveProfileBtn">
+                <span class="material-icons">save</span>
+                Save Changes
+            </button>
         </div>
     </div>
     
@@ -1237,11 +1344,11 @@
         };
         
         // DOM elements
-        const userProfilePic = document.getElementById('userProfilePic');
         const userName = document.getElementById('userName');
+        const userProfileName = document.getElementById('userProfileName');
+        const userProfilePic = document.getElementById('userProfilePic');
         const userPhone = document.getElementById('userPhone');
         const userNIC = document.getElementById('userNIC');
-        const userEmail = document.getElementById('userEmail');
         const userLocation = document.getElementById('userLocation');
         const editProfileBtn = document.getElementById('editProfileBtn');
         const agentCard = document.getElementById('agentCard');
@@ -1260,9 +1367,7 @@
         const currentLocation = document.getElementById('currentLocation');
         const mapLocation = document.getElementById('mapLocation');
         const mapContainer = document.getElementById('mapContainer');
-        const accidentCurrentLocation = document.getElementById('accidentCurrentLocation');
-        const accidentMapLocation = document.getElementById('accidentMapLocation');
-        const accidentMapContainer = document.getElementById('accidentMapContainer');
+        const reportDateTime = document.getElementById('reportDateTime');
         const sightingImage1 = document.getElementById('sightingImage1');
         const sightingImage2 = document.getElementById('sightingImage2');
         const sightingImageInput1 = document.getElementById('sightingImageInput1');
@@ -1300,10 +1405,9 @@
         let accidentImage2Base64 = '';
         let nicFrontBase64 = '';
         let editProfilePicBase64 = '';
-        let sightingLocation = { lat: null, lng: null };
-        let accidentLocation = { lat: null, lng: null };
-        let useCurrentLocationForSighting = true;
-        let useCurrentLocationForAccident = true;
+        let reportLocation = { lat: null, lng: null };
+        let useCurrentLocationForReport = true;
+        let selectedReportType = null;
         
         // Check if user is logged in
         window.addEventListener('load', () => {
@@ -1312,8 +1416,23 @@
                 window.location.href = 'index.html';
             } else {
                 loadUserData(userEmail);
+                updateDateTime();
+                setInterval(updateDateTime, 60000); // Update every minute
             }
         });
+        
+        // Update date and time display
+        function updateDateTime() {
+            const now = new Date();
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            };
+            reportDateTime.textContent = now.toLocaleDateString('en-US', options);
+        }
         
         // Load user data from Firebase
         function loadUserData(email) {
@@ -1328,10 +1447,10 @@
                         currentUserData.key = userKey;
                         
                         // Update UI with user data
-                        userName.textContent = currentUserData.name || 'N/A';
+                        userName.textContent = currentUserData.name || 'User';
+                        userProfileName.textContent = currentUserData.name || 'User';
                         userPhone.textContent = currentUserData.phone || 'N/A';
                         userNIC.textContent = currentUserData.nic || 'N/A';
-                        userEmail.textContent = currentUserData.email || 'N/A';
                         
                         if (currentUserData.province && currentUserData.district) {
                             userLocation.textContent = `${currentUserData.district}, ${currentUserData.province}`;
@@ -1496,35 +1615,53 @@
         // FAB button
         fabBtn.addEventListener('click', () => {
             reportModal.style.display = 'flex';
+            // Get current location by default
+            getCurrentLocation((location) => {
+                if (location) {
+                    reportLocation = location;
+                }
+            });
         });
         
         // Close report modal
         closeReportModal.addEventListener('click', () => {
             reportModal.style.display = 'none';
+            // Reset form state
+            selectedReportType = null;
+            sightingOption.classList.remove('selected');
+            accidentOption.classList.remove('selected');
+            sightingForm.style.display = 'none';
+            accidentForm.style.display = 'none';
         });
         
         // Report options
         sightingOption.addEventListener('click', () => {
+            selectedReportType = 'sighting';
+            sightingOption.classList.add('selected');
+            accidentOption.classList.remove('selected');
             sightingForm.style.display = 'block';
             accidentForm.style.display = 'none';
         });
         
         accidentOption.addEventListener('click', () => {
+            selectedReportType = 'accident';
+            accidentOption.classList.add('selected');
+            sightingOption.classList.remove('selected');
             accidentForm.style.display = 'block';
             sightingForm.style.display = 'none';
         });
         
-        // Location options for sighting
+        // Location options
         currentLocation.addEventListener('click', () => {
             currentLocation.classList.add('active');
             mapLocation.classList.remove('active');
             mapContainer.style.display = 'none';
-            useCurrentLocationForSighting = true;
+            useCurrentLocationForReport = true;
             
             // Get current location
             getCurrentLocation((location) => {
                 if (location) {
-                    sightingLocation = location;
+                    reportLocation = location;
                 }
             });
         });
@@ -1533,32 +1670,7 @@
             mapLocation.classList.add('active');
             currentLocation.classList.remove('active');
             mapContainer.style.display = 'block';
-            useCurrentLocationForSighting = false;
-            
-            // In a real app, you would initialize a map here
-            showNotification('Map functionality would be implemented here', 'info');
-        });
-        
-        // Location options for accident
-        accidentCurrentLocation.addEventListener('click', () => {
-            accidentCurrentLocation.classList.add('active');
-            accidentMapLocation.classList.remove('active');
-            accidentMapContainer.style.display = 'none';
-            useCurrentLocationForAccident = true;
-            
-            // Get current location
-            getCurrentLocation((location) => {
-                if (location) {
-                    accidentLocation = location;
-                }
-            });
-        });
-        
-        accidentMapLocation.addEventListener('click', () => {
-            accidentMapLocation.classList.add('active');
-            accidentCurrentLocation.classList.remove('active');
-            accidentMapContainer.style.display = 'block';
-            useCurrentLocationForAccident = false;
+            useCurrentLocationForReport = false;
             
             // In a real app, you would initialize a map here
             showNotification('Map functionality would be implemented here', 'info');
@@ -1624,36 +1736,39 @@
         
         // Submit sighting report
         submitSightingBtn.addEventListener('click', () => {
-            const date = document.getElementById('sightingDate').value;
-            const time = document.getElementById('sightingTime').value;
             const count = document.getElementById('elephantCount').value;
             const description = document.getElementById('elephantDescription').value;
             
-            if (!date || !time || !count) {
-                showNotification('Please fill in all required fields', 'error');
+            if (!count) {
+                showNotification('Please enter the number of elephants', 'error');
                 return;
             }
             
-            if (useCurrentLocationForSighting && !sightingLocation.lat) {
+            if (useCurrentLocationForReport && !reportLocation.lat) {
                 showNotification('Getting your location...', 'info');
                 getCurrentLocation((location) => {
                     if (location) {
-                        sightingLocation = location;
-                        submitSightingReport(date, time, count, description);
+                        reportLocation = location;
+                        submitSightingReport(count, description);
                     } else {
                         showNotification('Unable to get your location. Please try again or select location on map', 'error');
                     }
                 });
             } else {
-                submitSightingReport(date, time, count, description);
+                submitSightingReport(count, description);
             }
         });
         
-        function submitSightingReport(date, time, count, description) {
+        function submitSightingReport(count, description) {
             showLoading('Submitting your sighting report...');
             
             // Generate a unique key for this report
             const reportKey = database.ref().child('sightings').push().key;
+            
+            // Get current date and time
+            const now = new Date();
+            const date = now.toISOString().split('T')[0];
+            const time = now.toTimeString().split(' ')[0].substring(0, 5);
             
             // Create report object
             const report = {
@@ -1663,7 +1778,7 @@
                 description,
                 image1: sightingImage1Base64,
                 image2: sightingImage2Base64,
-                location: sightingLocation,
+                location: reportLocation,
                 reportedBy: currentUserData.email,
                 reportedByName: currentUserData.name,
                 timestamp: firebase.database.ServerValue.TIMESTAMP
@@ -1695,8 +1810,6 @@
                             showNotification('Sighting report submitted successfully!', 'success');
                             
                             // Reset form
-                            document.getElementById('sightingDate').value = '';
-                            document.getElementById('sightingTime').value = '';
                             document.getElementById('elephantCount').value = '';
                             document.getElementById('elephantDescription').value = '';
                             sightingImage1Base64 = '';
@@ -1720,36 +1833,39 @@
         
         // Submit accident report
         submitAccidentBtn.addEventListener('click', () => {
-            const date = document.getElementById('accidentDate').value;
-            const time = document.getElementById('accidentTime').value;
             const type = document.getElementById('accidentType').value;
             const description = document.getElementById('accidentDescription').value;
             
-            if (!date || !time || !type) {
-                showNotification('Please fill in all required fields', 'error');
+            if (!type) {
+                showNotification('Please select the type of accident', 'error');
                 return;
             }
             
-            if (useCurrentLocationForAccident && !accidentLocation.lat) {
+            if (useCurrentLocationForReport && !reportLocation.lat) {
                 showNotification('Getting your location...', 'info');
                 getCurrentLocation((location) => {
                     if (location) {
-                        accidentLocation = location;
-                        submitAccidentReport(date, time, type, description);
+                        reportLocation = location;
+                        submitAccidentReport(type, description);
                     } else {
                         showNotification('Unable to get your location. Please try again or select location on map', 'error');
                     }
                 });
             } else {
-                submitAccidentReport(date, time, type, description);
+                submitAccidentReport(type, description);
             }
         });
         
-        function submitAccidentReport(date, time, type, description) {
+        function submitAccidentReport(type, description) {
             showLoading('Submitting your accident report...');
             
             // Generate a unique key for this report
             const reportKey = database.ref().child('accidents').push().key;
+            
+            // Get current date and time
+            const now = new Date();
+            const date = now.toISOString().split('T')[0];
+            const time = now.toTimeString().split(' ')[0].substring(0, 5);
             
             // Create report object
             const report = {
@@ -1759,7 +1875,7 @@
                 description,
                 image1: accidentImage1Base64,
                 image2: accidentImage2Base64,
-                location: accidentLocation,
+                location: reportLocation,
                 reportedBy: currentUserData.email,
                 reportedByName: currentUserData.name,
                 timestamp: firebase.database.ServerValue.TIMESTAMP
@@ -1791,8 +1907,6 @@
                             showNotification('Accident report submitted successfully!', 'success');
                             
                             // Reset form
-                            document.getElementById('accidentDate').value = '';
-                            document.getElementById('accidentTime').value = '';
                             document.getElementById('accidentType').value = '';
                             document.getElementById('accidentDescription').value = '';
                             accidentImage1Base64 = '';
@@ -1850,8 +1964,6 @@
         submitAgentBtn.addEventListener('click', () => {
             const name = document.getElementById('agentName').value;
             const nic = document.getElementById('agentNIC').value;
-            const reason = document.getElementById('agentReason').value;
-            const experience = document.getElementById('agentExperience').value;
             
             if (!name || !nic || !nicFrontBase64) {
                 showNotification('Please fill in all required fields and upload your NIC', 'error');
@@ -1864,8 +1976,6 @@
             const agentApplication = {
                 name,
                 nic,
-                reason,
-                experience,
                 nicFront: nicFrontBase64,
                 agentStatus: 'X', // X for pending
                 appliedDate: firebase.database.ServerValue.TIMESTAMP
@@ -1880,8 +1990,6 @@
                     // Reset form
                     document.getElementById('agentName').value = '';
                     document.getElementById('agentNIC').value = '';
-                    document.getElementById('agentReason').value = '';
-                    document.getElementById('agentExperience').value = '';
                     nicFrontBase64 = '';
                     nicFrontUpload.innerHTML = '<span class="material-icons">badge</span><span>Tap to upload NIC front</span>';
                     
@@ -1993,6 +2101,7 @@
                     
                     // Update UI
                     userName.textContent = name;
+                    userProfileName.textContent = name;
                     userPhone.textContent = phone;
                     userLocation.textContent = `${district}, ${province}`;
                     
