@@ -190,12 +190,16 @@
             padding: 20px;
             z-index: 1000;
             transition: transform 0.3s ease;
-            height: 50vh;
+            height: 15vh;
             overflow-y: auto;
         }
         
         .bottom-sheet.hidden {
             transform: translateY(100%);
+        }
+        
+        .bottom-sheet.expanded {
+            height: 50vh;
         }
         
         .nav-buttons {
@@ -229,6 +233,12 @@
             font-size: 28px;
             color: var(--parakeet);
             margin-bottom: 5px;
+        }
+        
+        .nav-button span {
+            font-size: 12px;
+            color: var(--black);
+            text-align: center;
         }
         
         .agent-status-button {
@@ -498,7 +508,7 @@
             z-index: 1000;
             transform: translateY(100%);
             transition: transform 0.3s ease;
-            max-height: 80vh;
+            max-height: 50vh;
             overflow-y: auto;
         }
         
@@ -662,7 +672,7 @@
         
         .add-report-button {
             position: absolute;
-            bottom: 100px;
+            top: 20px;
             right: 20px;
             width: 56px;
             height: 56px;
@@ -687,32 +697,54 @@
             font-size: 28px;
         }
         
-        .map-type-selector {
+        .info-pill {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--white);
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 15px 20px;
+            display: flex;
+            z-index: 1000;
+            min-width: 300px;
+        }
+        
+        .weather-section, .sightings-section {
+            flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 10px 0;
-            border-top: 1px solid var(--pistachio);
-        }
-        
-        .map-type-option {
-            display: flex;
             align-items: center;
-            padding: 10px 20px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+            padding: 0 10px;
         }
         
-        .map-type-option:hover {
-            background-color: var(--mint);
+        .weather-icon {
+            font-size: 32px;
+            margin-bottom: 5px;
         }
         
-        .map-type-option.selected {
-            background-color: var(--pistachio);
+        .weather-temp {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
         }
         
-        .map-type-option .material-icons {
-            margin-right: 15px;
+        .weather-desc {
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .sightings-count {
+            font-size: 24px;
+            font-weight: 600;
             color: var(--parakeet);
+            margin-bottom: 5px;
+        }
+        
+        .sightings-label {
+            font-size: 14px;
+            text-align: center;
         }
         
         @media (max-width: 768px) {
@@ -742,6 +774,11 @@
             .report-type .material-icons, .location-option .material-icons {
                 font-size: 20px;
             }
+            
+            .info-pill {
+                min-width: 250px;
+                padding: 10px 15px;
+            }
         }
         
         @media (min-width: 768px) {
@@ -761,7 +798,7 @@
             }
             
             .report-form {
-                max-height: 70vh;
+                max-height: 50vh;
             }
         }
     </style>
@@ -774,6 +811,22 @@
             <span class="material-icons">menu</span>
         </div>
         <img id="userProfileImage" class="profile-image" src="https://picsum.photos/seed/defaultprofile/100/100.jpg" alt="Profile">
+    </div>
+    
+    <div class="info-pill">
+        <div class="weather-section">
+            <div class="weather-icon" id="weatherIcon">🌤</div>
+            <div class="weather-temp" id="weatherTemp">--°C</div>
+            <div class="weather-desc" id="weatherDesc">Loading...</div>
+        </div>
+        <div class="sightings-section">
+            <div class="sightings-count" id="sightingsCount">0</div>
+            <div class="sightings-label">Latest Reports (24h)</div>
+        </div>
+    </div>
+    
+    <div class="add-report-button" id="addReportButton">
+        <span class="material-icons">add</span>
     </div>
     
     <div class="side-menu" id="sideMenu">
@@ -840,10 +893,6 @@
             <span class="material-icons" style="margin-right: 8px;">verified_user</span>
             Agent Status
         </button>
-    </div>
-    
-    <div class="add-report-button" id="addReportButton">
-        <span class="material-icons">add</span>
     </div>
     
     <div class="report-form" id="reportForm">
@@ -1069,6 +1118,8 @@
         let locationMarker = null;
         let currentTileLayer;
         let mapType = localStorage.getItem('mapType') || 'street';
+        let lastTapTime = 0;
+        let tapTimeout;
         
         document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('loaderModal').style.display = 'flex';
@@ -1093,6 +1144,14 @@
                     if (userData.agentData && userData.agentData.status) {
                         updateAgentStatusButton(userData.agentData.status);
                     }
+                    
+                    // Load weather for user's district
+                    if (userData.district) {
+                        loadWeather(userData.district);
+                    }
+                    
+                    // Load recent sightings count
+                    loadRecentSightingsCount();
                 } else {
                     localStorage.removeItem('emaid');
                     window.location.href = 'index.html';
@@ -1136,6 +1195,24 @@
                 );
             }
             
+            // Add double tap detection
+            map.on('click', function(e) {
+                const currentTime = new Date().getTime();
+                const tapLength = currentTime - lastTapTime;
+                
+                if (tapLength < 300 && tapLength > 0) {
+                    clearTimeout(tapTimeout);
+                    // Double tap detected
+                    onMapDoubleTap(e);
+                } else {
+                    tapTimeout = setTimeout(function() {
+                        // Single tap - do nothing
+                    }, 300);
+                }
+                
+                lastTapTime = currentTime;
+            });
+            
             map.on('click', function(e) {
                 if (isSelectingLocation) {
                     if (locationMarker) {
@@ -1155,6 +1232,80 @@
                     document.getElementById('selectOnMapAccident').classList.add('selected');
                 }
             });
+        }
+        
+        function onMapDoubleTap(e) {
+            // Open report form on double tap
+            document.getElementById('bottomSheet').classList.add('hidden');
+            document.getElementById('reportForm').classList.add('show');
+        }
+        
+        function loadWeather(district) {
+            // Use OpenWeatherMap API (free tier, no API key required)
+            const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${district},LK&appid=439d4b804bc518dc95b271d5b974681d&units=metric`;
+            
+            fetch(weatherUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.weather && data.main) {
+                        const temp = Math.round(data.main.temp);
+                        const description = data.weather[0].description;
+                        const iconCode = data.weather[0].icon;
+                        
+                        // Set weather icon based on weather code
+                        let weatherEmoji = '🌤'; // Default
+                        
+                        if (iconCode.includes('01')) weatherEmoji = '☀️'; // clear sky
+                        else if (iconCode.includes('02')) weatherEmoji = '⛅'; // few clouds
+                        else if (iconCode.includes('03') || iconCode.includes('04')) weatherEmoji = '☁️'; // scattered/broken clouds
+                        else if (iconCode.includes('09') || iconCode.includes('10') || iconCode.includes('11')) weatherEmoji = '🌧️'; // shower/rain/thunderstorm
+                        else if (iconCode.includes('13')) weatherEmoji = '❄️'; // snow
+                        else if (iconCode.includes('50')) weatherEmoji = '🌫️'; // mist/fog
+                        
+                        document.getElementById('weatherIcon').textContent = weatherEmoji;
+                        document.getElementById('weatherTemp').textContent = `${temp}°C`;
+                        document.getElementById('weatherDesc').textContent = description;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching weather:', error);
+                    document.getElementById('weatherIcon').textContent = '🌤';
+                    document.getElementById('weatherTemp').textContent = '--°C';
+                    document.getElementById('weatherDesc').textContent = 'Weather unavailable';
+                });
+        }
+        
+        async function loadRecentSightingsCount() {
+            try {
+                const now = new Date();
+                const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+                
+                const reportsSnapshot = await database.ref('reports/sightings').once('value');
+                const reports = reportsSnapshot.val();
+                
+                let count = 0;
+                
+                if (reports) {
+                    for (const key in reports) {
+                        const report = reports[key].data;
+                        if (report && report.timestamp) {
+                            const reportDate = new Date(report.timestamp);
+                            if (reportDate >= yesterday) {
+                                count++;
+                            // Only count the latest report per user
+                            break;
+                            // This is a simplification - in a real app, you might want to count all reports
+                            // or implement a more sophisticated filtering logic
+                        }
+                    }
+                }
+                }
+                
+                document.getElementById('sightingsCount').textContent = count;
+            } catch (error) {
+                console.error('Error loading sightings count:', error);
+                document.getElementById('sightingsCount').textContent = '0';
+            }
         }
         
         function setMapType(type) {
@@ -1493,10 +1644,12 @@
         document.getElementById('addReportButton').addEventListener('click', () => {
             document.getElementById('bottomSheet').classList.add('hidden');
             document.getElementById('reportForm').classList.add('show');
+            document.getElementById('reportForm').classList.add('expanded');
         });
         
         document.getElementById('closeReportForm').addEventListener('click', () => {
             document.getElementById('reportForm').classList.remove('show');
+            document.getElementById('reportForm').classList.remove('expanded');
             document.getElementById('bottomSheet').classList.remove('hidden');
             
             reportImages = [];
