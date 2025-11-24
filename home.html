@@ -26,7 +26,6 @@
             --card-radius: 20px;
             --glass: rgba(255,255,255,0.92);
             --background-light: #f5f7f5;
-            --error-color: #D32F2F;
         }
 
         * {
@@ -46,95 +45,46 @@
             -moz-osx-font-smoothing: grayscale;
             overflow: hidden;
         }
-
+        
         body {
-            background-color: var(--background-light);
+            background: var(--background-light);
         }
 
         /* Map container */
         #map {
-            height: 100%;
             width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
             z-index: 1;
         }
 
-        /* Welcome banner */
-        .welcome-banner {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            padding: 20px;
-            z-index: 1000;
-            transform: translateY(0);
-            transition: transform 0.5s ease;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .welcome-banner.hidden {
-            transform: translateY(-100%);
-        }
-
-        .welcome-content {
-            max-width: 600px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .welcome-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--green);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .welcome-message {
-            font-size: 16px;
-            color: var(--muted);
-            line-height: 1.5;
-        }
-
-        .welcome-close {
+        /* User profile pill card */
+        .user-pill {
             position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--muted);
-            font-size: 24px;
-        }
-
-        /* User profile card */
-        .profile-card {
-            position: fixed;
             top: 20px;
             left: 20px;
             background: var(--glass);
-            backdrop-filter: blur(10px);
             border-radius: 50px;
-            padding: 8px 16px;
+            padding: 8px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            z-index: 999;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            backdrop-filter: blur(6px) saturate(110%);
+            border: 1px solid rgba(255,255,255,0.2);
+            z-index: 1000;
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
-        .profile-card:hover {
+        .user-pill:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
         }
 
-        .profile-avatar {
+        .user-avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -142,56 +92,68 @@
             border: 2px solid white;
         }
 
-        .profile-name {
-            font-weight: 600;
-            color: #333;
-            max-width: 120px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+        .user-info {
+            flex: 1;
+            padding: 0 8px;
         }
 
-        .profile-edit {
-            background: none;
-            border: none;
-            cursor: pointer;
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+            margin: 0;
+        }
+
+        .user-ema-id {
+            font-size: 12px;
             color: var(--muted);
+            margin: 0;
+        }
+
+        .edit-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--green);
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
+            color: white;
+            cursor: pointer;
             transition: all 0.2s ease;
         }
 
-        .profile-edit:hover {
-            background: rgba(66, 167, 90, 0.1);
-            color: var(--green);
+        .edit-icon:hover {
+            background: var(--green-strong);
+        }
+
+        .edit-icon .material-symbols-outlined {
+            font-size: 18px;
         }
 
         /* Map toggle button */
         .map-toggle {
-            position: fixed;
+            position: absolute;
             top: 20px;
             right: 20px;
-            background: var(--glass);
-            backdrop-filter: blur(10px);
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            background: var(--glass);
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 999;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            backdrop-filter: blur(6px) saturate(110%);
+            border: 1px solid rgba(255,255,255,0.2);
+            z-index: 1000;
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
         .map-toggle:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
         }
 
         .map-toggle .material-symbols-outlined {
@@ -199,49 +161,109 @@
             color: var(--green);
         }
 
-        /* Edit profile modal */
-        .modal {
-            display: none;
+        /* Welcome banner */
+        .welcome-banner {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1001;
+            background: rgba(0,0,0,0.7);
+            display: flex;
             align-items: center;
             justify-content: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .welcome-card {
+            background: white;
+            border-radius: var(--card-radius);
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .welcome-emoji {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .welcome-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--green);
+            margin-bottom: 15px;
+        }
+
+        .welcome-message {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #555;
+            margin-bottom: 25px;
+        }
+
+        .welcome-button {
+            background: var(--green);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .welcome-button:hover {
+            background: var(--green-strong);
+        }
+
+        /* Edit profile modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
         }
 
         .modal.active {
             display: flex;
         }
 
-        .modal-content {
+        .modal-card {
             background: white;
             border-radius: var(--card-radius);
-            width: 90%;
+            padding: 30px;
             max-width: 450px;
-            padding: 24px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            animation: modalFadeIn 0.3s ease;
-        }
-
-        @keyframes modalFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: slideUp 0.4s ease;
         }
 
         .modal-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
             margin-bottom: 20px;
         }
 
@@ -251,24 +273,25 @@
             color: #333;
         }
 
-        .modal-close {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--muted);
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .close-modal {
             width: 32px;
             height: 32px;
             border-radius: 50%;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
             transition: all 0.2s ease;
         }
 
-        .modal-close:hover {
-            background: rgba(0, 0, 0, 0.05);
-            color: #333;
+        .close-modal:hover {
+            background: #e0e0e0;
+        }
+
+        .close-modal .material-symbols-outlined {
+            font-size: 18px;
+            color: #555;
         }
 
         .field {
@@ -278,7 +301,7 @@
 
         .field label {
             display: block;
-            font-size: 14px;
+            font-size: 13px;
             color: #555;
             margin-bottom: 6px;
             font-weight: 600;
@@ -311,7 +334,7 @@
         }
 
         .error-text {
-            color: var(--error-color);
+            color: #D32F2F;
             font-size: 12px;
             margin-top: 4px;
             display: none;
@@ -342,35 +365,19 @@
             cursor: not-allowed;
         }
 
-        .btn-secondary {
-            background: transparent;
-            color: var(--green);
-            border: 1px solid var(--green);
-            box-shadow: none;
-            margin-top: 12px;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(66, 167, 90, 0.05);
-        }
-
-        /* Loading overlay */
-        .loading-overlay {
+        /* Loader */
+        .loader-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255,255,255,0.9);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 1002;
-        }
-
-        .loading-overlay.hidden {
-            display: none;
+            z-index: 3000;
         }
 
         .loader {
@@ -380,7 +387,7 @@
             width: 50px;
             height: 50px;
             animation: spin 1s linear infinite;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
 
         @keyframes spin {
@@ -388,192 +395,81 @@
             100% { transform: rotate(360deg); }
         }
 
-        .loading-text {
+        .loader-text {
             font-size: 16px;
-            color: var(--muted);
-            font-weight: 500;
+            color: var(--green);
+            font-weight: 600;
         }
 
-        /* User location marker */
+        /* Custom marker styles */
         .user-location-marker {
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background-color: #4285F4;
+            background: #4285F4;
             border: 3px solid white;
-            box-shadow: 0 0 20px rgba(66, 133, 244, 0.6);
-            animation: pulse 2s infinite;
+            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.3), 0 0 0 6px rgba(66, 133, 244, 0.1);
         }
 
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.7);
-            }
-            70% {
-                box-shadow: 0 0 0 10px rgba(66, 133, 244, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(66, 133, 244, 0);
-            }
+        /* Hide Leaflet controls */
+        .leaflet-control-zoom {
+            display: none !important;
         }
 
-        /* Toast notification */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            padding: 16px 24px;
-            border-radius: 50px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            z-index: 1003;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .toast.show {
-            opacity: 1;
-        }
-
-        .toast.success {
-            border-left: 4px solid var(--green);
-        }
-
-        .toast.error {
-            border-left: 4px solid var(--error-color);
-        }
-
-        .toast-message {
-            font-size: 14px;
-            font-weight: 500;
-            color: #333;
-        }
-
-        /* Map controls */
-        .map-controls {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            z-index: 999;
-        }
-
-        .map-control-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s ease;
-        }
-
-        .map-control-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-        }
-
-        .map-control-btn .material-symbols-outlined {
-            font-size: 20px;
-            color: var(--green);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .profile-card {
-                left: 10px;
-                top: 10px;
-            }
-
-            .map-toggle {
-                right: 10px;
-                top: 10px;
-            }
-
-            .map-controls {
-                bottom: 10px;
-                right: 10px;
-            }
+        .leaflet-control-attribution {
+            display: none !important;
         }
     </style>
 </head>
 <body>
-    <!-- Welcome Banner -->
-    <div id="welcomeBanner" class="welcome-banner">
-        <button class="welcome-close" id="closeWelcome">
-            <span class="material-symbols-outlined">close</span>
-        </button>
-        <div class="welcome-content">
-            <div class="welcome-title">
-                <span class="material-symbols-outlined">elephant</span>
-                Welcome to EMA
-            </div>
-            <div class="welcome-message">
-                This is EMA, Elephant Monitoring App. You can report elephant sightings, see reports from other users, help avoid fake reports, and contribute to elephant conservation efforts.
-            </div>
+    <!-- Map container -->
+    <div id="map"></div>
+    
+    <!-- User profile pill card -->
+    <div class="user-pill" id="userPill">
+        <img id="userAvatar" class="user-avatar" src="" alt="User Avatar">
+        <div class="user-info">
+            <p id="userName" class="user-name">Loading...</p>
+            <p id="userEmaId" class="user-ema-id">Loading...</p>
+        </div>
+        <div class="edit-icon" id="editProfileBtn">
+            <span class="material-symbols-outlined">edit</span>
         </div>
     </div>
-
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay">
-        <div class="loader"></div>
-        <div class="loading-text">Loading your data...</div>
-    </div>
-
-    <!-- Map Container -->
-    <div id="map"></div>
-
-    <!-- User Profile Card -->
-    <div id="profileCard" class="profile-card">
-        <img id="profileAvatar" class="profile-avatar" src="" alt="Profile">
-        <div id="profileName" class="profile-name">Loading...</div>
-        <button id="editProfileBtn" class="profile-edit">
-            <span class="material-symbols-outlined">edit</span>
-        </button>
-    </div>
-
-    <!-- Map Toggle Button -->
-    <div id="mapToggle" class="map-toggle">
+    
+    <!-- Map toggle button -->
+    <div class="map-toggle" id="mapToggleBtn">
         <span class="material-symbols-outlined">layers</span>
     </div>
-
-    <!-- Map Controls -->
-    <div class="map-controls">
-        <button id="locateBtn" class="map-control-btn" title="Find my location">
-            <span class="material-symbols-outlined">my_location</span>
-        </button>
-        <button id="reportBtn" class="map-control-btn" title="Report elephant sighting">
-            <span class="material-symbols-outlined">add_location_alt</span>
-        </button>
+    
+    <!-- Welcome banner -->
+    <div class="welcome-banner" id="welcomeBanner">
+        <div class="welcome-card">
+            <div class="welcome-emoji">🐘🌍</div>
+            <h2 class="welcome-title">Welcome to EMA!</h2>
+            <p class="welcome-message">
+                This is EMA, Elephant Monitoring App. You can report elephant sightings, see reports from others, avoid fake reports, and help protect these magnificent creatures. Together, we're making a difference for wildlife conservation!
+            </p>
+            <button class="welcome-button" id="getStartedBtn">Get Started</button>
+        </div>
     </div>
-
-    <!-- Edit Profile Modal -->
-    <div id="editModal" class="modal">
-        <div class="modal-content">
+    
+    <!-- Edit profile modal -->
+    <div class="modal" id="editProfileModal">
+        <div class="modal-card">
             <div class="modal-header">
-                <h2 class="modal-title">Edit Profile</h2>
-                <button id="closeModal" class="modal-close">
+                <h3 class="modal-title">Edit Profile</h3>
+                <div class="close-modal" id="closeModalBtn">
                     <span class="material-symbols-outlined">close</span>
-                </button>
+                </div>
             </div>
-
-            <div id="editMessage" class="message"></div>
-
-            <form id="editForm">
+            
+            <form id="editProfileForm">
                 <div class="field">
                     <label for="editFullName">Full Name</label>
                     <div class="input">
                         <span class="material-symbols-outlined">person</span>
-                        <input id="editFullName" type="text" placeholder="Enter your full name" required />
+                        <input id="editFullName" type="text" required />
                     </div>
                     <div id="editFullNameError" class="error-text"></div>
                 </div>
@@ -582,7 +478,7 @@
                     <label for="editPhone">Phone Number</label>
                     <div class="input">
                         <span class="material-symbols-outlined">phone</span>
-                        <input id="editPhone" type="tel" placeholder="Enter 10-digit phone number" required />
+                        <input id="editPhone" type="tel" required />
                     </div>
                     <div id="editPhoneError" class="error-text"></div>
                 </div>
@@ -627,20 +523,20 @@
                     <label for="editEmail">Email</label>
                     <div class="input">
                         <span class="material-symbols-outlined">mail</span>
-                        <input id="editEmail" type="email" placeholder="Enter your email address" required />
+                        <input id="editEmail" type="email" required />
                     </div>
                     <div id="editEmailError" class="error-text"></div>
                 </div>
-
-                <button type="button" class="btn" id="saveProfileBtn">SAVE CHANGES</button>
-                <button type="button" class="btn btn-secondary" id="cancelEditBtn">CANCEL</button>
+                
+                <button type="submit" class="btn" id="saveProfileBtn">Save Changes</button>
             </form>
         </div>
     </div>
-
-    <!-- Toast Notification -->
-    <div id="toast" class="toast">
-        <div class="toast-message" id="toastMessage"></div>
+    
+    <!-- Loader -->
+    <div class="loader-container" id="loader">
+        <div class="loader"></div>
+        <div class="loader-text">Loading your data...</div>
     </div>
 
     <!-- Leaflet JS -->
@@ -670,255 +566,211 @@
 
         // DOM elements
         const welcomeBanner = document.getElementById('welcomeBanner');
-        const closeWelcome = document.getElementById('closeWelcome');
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        const profileCard = document.getElementById('profileCard');
-        const profileAvatar = document.getElementById('profileAvatar');
-        const profileName = document.getElementById('profileName');
+        const getStartedBtn = document.getElementById('getStartedBtn');
+        const loader = document.getElementById('loader');
+        const userPill = document.getElementById('userPill');
+        const userAvatar = document.getElementById('userAvatar');
+        const userName = document.getElementById('userName');
+        const userEmaId = document.getElementById('userEmaId');
         const editProfileBtn = document.getElementById('editProfileBtn');
-        const mapToggle = document.getElementById('mapToggle');
-        const locateBtn = document.getElementById('locateBtn');
-        const reportBtn = document.getElementById('reportBtn');
-        const editModal = document.getElementById('editModal');
-        const closeModal = document.getElementById('closeModal');
-        const editForm = document.getElementById('editForm');
-        const saveProfileBtn = document.getElementById('saveProfileBtn');
-        const cancelEditBtn = document.getElementById('cancelEditBtn');
-        const toast = document.getElementById('toast');
-        const toastMessage = document.getElementById('toastMessage');
+        const editProfileModal = document.getElementById('editProfileModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const editProfileForm = document.getElementById('editProfileForm');
+        const mapToggleBtn = document.getElementById('mapToggleBtn');
 
-        // Variables
+        // Map variables
         let map;
-        let userMarker;
-        let currentLayer = 'osm'; // Default to OpenStreetMap
-        let userData;
-        let emaId;
+        let userLocationMarker;
+        let currentMapLayer = 'osm'; // Default to OpenStreetMap
+        let osmLayer;
+        let esriLayer;
+
+        // User data
+        let userData = null;
+        let emaId = null;
 
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
             // Check if user is logged in
             emaId = localStorage.getItem('emaId');
             if (!emaId) {
-                window.location.href = 'login.html';
+                window.location.href = 'index.html';
                 return;
             }
 
-            // Check if welcome banner should be shown
-            const hasSeenWelcome = localStorage.getItem('hasSeenWelcome');
-            if (!hasSeenWelcome) {
-                welcomeBanner.classList.remove('hidden');
+            // Check if first time visit
+            const hasVisited = localStorage.getItem('emaHasVisited');
+            if (!hasVisited) {
+                welcomeBanner.style.display = 'flex';
+            } else {
+                welcomeBanner.style.display = 'none';
             }
-
-            // Initialize map
-            initMap();
 
             // Load user data
             loadUserData();
-
-            // Request location permission
-            requestLocationPermission();
         });
 
-        // Initialize map
-        function initMap() {
-            // Default center (Sri Lanka)
-            const defaultCenter = [7.8731, 80.7718];
-            
-            // Create map
-            map = L.map('map').setView(defaultCenter, 8);
+        // Event listeners
+        getStartedBtn.addEventListener('click', function() {
+            localStorage.setItem('emaHasVisited', 'true');
+            welcomeBanner.style.display = 'none';
+        });
 
-            // Add default tile layer (OpenStreetMap)
-            const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            });
+        editProfileBtn.addEventListener('click', function() {
+            openEditProfileModal();
+        });
 
-            // Add ESRI World Imagery layer
-            const esriLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-            });
+        closeModalBtn.addEventListener('click', function() {
+            editProfileModal.classList.remove('active');
+        });
 
-            // Add default layer
-            osmLayer.addTo(map);
+        editProfileForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            saveProfileChanges();
+        });
 
-            // Map toggle functionality
-            mapToggle.addEventListener('click', function() {
-                if (currentLayer === 'osm') {
-                    map.removeLayer(osmLayer);
-                    esriLayer.addTo(map);
-                    currentLayer = 'esri';
-                    showToast('Switched to satellite view', 'success');
-                } else {
-                    map.removeLayer(esriLayer);
-                    osmLayer.addTo(map);
-                    currentLayer = 'osm';
-                    showToast('Switched to map view', 'success');
-                }
-            });
+        mapToggleBtn.addEventListener('click', function() {
+            toggleMapLayer();
+        });
 
-            // Locate button functionality
-            locateBtn.addEventListener('click', function() {
-                locateUser();
-            });
-
-            // Report button functionality
-            reportBtn.addEventListener('click', function() {
-                // This would open a report form in a real implementation
-                showToast('Report feature coming soon!', 'success');
-            });
-        }
-
-        // Load user data
+        // Load user data from Firebase
         function loadUserData() {
+            loader.style.display = 'flex';
+
             database.ref('users/' + emaId).once('value')
                 .then((snapshot) => {
                     if (snapshot.exists()) {
                         userData = snapshot.val();
-                        updateProfileUI();
                         
-                        // If user has location data, show it on map
-                        if (userData.latitude && userData.longitude) {
-                            showUserLocation(userData.latitude, userData.longitude);
+                        // Update UI with user data
+                        userName.textContent = userData.fullName;
+                        userEmaId.textContent = emaId;
+                        
+                        if (userData.profilePicture) {
+                            userAvatar.src = userData.profilePicture;
                         } else {
-                            // Try to get user's current location
-                            locateUser();
+                            userAvatar.src = 'https://picsum.photos/seed/emauser/100/100.jpg';
                         }
+                        
+                        // Initialize map after loading user data
+                        initializeMap();
                     } else {
-                        showToast('User data not found', 'error');
-                        window.location.href = 'login.html';
+                        alert('User data not found. Please login again.');
+                        window.location.href = 'index.html';
                     }
                 })
                 .catch((error) => {
-                    showToast('Error loading user data: ' + error.message, 'error');
-                    window.location.href = 'login.html';
+                    console.error('Error loading user data:', error);
+                    alert('Error loading user data. Please try again.');
+                    window.location.href = 'index.html';
                 })
                 .finally(() => {
-                    // Hide loading overlay
-                    loadingOverlay.classList.add('hidden');
+                    loader.style.display = 'none';
                 });
         }
 
-        // Update profile UI
-        function updateProfileUI() {
-            // Update profile name
-            profileName.textContent = userData.fullName || 'User';
-            
-            // Update profile avatar
-            if (userData.profilePicture) {
-                profileAvatar.src = userData.profilePicture;
-            } else {
-                // Use default avatar
-                profileAvatar.src = 'https://picsum.photos/seed/ema-user/100/100.jpg';
-            }
-        }
+        // Initialize map
+        function initializeMap() {
+            // Create map
+            map = L.map('map', {
+                center: [7.8731, 80.7718], // Default to Sri Lanka center
+                zoom: 8,
+                zoomControl: false // Hide zoom controls
+            });
 
-        // Request location permission
-        function requestLocationPermission() {
+            // Add OpenStreetMap layer
+            osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: ''
+            }).addTo(map);
+
+            // Add ESRI World Imagery layer
+            esriLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: ''
+            });
+
+            // Get user location
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
-                        // Permission granted
-                        console.log('Location permission granted');
-                    },
-                    (error) => {
-                        // Permission denied or error
-                        console.error('Location permission denied:', error);
-                        showToast('Location permission denied. Some features may not work properly.', 'error');
-                    }
-                );
-            } else {
-                console.error('Geolocation is not supported by this browser');
-                showToast('Geolocation is not supported by your browser', 'error');
-            }
-        }
-
-        // Locate user
-        function locateUser() {
-            if (navigator.geolocation) {
-                locateBtn.disabled = true;
-                locateBtn.innerHTML = '<span class="material-symbols-outlined">hourglass_empty</span>';
-                
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const { latitude, longitude } = position.coords;
-                        showUserLocation(latitude, longitude);
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
                         
-                        // Save location to database
-                        if (userData) {
-                            database.ref('users/' + emaId).update({
-                                latitude: latitude,
-                                longitude: longitude,
-                                lastLocationUpdate: new Date().toISOString()
-                            });
+                        // Center map on user location
+                        map.setView([lat, lng], 12);
+                        
+                        // Add user location marker
+                        if (userLocationMarker) {
+                            map.removeLayer(userLocationMarker);
                         }
                         
-                        showToast('Location found!', 'success');
+                        userLocationMarker = L.marker([lat, lng], {
+                            icon: L.divIcon({
+                                className: 'user-location-marker',
+                                iconSize: [20, 20],
+                                iconAnchor: [10, 10]
+                            })
+                        }).addTo(map);
+                        
+                        // Watch for location changes
+                        navigator.geolocation.watchPosition(
+                            (newPosition) => {
+                                const newLat = newPosition.coords.latitude;
+                                const newLng = newPosition.coords.longitude;
+                                
+                                if (userLocationMarker) {
+                                    userLocationMarker.setLatLng([newLat, newLng]);
+                                }
+                            },
+                            (error) => {
+                                console.error('Error watching position:', error);
+                            },
+                            { enableHighAccuracy: true }
+                        );
                     },
                     (error) => {
                         console.error('Error getting location:', error);
-                        showToast('Could not get your location', 'error');
-                    },
-                    {
-                        enableHighAccuracy: true,
-                        timeout: 10000,
-                        maximumAge: 60000
+                        alert('Unable to get your location. Please enable location services.');
                     }
-                ).finally(() => {
-                    locateBtn.disabled = false;
-                    locateBtn.innerHTML = '<span class="material-symbols-outlined">my_location</span>';
-                });
+                );
             } else {
-                showToast('Geolocation is not supported by your browser', 'error');
+                alert('Geolocation is not supported by your browser.');
             }
         }
 
-        // Show user location on map
-        function showUserLocation(latitude, longitude) {
-            // Remove existing marker if any
-            if (userMarker) {
-                map.removeLayer(userMarker);
+        // Toggle between map layers
+        function toggleMapLayer() {
+            if (currentMapLayer === 'osm') {
+                map.removeLayer(osmLayer);
+                map.addLayer(esriLayer);
+                currentMapLayer = 'esri';
+            } else {
+                map.removeLayer(esriLayer);
+                map.addLayer(osmLayer);
+                currentMapLayer = 'osm';
             }
+        }
+
+        // Open edit profile modal
+        function openEditProfileModal() {
+            if (!userData) return;
             
-            // Create custom icon for user location
-            const userIcon = L.divIcon({
-                className: 'user-location-marker',
-                iconSize: [20, 20],
-                iconAnchor: [10, 10]
+            // Populate form with current data
+            document.getElementById('editFullName').value = userData.fullName;
+            document.getElementById('editPhone').value = userData.phone;
+            document.getElementById('editDistrict').value = userData.district;
+            document.getElementById('editEmail').value = userData.email;
+            
+            // Clear any previous error messages
+            document.querySelectorAll('.error-text').forEach(el => {
+                el.style.display = 'none';
             });
             
-            // Add marker to map
-            userMarker = L.marker([latitude, longitude], { icon: userIcon }).addTo(map);
-            
-            // Center map on user location
-            map.setView([latitude, longitude], 13);
+            // Show modal
+            editProfileModal.classList.add('active');
         }
 
-        // Event listeners
-        closeWelcome.addEventListener('click', function() {
-            welcomeBanner.classList.add('hidden');
-            localStorage.setItem('hasSeenWelcome', 'true');
-        });
-
-        editProfileBtn.addEventListener('click', function() {
-            // Populate form with current data
-            document.getElementById('editFullName').value = userData.fullName || '';
-            document.getElementById('editPhone').value = userData.phone || '';
-            document.getElementById('editDistrict').value = userData.district || '';
-            document.getElementById('editEmail').value = userData.email || '';
-            
-            // Show modal
-            editModal.classList.add('active');
-        });
-
-        closeModal.addEventListener('click', function() {
-            editModal.classList.remove('active');
-        });
-
-        cancelEditBtn.addEventListener('click', function() {
-            editModal.classList.remove('active');
-        });
-
-        saveProfileBtn.addEventListener('click', function() {
-            // Get form values
+        // Save profile changes
+        function saveProfileChanges() {
             const fullName = document.getElementById('editFullName').value.trim();
             const phone = document.getElementById('editPhone').value.trim();
             const district = document.getElementById('editDistrict').value;
@@ -934,7 +786,7 @@
                 hideError('editFullNameError');
             }
             
-            // Validate phone
+            // Validate phone number
             if (!phone) {
                 showError('editPhoneError', 'Please enter your phone number');
                 isValid = false;
@@ -966,63 +818,44 @@
             
             if (!isValid) return;
             
-            // Disable button and show loading
-            saveProfileBtn.disabled = true;
-            saveProfileBtn.textContent = 'SAVING...';
+            // Disable save button
+            const saveBtn = document.getElementById('saveProfileBtn');
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Saving...';
             
-            // Update user data in database
-            database.ref('users/' + emaId).update({
-                fullName: fullName,
-                phone: phone,
-                district: district,
-                email: email,
-                lastUpdated: new Date().toISOString()
-            })
-            .then(() => {
-                // Update local data
-                userData = {
-                    ...userData,
-                    fullName: fullName,
-                    phone: phone,
-                    district: district,
-                    email: email
-                };
-                
-                // Update UI
-                updateProfileUI();
-                
-                // Close modal
-                editModal.classList.remove('active');
-                
-                // Show success message
-                showToast('Profile updated successfully!', 'success');
-                
-                // Reload page after a short delay
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1500);
-            })
-            .catch((error) => {
-                showToast('Error updating profile: ' + error.message, 'error');
-            })
-            .finally(() => {
-                // Re-enable button
-                saveProfileBtn.disabled = false;
-                saveProfileBtn.textContent = 'SAVE CHANGES';
-            });
-        });
-
-        // Helper functions
-        function showToast(message, type = 'success') {
-            toastMessage.textContent = message;
-            toast.className = 'toast ' + type;
-            toast.classList.add('show');
+            // Update user data
+            userData.fullName = fullName;
+            userData.phone = phone;
+            userData.district = district;
+            userData.email = email;
             
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+            // Save to Firebase
+            database.ref('users/' + emaId).set(userData)
+                .then(() => {
+                    // Update UI
+                    userName.textContent = fullName;
+                    
+                    // Close modal
+                    editProfileModal.classList.remove('active');
+                    
+                    // Reset save button
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = 'Save Changes';
+                    
+                    // Show success message
+                    alert('Profile updated successfully!');
+                })
+                .catch((error) => {
+                    console.error('Error updating profile:', error);
+                    alert('Error updating profile. Please try again.');
+                    
+                    // Reset save button
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = 'Save Changes';
+                });
         }
 
+        // Helper functions
         function showError(elementId, message) {
             const element = document.getElementById(elementId);
             if (element) {
