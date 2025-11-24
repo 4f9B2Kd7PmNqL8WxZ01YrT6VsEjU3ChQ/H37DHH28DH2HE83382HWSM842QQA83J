@@ -4,663 +4,375 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EMA - Elephant Monitoring App</title>
-    <link href="https://fonts.googleapis.com/css2?family=Mona+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
     <style>
         :root {
-            --primary-green: #2a9d8f;
-            --mint-green: #81b29a;
-            --grayish-blue: #3d405b;
-            --light-gray: #f4f1de;
-            --dark-green: #264653;
-            --accent: #e76f51;
+            --primary-color: #2E7D32;
+            --primary-light: #60AD5E;
+            --primary-dark: #005005;
+            --secondary-color: #81C784;
+            --background-color: #F1F8E9;
+            --surface-color: #FFFFFF;
+            --error-color: #D32F2F;
+            --text-primary: #212121;
+            --text-secondary: #757575;
+            --border-radius: 12px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Mona Sans', sans-serif;
+            font-family: 'Roboto', 'Helvetica Sans', sans-serif;
         }
-        
+
         body {
-            background-color: #ffffff;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #000;
-            position: relative;
-            overflow-x: hidden;
-        }
-        
-        .container {
-            width: 90%;
-            max-width: 450px;
-            background-color: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .logo-container {
-            background-color: var(--primary-green);
             padding: 20px;
-            text-align: center;
-            color: white;
         }
-        
-        .logo-container h1 {
-            font-size: 24px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .logo-container h1 .material-icons {
-            margin-right: 10px;
-            font-size: 28px;
-        }
-        
-        .form-container {
-            padding: 30px;
-        }
-        
-        .form-toggle {
-            display: flex;
-            margin-bottom: 25px;
-            border-radius: 8px;
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background-color: var(--surface-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
             overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            position: relative;
         }
-        
-        .form-toggle button {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            background-color: var(--light-gray);
-            color: var(--grayish-blue);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .form-toggle button.active {
-            background-color: var(--primary-green);
+
+        .header {
+            background-color: var(--primary-color);
             color: white;
+            padding: 24px;
+            text-align: center;
         }
-        
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 16px;
+            display: block;
+            border-radius: 50%;
+            background-color: white;
+            padding: 10px;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 24px;
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
-        
+
         .form-group label {
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
-            color: var(--grayish-blue);
+            color: var(--text-primary);
         }
-        
-        .form-group input,
-        .form-group select {
+
+        .form-control {
             width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            padding: 12px 16px;
+            border: 1px solid #E0E0E0;
+            border-radius: var(--border-radius);
             font-size: 16px;
-            transition: all 0.3s ease;
+            transition: var(--transition);
+            background-color: #FAFAFA;
         }
-        
-        .form-group input:focus,
-        .form-group select:focus {
-            border-color: var(--primary-green);
+
+        .form-control:focus {
             outline: none;
-            box-shadow: 0 0 0 2px rgba(42, 157, 143, 0.2);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+            background-color: white;
         }
-        
-        .profile-pic-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .profile-pic {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background-color: var(--light-gray);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 10px;
-            overflow: hidden;
-            border: 3px solid var(--primary-green);
-        }
-        
-        .profile-pic img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .profile-pic .material-icons {
-            font-size: 40px;
-            color: var(--grayish-blue);
-        }
-        
-        .profile-pic-btn {
-            background-color: var(--mint-green);
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-        }
-        
-        .profile-pic-btn .material-icons {
-            font-size: 18px;
-            margin-right: 5px;
-        }
-        
-        .profile-pic-btn:hover {
-            background-color: var(--primary-green);
-        }
-        
-        .password-strength {
-            height: 5px;
-            margin-top: 5px;
-            border-radius: 5px;
-            background-color: #eee;
-            overflow: hidden;
-        }
-        
-        .password-strength-meter {
-            height: 100%;
-            width: 0;
-            transition: width 0.3s ease;
-        }
-        
-        .password-strength-text {
-            font-size: 12px;
-            margin-top: 5px;
-            color: var(--grayish-blue);
-        }
-        
-        .btn-primary {
-            background-color: var(--primary-green);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
+            border-radius: var(--border-radius);
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
             width: 100%;
-            transition: all 0.3s ease;
             margin-top: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
-        
-        .btn-primary .material-icons {
-            margin-right: 8px;
+
+        .btn:hover {
+            background-color: var(--primary-dark);
         }
-        
-        .btn-primary:hover {
-            background-color: var(--dark-green);
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
         }
-        
-        .btn-primary:disabled {
-            background-color: #cccccc;
+
+        .btn-secondary:hover {
+            background-color: rgba(46, 125, 50, 0.08);
+        }
+
+        .btn:disabled {
+            background-color: #BDBDBD;
             cursor: not-allowed;
         }
-        
-        .forgot-password {
-            text-align: right;
-            margin-top: 15px;
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0;
         }
-        
-        .forgot-password a {
-            color: var(--primary-green);
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background-color: #E0E0E0;
+        }
+
+        .divider span {
+            padding: 0 16px;
+            color: var(--text-secondary);
+        }
+
+        .message {
+            padding: 16px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .message.error {
+            background-color: #FFEBEE;
+            color: var(--error-color);
+            border: 1px solid #FFCDD2;
+        }
+
+        .message.success {
+            background-color: #E8F5E9;
+            color: var(--primary-dark);
+            border: 1px solid #C8E6C9;
+        }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        .ema-id {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-align: center;
+            margin: 20px 0;
+            padding: 16px;
+            background-color: rgba(46, 125, 50, 0.08);
+            border-radius: var(--border-radius);
+        }
+
+        .success-icon {
+            font-size: 64px;
+            color: var(--primary-color);
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 12px 16px;
+            background-color: #FAFAFA;
+            border: 1px solid #E0E0E0;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .file-input-label:hover {
+            background-color: #F5F5F5;
+        }
+
+        .preview-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 10px auto;
+            display: block;
+        }
+
+        .forgot-link {
+            text-align: center;
+            margin-top: 16px;
+            color: var(--primary-color);
+            cursor: pointer;
             text-decoration: none;
-            font-weight: 500;
+            display: inline-block;
         }
-        
-        .forgot-password a:hover {
+
+        .forgot-link:hover {
             text-decoration: underline;
         }
-        
-        .copyright {
-            text-align: center;
-            padding: 15px;
-            font-size: 12px;
-            color: var(--grayish-blue);
-            background-color: rgba(255, 255, 255, 0.7);
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .modal-content {
-            background-color: white;
-            padding: 30px;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 400px;
-            position: relative;
-        }
-        
-        .close-modal {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 20px;
-            cursor: pointer;
-            color: var(--grayish-blue);
-        }
-        
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            border-radius: 8px;
-            color: white;
-            font-weight: 500;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transform: translateX(150%);
-            transition: transform 0.3s ease;
-            z-index: 2000;
-        }
-        
-        .notification.success {
-            background-color: var(--primary-green);
-        }
-        
-        .notification.error {
-            background-color: var(--accent);
-        }
-        
-        .notification.show {
-            transform: translateX(0);
-        }
-        
-        .form-row {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .form-row .form-group {
-            flex: 1;
-        }
-        
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.8);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 3000;
-        }
-        
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(42, 157, 143, 0.3);
-            border-radius: 50%;
-            border-top-color: var(--primary-green);
-            animation: spin 1s ease-in-out infinite;
-        }
-        
-        .loading-text {
-            margin-top: 15px;
-            font-weight: 500;
-            color: var(--grayish-blue);
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .progress-bar {
-            width: 80%;
-            height: 6px;
-            background-color: #eee;
-            border-radius: 3px;
-            margin-top: 10px;
-            overflow: hidden;
-        }
-        
-        .progress {
-            height: 100%;
-            width: 0;
-            background-color: var(--primary-green);
-            transition: width 0.3s ease;
-        }
-        
-        .confirmation-dialog {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 2500;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .confirmation-content {
-            background-color: white;
-            padding: 30px;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-        }
-        
-        .confirmation-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: var(--grayish-blue);
-        }
-        
-        .confirmation-message {
-            margin-bottom: 25px;
-            color: #555;
-        }
-        
-        .confirmation-buttons {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .confirmation-btn {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .confirmation-btn.cancel {
-            background-color: #eee;
-            color: var(--grayish-blue);
-        }
-        
-        .confirmation-btn.confirm {
-            background-color: var(--primary-green);
-            color: white;
-        }
-        
-        .crop-container {
-            max-width: 100%;
-            max-height: 400px;
-            margin: 0 auto;
-        }
-        
-        .crop-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 15px;
-        }
-        
-        .crop-btn {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .crop-btn.cancel {
-            background-color: #eee;
-            color: var(--grayish-blue);
-        }
-        
-        .crop-btn.confirm {
-            background-color: var(--primary-green);
-            color: white;
-        }
-        
+
         @media (max-width: 480px) {
-            .form-row {
-                flex-direction: column;
-                gap: 0;
+            .container {
+                max-width: 100%;
+            }
+            
+            .content {
+                padding: 16px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo-container">
-            <h1><span class="material-icons">pets</span> EMA - Elephant Monitoring App</h1>
+        <div class="header">
+            <img src="https://raw.githubusercontent.com/4f9B2Kd7PmNqL8WxZ01YrT6VsEjU3ChQ/C4o9nB7tP3eY6nR5tX8s1EjU2KhL0ZmVQ/refs/heads/main/ema_logo.webp?token=GHSAT0AAAAAADPZ3NV754WLSZTXZNLCMIKK2JEA6VA" alt="EMA Logo" class="logo">
+            <h1 class="title">EMA</h1>
+            <p class="subtitle">Elephant Monitoring App</p>
         </div>
-        
-        <div class="form-container">
-            <div class="form-toggle">
-                <button id="loginTab" class="active">Login</button>
-                <button id="registerTab">Register</button>
+
+        <div class="content">
+            <div id="loginView" class="view active">
+                <div id="loginMessage" class="message"></div>
+                <div class="form-group">
+                    <label for="emaId">EMA ID</label>
+                    <input type="text" id="emaId" class="form-control" placeholder="Enter your EMA ID (e.g., 123456 or 123456-E)">
+                </div>
+                <button id="loginBtn" class="btn">LOGIN</button>
+                <div class="divider">
+                    <span>OR</span>
+                </div>
+                <button id="registerBtn" class="btn btn-secondary">REGISTER</button>
+                <a id="forgotIdLink" class="forgot-link">Forgot EMA ID?</a>
+                <div id="loginLoader" class="loader"></div>
             </div>
-            
-            <div id="loginForm">
-                <div class="form-group">
-                    <label for="loginEmail">Email</label>
-                    <input type="email" id="loginEmail" placeholder="Enter your email">
-                </div>
-                
-                <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <input type="password" id="loginPassword" placeholder="Enter your password">
-                </div>
-                
-                <button class="btn-primary" id="loginBtn">
-                    <span class="material-icons">login</span> Login
-                </button>
-                
-                <div class="forgot-password">
-                    <a href="#" id="forgotPasswordLink">Forgot Password?</a>
-                </div>
-            </div>
-            
-            <div id="registerForm" style="display: none;">
-                <div class="profile-pic-container">
-                    <div class="profile-pic" id="profilePicPreview">
-                        <span class="material-icons">person</span>
-                    </div>
-                    <input type="file" id="profilePicInput" accept="image/*" style="display: none;">
-                    <button class="profile-pic-btn" id="profilePicBtn">
-                        <span class="material-icons">photo_camera</span> Choose Profile Picture
-                    </button>
-                </div>
-                
-                <div class="form-group">
-                    <label for="regName">Full Name</label>
-                    <input type="text" id="regName" placeholder="Enter your full name">
-                </div>
-                
-                <div class="form-group">
-                    <label for="regPhone">Phone Number</label>
-                    <input type="tel" id="regPhone" placeholder="Enter your phone number (e.g., 0711234567)">
-                </div>
-                
-                <div class="form-group">
-                    <label for="regNIC">NIC Number</label>
-                    <input type="text" id="regNIC" placeholder="Enter your NIC number">
-                </div>
-                
-                <div class="form-group">
-                    <label for="regEmail">Email</label>
-                    <input type="email" id="regEmail" placeholder="Enter your email">
-                </div>
-                
-                <div class="form-group">
-                    <label for="regPassword">Password</label>
-                    <input type="password" id="regPassword" placeholder="Enter your password">
-                    <div class="password-strength">
-                        <div class="password-strength-meter" id="passwordStrengthMeter"></div>
-                    </div>
-                    <div class="password-strength-text" id="passwordStrengthText">Password strength</div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="regConfirmPassword">Confirm Password</label>
-                    <input type="password" id="regConfirmPassword" placeholder="Confirm your password">
-                </div>
-                
-                <div class="form-row">
+
+            <div id="registerView" class="view">
+                <div id="registerMessage" class="message"></div>
+                <form id="registerForm">
                     <div class="form-group">
-                        <label for="regProvince">Province</label>
-                        <select id="regProvince">
-                            <option value="">Select Province</option>
-                            <option value="Western">Western</option>
-                            <option value="Central">Central</option>
-                            <option value="Southern">Southern</option>
-                            <option value="Northern">Northern</option>
-                            <option value="Eastern">Eastern</option>
-                            <option value="North Western">North Western</option>
-                            <option value="North Central">North Central</option>
-                            <option value="Uva">Uva</option>
-                            <option value="Sabaragamuwa">Sabaragamuwa</option>
-                        </select>
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" class="form-control" required>
                     </div>
-                    
                     <div class="form-group">
-                        <label for="regDistrict">District</label>
-                        <select id="regDistrict">
-                            <option value="">Select District</option>
-                        </select>
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" class="form-control" required>
                     </div>
+                    <div class="form-group">
+                        <label for="region">Region</label>
+                        <input type="text" id="region" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="profilePicture">Profile Picture</label>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="profilePicture" accept="image/*">
+                            <label for="profilePicture" class="file-input-label">Choose Profile Picture</label>
+                        </div>
+                        <img id="previewImage" class="preview-image" style="display: none;">
+                    </div>
+                    <button type="submit" class="btn">REGISTER</button>
+                    <button type="button" id="backToLoginBtn" class="btn btn-secondary">BACK TO LOGIN</button>
+                </form>
+                <div id="registerLoader" class="loader"></div>
+            </div>
+
+            <div id="successView" class="view">
+                <div class="success-icon">
+                    <span class="material-icons">check_circle</span>
                 </div>
-                
-                <button class="btn-primary" id="registerBtn">
-                    <span class="material-icons">person_add</span> Register
-                </button>
+                <h2 style="text-align: center; margin-bottom: 10px;">Registration Successful!</h2>
+                <p style="text-align: center; color: var(--text-secondary); margin-bottom: 20px;">Your EMA ID has been generated. Please save it for future logins.</p>
+                <div id="generatedEmaId" class="ema-id"></div>
+                <button id="goToLoginBtn" class="btn">GO TO LOGIN</button>
             </div>
-        </div>
-        
-        <div class="copyright">
-            Project EMA by Aveesha Ninsara @2025
-        </div>
-    </div>
-    
-    <div class="modal" id="forgotPasswordModal">
-        <div class="modal-content">
-            <span class="close-modal" id="closeModal">&times;</span>
-            <h2 style="margin-bottom: 20px; color: var(--grayish-blue);">Forgot Password</h2>
-            
-            <div class="form-group">
-                <label for="forgotEmail">Email</label>
-                <input type="email" id="forgotEmail" placeholder="Enter your email">
-            </div>
-            
-            <div class="form-group">
-                <label for="forgotNIC">NIC Number</label>
-                <input type="text" id="forgotNIC" placeholder="Enter your NIC number">
-            </div>
-            
-            <div class="form-group">
-                <label for="forgotProvince">Province</label>
-                <select id="forgotProvince">
-                    <option value="">Select Province</option>
-                    <option value="Western">Western</option>
-                    <option value="Central">Central</option>
-                    <option value="Southern">Southern</option>
-                    <option value="Northern">Northern</option>
-                    <option value="Eastern">Eastern</option>
-                    <option value="North Western">North Western</option>
-                    <option value="North Central">North Central</option>
-                    <option value="Uva">Uva</option>
-                    <option value="Sabaragamuwa">Sabaragamuwa</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="forgotDistrict">District</label>
-                <select id="forgotDistrict">
-                    <option value="">Select District</option>
-                </select>
-            </div>
-            
-            <button class="btn-primary" id="forgotPasswordBtn">
-                <span class="material-icons">lock_reset</span> Recover Password
-            </button>
-        </div>
-    </div>
-    
-    <div class="modal" id="cropModal">
-        <div class="modal-content" style="max-width: 600px;">
-            <h2 style="margin-bottom: 20px; color: var(--grayish-blue);">Crop Profile Picture</h2>
-            <div class="crop-container">
-                <img id="cropImage" style="max-width: 100%;">
-            </div>
-            <div class="crop-buttons">
-                <button class="crop-btn cancel" id="cropCancel">Cancel</button>
-                <button class="crop-btn confirm" id="cropConfirm">Confirm</button>
+
+            <div id="forgotIdView" class="view">
+                <div id="forgotIdMessage" class="message"></div>
+                <h2 style="text-align: center; margin-bottom: 20px;">Find Your EMA ID</h2>
+                <form id="forgotIdForm">
+                    <div class="form-group">
+                        <label for="forgotEmail">Email</label>
+                        <input type="email" id="forgotEmail" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="forgotPhone">Phone Number</label>
+                        <input type="tel" id="forgotPhone" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn">FIND MY ID</button>
+                    <button type="button" id="backToLoginFromForgotBtn" class="btn btn-secondary">BACK TO LOGIN</button>
+                </form>
+                <div id="forgotIdLoader" class="loader"></div>
             </div>
         </div>
     </div>
-    
-    <div class="confirmation-dialog" id="passwordConfirmationDialog">
-        <div class="confirmation-content">
-            <div class="confirmation-title">Password Usage Confirmation</div>
-            <div class="confirmation-message">
-                Are you sure you want to use this password? Make sure it's strong and not easily guessable.
-            </div>
-            <div class="confirmation-buttons">
-                <button class="confirmation-btn cancel" id="passwordCancel">Cancel</button>
-                <button class="confirmation-btn confirm" id="passwordConfirm">Yes, Use This Password</button>
-            </div>
-        </div>
-    </div>
-    
-    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
-        <div class="loading-spinner"></div>
-        <div class="loading-text" id="loadingText">Processing...</div>
-        <div class="progress-bar">
-            <div class="progress" id="progressBar"></div>
-        </div>
-    </div>
-    
-    <div class="notification" id="notification"></div>
-    
+
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
     <script>
-        // Designed and developed by Aveesha Ninsara. Copyright Prohibited
-        
-        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCtIvVHA0Q_iuTIFNanoU8RhV4oC60L_YM",
             authDomain: "emausers-9837a.firebaseapp.com",
@@ -671,520 +383,278 @@
             measurementId: "G-TRDREJFMQ9",
             databaseURL: "https://emausers-9837a-default-rtdb.asia-southeast1.firebasedatabase.app/"
         };
-        
-        // Initialize Firebase
+
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-        
-        // Sri Lanka districts by province
-        const districtsByProvince = {
-            "Western": ["Colombo", "Gampaha", "Kalutara"],
-            "Central": ["Kandy", "Matale", "Nuwara Eliya"],
-            "Southern": ["Galle", "Matara", "Hambantota"],
-            "Northern": ["Jaffna", "Kilinochchi", "Mannar", "Vavuniya", "Mullaitivu"],
-            "Eastern": ["Batticaloa", "Ampara", "Trincomalee"],
-            "North Western": ["Kurunegala", "Puttalam"],
-            "North Central": ["Anuradhapura", "Polonnaruwa"],
-            "Uva": ["Badulla", "Monaragala"],
-            "Sabaragamuwa": ["Ratnapura", "Kegalle"]
-        };
-        
-        // DOM elements
-        const loginTab = document.getElementById('loginTab');
-        const registerTab = document.getElementById('registerTab');
-        const loginForm = document.getElementById('loginForm');
-        const registerForm = document.getElementById('registerForm');
-        const loginBtn = document.getElementById('loginBtn');
-        const registerBtn = document.getElementById('registerBtn');
-        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
-        const forgotPasswordModal = document.getElementById('forgotPasswordModal');
-        const closeModal = document.getElementById('closeModal');
-        const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
-        const notification = document.getElementById('notification');
-        const profilePicInput = document.getElementById('profilePicInput');
-        const profilePicBtn = document.getElementById('profilePicBtn');
-        const profilePicPreview = document.getElementById('profilePicPreview');
-        const regPassword = document.getElementById('regPassword');
-        const passwordStrengthMeter = document.getElementById('passwordStrengthMeter');
-        const passwordStrengthText = document.getElementById('passwordStrengthText');
-        const regProvince = document.getElementById('regProvince');
-        const regDistrict = document.getElementById('regDistrict');
-        const forgotProvince = document.getElementById('forgotProvince');
-        const forgotDistrict = document.getElementById('forgotDistrict');
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        const loadingText = document.getElementById('loadingText');
-        const progressBar = document.getElementById('progressBar');
-        const passwordConfirmationDialog = document.getElementById('passwordConfirmationDialog');
-        const passwordCancel = document.getElementById('passwordCancel');
-        const passwordConfirm = document.getElementById('passwordConfirm');
-        const cropModal = document.getElementById('cropModal');
-        const cropImage = document.getElementById('cropImage');
-        const cropCancel = document.getElementById('cropCancel');
-        const cropConfirm = document.getElementById('cropConfirm');
-        
-        // Variables
-        let profilePicBase64 = '';
-        let cropper;
-        let passwordConfirmed = false;
-        
-        // Check if user is already logged in
-        window.addEventListener('load', () => {
-            const userEmail = localStorage.getItem('emaUserEmail');
-            if (userEmail) {
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const emaId = localStorage.getItem('emaId');
+            if (emaId) {
                 window.location.href = 'home.html';
             }
-        });
-        
-        // Tab switching
-        loginTab.addEventListener('click', () => {
-            loginTab.classList.add('active');
-            registerTab.classList.remove('active');
-            loginForm.style.display = 'block';
-            registerForm.style.display = 'none';
-        });
-        
-        registerTab.addEventListener('click', () => {
-            registerTab.classList.add('active');
-            loginTab.classList.remove('active');
-            registerForm.style.display = 'block';
-            loginForm.style.display = 'none';
-        });
-        
-        // Profile picture handling
-        profilePicBtn.addEventListener('click', () => {
-            profilePicInput.click();
-        });
-        
-        profilePicInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                if (file.size > 2 * 1024 * 1024) { // 2MB limit
-                    showNotification('Image size should be less than 2MB', 'error');
+
+            const loginView = document.getElementById('loginView');
+            const registerView = document.getElementById('registerView');
+            const successView = document.getElementById('successView');
+            const forgotIdView = document.getElementById('forgotIdView');
+
+            const loginBtn = document.getElementById('loginBtn');
+            const registerBtn = document.getElementById('registerBtn');
+            const backToLoginBtn = document.getElementById('backToLoginBtn');
+            const goToLoginBtn = document.getElementById('goToLoginBtn');
+            const forgotIdLink = document.getElementById('forgotIdLink');
+            const backToLoginFromForgotBtn = document.getElementById('backToLoginFromForgotBtn');
+
+            const registerForm = document.getElementById('registerForm');
+            const forgotIdForm = document.getElementById('forgotIdForm');
+            const profilePictureInput = document.getElementById('profilePicture');
+            const previewImage = document.getElementById('previewImage');
+
+            const loginLoader = document.getElementById('loginLoader');
+            const registerLoader = document.getElementById('registerLoader');
+            const forgotIdLoader = document.getElementById('forgotIdLoader');
+
+            registerBtn.addEventListener('click', function() {
+                showView(registerView);
+            });
+
+            backToLoginBtn.addEventListener('click', function() {
+                showView(loginView);
+            });
+
+            goToLoginBtn.addEventListener('click', function() {
+                showView(loginView);
+            });
+
+            forgotIdLink.addEventListener('click', function() {
+                showView(forgotIdView);
+            });
+
+            backToLoginFromForgotBtn.addEventListener('click', function() {
+                showView(loginView);
+            });
+
+            profilePictureInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        previewImage.src = event.target.result;
+                        previewImage.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            loginBtn.addEventListener('click', function() {
+                const emaIdInput = document.getElementById('emaId').value.trim();
+                const loginMessage = document.getElementById('loginMessage');
+                
+                if (!emaIdInput) {
+                    showMessage(loginMessage, 'Please enter your EMA ID', 'error');
                     return;
                 }
-                
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    cropImage.src = event.target.result;
-                    cropModal.style.display = 'flex';
-                    
-                    // Initialize cropper
-                    if (cropper) {
-                        cropper.destroy();
-                    }
-                    
-                    cropper = new Cropper(cropImage, {
-                        aspectRatio: 1,
-                        viewMode: 1,
-                        guides: true,
-                        center: true,
-                        highlight: false,
-                        background: true,
-                        autoCrop: true,
-                        autoCropArea: 0.8,
-                        movable: true,
-                        rotatable: false,
-                        scalable: true,
-                        zoomable: true,
-                        cropBoxMovable: true,
-                        cropBoxResizable: true,
-                        toggleDragModeOnDblclick: false,
-                    });
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-        
-        // Crop confirmation
-        cropConfirm.addEventListener('click', () => {
-            if (cropper) {
-                const canvas = cropper.getCroppedCanvas({
-                    width: 300,
-                    height: 300,
-                });
-                
-                canvas.toBlob((blob) => {
-                    const reader = new FileReader();
-                    reader.onload = () => {
-                        // Try to get base64 under 20KB by adjusting quality
-                        let quality = 0.7;
-                        let base64 = canvas.toDataURL('image/jpeg', quality);
-                        
-                        while (base64.length > 20000 && quality > 0.1) {
-                            quality -= 0.1;
-                            base64 = canvas.toDataURL('image/jpeg', quality);
-                        }
-                        
-                        profilePicBase64 = base64;
-                        profilePicPreview.innerHTML = `<img src="${base64}" alt="Profile">`;
-                        
-                        if (base64.length > 20000) {
-                            showNotification('Image is still too large. Please choose a smaller image.', 'error');
-                            profilePicBase64 = '';
-                            profilePicPreview.innerHTML = '<span class="material-icons">person</span>';
-                        }
-                        
-                        cropModal.style.display = 'none';
-                        cropper.destroy();
-                        cropper = null;
-                    };
-                    reader.readAsDataURL(blob);
-                }, 'image/jpeg');
-            }
-        });
-        
-        // Crop cancellation
-        cropCancel.addEventListener('click', () => {
-            cropModal.style.display = 'none';
-            if (cropper) {
-                cropper.destroy();
-                cropper = null;
-            }
-        });
-        
-        // Password strength indicator
-        regPassword.addEventListener('input', () => {
-            const password = regPassword.value;
-            let strength = 0;
-            
-            if (password.length >= 8) strength++;
-            if (password.match(/[a-z]+/)) strength++;
-            if (password.match(/[A-Z]+/)) strength++;
-            if (password.match(/[0-9]+/)) strength++;
-            if (password.match(/[$@#&!]+/)) strength++;
-            
-            const strengthPercentage = (strength / 5) * 100;
-            passwordStrengthMeter.style.width = `${strengthPercentage}%`;
-            
-            if (strength < 2) {
-                passwordStrengthMeter.style.backgroundColor = '#e74c3c';
-                passwordStrengthText.textContent = 'Weak password';
-            } else if (strength < 4) {
-                passwordStrengthMeter.style.backgroundColor = '#f39c12';
-                passwordStrengthText.textContent = 'Medium password';
-            } else {
-                passwordStrengthMeter.style.backgroundColor = '#2ecc71';
-                passwordStrengthText.textContent = 'Strong password';
-            }
-            
-            // Reset password confirmation when password changes
-            passwordConfirmed = false;
-        });
-        
-        // District dropdown update based on province selection
-        regProvince.addEventListener('change', () => {
-            const province = regProvince.value;
-            regDistrict.innerHTML = '<option value="">Select District</option>';
-            
-            if (province && districtsByProvince[province]) {
-                districtsByProvince[province].forEach(district => {
-                    const option = document.createElement('option');
-                    option.value = district;
-                    option.textContent = district;
-                    regDistrict.appendChild(option);
-                });
-            }
-        });
-        
-        forgotProvince.addEventListener('change', () => {
-            const province = forgotProvince.value;
-            forgotDistrict.innerHTML = '<option value="">Select District</option>';
-            
-            if (province && districtsByProvince[province]) {
-                districtsByProvince[province].forEach(district => {
-                    const option = document.createElement('option');
-                    option.value = district;
-                    option.textContent = district;
-                    forgotDistrict.appendChild(option);
-                });
-            }
-        });
-        
-        // Show notification
-        function showNotification(message, type) {
-            notification.textContent = message;
-            notification.className = `notification ${type}`;
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-        
-        // Show loading overlay
-        function showLoading(text, progressInterval) {
-            loadingText.textContent = text;
-            loadingOverlay.style.display = 'flex';
-            
-            if (progressInterval) {
-                let progress = 0;
-                const interval = setInterval(() => {
-                    progress += 10;
-                    progressBar.style.width = `${progress}%`;
-                    
-                    if (progress >= 100) {
-                        clearInterval(interval);
-                    }
-                }, progressInterval);
-            }
-        }
-        
-        // Hide loading overlay
-        function hideLoading() {
-            loadingOverlay.style.display = 'none';
-            progressBar.style.width = '0%';
-        }
-        
-        // Validate Sri Lankan phone number
-        function validatePhoneNumber(phone) {
-            // Remove all non-digit characters
-            const digitsOnly = phone.replace(/\D/g, '');
-            
-            // Check if it starts with 0, 94, or +94 and has the correct prefix
-            if (digitsOnly.startsWith('94')) {
-                // Format: 94xxxxxxxxx
-                const prefix = digitsOnly.substring(2, 4);
-                return (digitsOnly.length === 11) && 
-                       ['71', '72', '74', '75', '76', '77', '78', '11'].includes(prefix);
-            } else if (digitsOnly.startsWith('0')) {
-                // Format: 0xxxxxxxxx
-                const prefix = digitsOnly.substring(1, 3);
-                return (digitsOnly.length === 10) && 
-                       ['71', '72', '74', '75', '76', '77', '78', '11'].includes(prefix);
-            } else {
-                return false;
-            }
-        }
-        
-        // Validate Sri Lankan NIC
-        function validateNIC(nic) {
-            const oldNICRegex = /^[0-9]{9}[vVxX]$/;
-            const newNICRegex = /^[0-9]{12}$/;
-            return oldNICRegex.test(nic) || newNICRegex.test(nic);
-        }
-        
-        // Login functionality
-        loginBtn.addEventListener('click', () => {
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            if (!email || !password) {
-                showNotification('Please enter both email and password', 'error');
-                return;
-            }
-            
-            showLoading('Logging in...', 100);
-            
-            // Query Firebase for user
-            database.ref('users').orderByChild('email').equalTo(email).once('value')
-                .then((snapshot) => {
-                    if (snapshot.exists()) {
-                        const userData = snapshot.val();
-                        const userKey = Object.keys(userData)[0];
-                        const user = userData[userKey];
-                        
-                        if (user.password === password) {
-                            localStorage.setItem('emaUserEmail', email);
-                            showNotification('Login successful! Redirecting...', 'success');
+
+                let emaIdToCheck = emaIdInput;
+                if (!emaIdInput.includes('-E')) {
+                    emaIdToCheck = emaIdInput + '-E';
+                }
+
+                loginLoader.style.display = 'block';
+                loginBtn.disabled = true;
+
+                database.ref('users/' + emaIdToCheck).once('value')
+                    .then((snapshot) => {
+                        loginLoader.style.display = 'none';
+                        loginBtn.disabled = false;
+
+                        if (snapshot.exists()) {
+                            localStorage.setItem('emaId', emaIdToCheck);
+                            showMessage(loginMessage, 'Login successful! Redirecting...', 'success');
                             setTimeout(() => {
-                                hideLoading();
                                 window.location.href = 'home.html';
                             }, 1500);
                         } else {
-                            hideLoading();
-                            showNotification('Incorrect password', 'error');
+                            showMessage(loginMessage, 'Invalid EMA ID. Please try again.', 'error');
                         }
-                    } else {
-                        hideLoading();
-                        showNotification('User not found', 'error');
-                    }
-                })
-                .catch((error) => {
-                    hideLoading();
-                    showNotification('Login failed: ' + error.message, 'error');
-                });
-        });
-        
-        // Register functionality
-        registerBtn.addEventListener('click', () => {
-            const name = document.getElementById('regName').value;
-            const phone = document.getElementById('regPhone').value;
-            const nic = document.getElementById('regNIC').value;
-            const email = document.getElementById('regEmail').value;
-            const password = document.getElementById('regPassword').value;
-            const confirmPassword = document.getElementById('regConfirmPassword').value;
-            const province = document.getElementById('regProvince').value;
-            const district = document.getElementById('regDistrict').value;
-            
-            // Validation
-            if (!name || !phone || !nic || !email || !password || !confirmPassword || !province || !district) {
-                showNotification('Please fill in all fields', 'error');
-                return;
-            }
-            
-            if (!validatePhoneNumber(phone)) {
-                showNotification('Please enter a valid Sri Lankan phone number (starting with 0, 94, or +94 followed by 71, 72, 74, 75, 76, 77, 78, or 11)', 'error');
-                return;
-            }
-            
-            if (!validateNIC(nic)) {
-                showNotification('Please enter a valid Sri Lankan NIC number', 'error');
-                return;
-            }
-            
-            if (password !== confirmPassword) {
-                showNotification('Passwords do not match', 'error');
-                return;
-            }
-            
-            if (password.length < 8) {
-                showNotification('Password must be at least 8 characters', 'error');
-                return;
-            }
-            
-            // Show password confirmation dialog if not already confirmed
-            if (!passwordConfirmed) {
-                passwordConfirmationDialog.style.display = 'flex';
-                return;
-            }
-            
-            // If password is confirmed, proceed with registration
-            performRegistration(name, phone, nic, email, password, province, district);
-        });
-        
-        // Password confirmation dialog handlers
-        passwordConfirm.addEventListener('click', () => {
-            passwordConfirmed = true;
-            passwordConfirmationDialog.style.display = 'none';
-            
-            // Trigger register button click again to continue registration
-            registerBtn.click();
-        });
-        
-        passwordCancel.addEventListener('click', () => {
-            passwordConfirmationDialog.style.display = 'none';
-            regPassword.focus();
-        });
-        
-        // Function to perform registration
-        function performRegistration(name, phone, nic, email, password, province, district) {
-            showLoading('Creating your account...', 150);
-            
-            // Check if user already exists
-            database.ref('users').orderByChild('email').equalTo(email).once('value')
-                .then((snapshot) => {
-                    if (snapshot.exists()) {
-                        hideLoading();
-                        showNotification('User with this email already exists', 'error');
-                        return;
-                    }
-                    
-                    // Create new user
-                    const newUser = {
-                        name,
+                    })
+                    .catch((error) => {
+                        loginLoader.style.display = 'none';
+                        loginBtn.disabled = false;
+                        showMessage(loginMessage, 'Error: ' + error.message, 'error');
+                    });
+            });
+
+            registerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const fullName = document.getElementById('fullName').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const region = document.getElementById('region').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const profilePicture = document.getElementById('profilePicture').files[0];
+                const registerMessage = document.getElementById('registerMessage');
+
+                if (!fullName || !phone || !region || !email) {
+                    showMessage(registerMessage, 'Please fill in all required fields', 'error');
+                    return;
+                }
+
+                registerLoader.style.display = 'block';
+                registerForm.querySelector('button[type="submit"]').disabled = true;
+
+                const emaId = generateEmaId();
+
+                const processRegistration = (profilePictureBase64) => {
+                    const userData = {
+                        fullName,
                         phone,
-                        nic,
+                        region,
                         email,
-                        password,
-                        province,
-                        district,
-                        profilePicture: profilePicBase64 || ''
+                        profilePicture: profilePictureBase64,
+                        registrationDate: new Date().toISOString()
                     };
-                    
-                    database.ref('users').push(newUser)
+
+                    database.ref('users/' + emaId).set(userData)
                         .then(() => {
-                            hideLoading();
-                            showNotification('Registration successful! Please login.', 'success');
+                            registerLoader.style.display = 'none';
+                            registerForm.querySelector('button[type="submit"]').disabled = false;
                             
-                            // Reset form
-                            document.getElementById('regName').value = '';
-                            document.getElementById('regPhone').value = '';
-                            document.getElementById('regNIC').value = '';
-                            document.getElementById('regEmail').value = '';
-                            document.getElementById('regPassword').value = '';
-                            document.getElementById('regConfirmPassword').value = '';
-                            document.getElementById('regProvince').value = '';
-                            document.getElementById('regDistrict').value = '';
-                            profilePicBase64 = '';
-                            profilePicPreview.innerHTML = '<span class="material-icons">person</span>';
-                            passwordConfirmed = false;
-                            
-                            // Switch to login tab
-                            loginTab.click();
+                            document.getElementById('generatedEmaId').textContent = emaId;
+                            showView(successView);
                         })
                         .catch((error) => {
-                            hideLoading();
-                            showNotification('Registration failed: ' + error.message, 'error');
+                            registerLoader.style.display = 'none';
+                            registerForm.querySelector('button[type="submit"]').disabled = false;
+                            showMessage(registerMessage, 'Error: ' + error.message, 'error');
                         });
-                })
-                .catch((error) => {
-                    hideLoading();
-                    showNotification('Registration failed: ' + error.message, 'error');
-                });
-        }
-        
-        // Forgot password functionality
-        forgotPasswordLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            forgotPasswordModal.style.display = 'flex';
-        });
-        
-        closeModal.addEventListener('click', () => {
-            forgotPasswordModal.style.display = 'none';
-        });
-        
-        window.addEventListener('click', (e) => {
-            if (e.target === forgotPasswordModal) {
-                forgotPasswordModal.style.display = 'none';
-            }
-        });
-        
-        forgotPasswordBtn.addEventListener('click', () => {
-            const email = document.getElementById('forgotEmail').value;
-            const nic = document.getElementById('forgotNIC').value;
-            const province = document.getElementById('forgotProvince').value;
-            const district = document.getElementById('forgotDistrict').value;
-            
-            if (!email || !nic || !province || !district) {
-                showNotification('Please fill in all fields', 'error');
-                return;
-            }
-            
-            if (!validateNIC(nic)) {
-                showNotification('Please enter a valid Sri Lankan NIC number', 'error');
-                return;
-            }
-            
-            showLoading('Verifying your information...', 200);
-            
-            // Query Firebase for user
-            database.ref('users').orderByChild('email').equalTo(email).once('value')
-                .then((snapshot) => {
-                    if (snapshot.exists()) {
-                        const userData = snapshot.val();
-                        const userKey = Object.keys(userData)[0];
-                        const user = userData[userKey];
+                };
+
+                if (profilePicture) {
+                    compressImage(profilePicture, 0.2)
+                        .then(compressedImage => {
+                            const reader = new FileReader();
+                            reader.onload = function(event) {
+                                processRegistration(event.target.result);
+                            };
+                            reader.readAsDataURL(compressedImage);
+                        })
+                        .catch(error => {
+                            registerLoader.style.display = 'none';
+                            registerForm.querySelector('button[type="submit"]').disabled = false;
+                            showMessage(registerMessage, 'Error processing image: ' + error.message, 'error');
+                        });
+                } else {
+                    processRegistration(null);
+                }
+            });
+
+            forgotIdForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('forgotEmail').value.trim();
+                const phone = document.getElementById('forgotPhone').value.trim();
+                const forgotIdMessage = document.getElementById('forgotIdMessage');
+                
+                if (!email || !phone) {
+                    showMessage(forgotIdMessage, 'Please fill in all required fields', 'error');
+                    return;
+                }
+
+                forgotIdLoader.style.display = 'block';
+                forgotIdForm.querySelector('button[type="submit"]').disabled = true;
+
+                database.ref('users').orderByChild('email').equalTo(email).once('value')
+                    .then((snapshot) => {
+                        forgotIdLoader.style.display = 'none';
+                        forgotIdForm.querySelector('button[type="submit"]').disabled = false;
                         
-                        if (user.nic === nic && user.province === province && user.district === district) {
-                            localStorage.setItem('emaUserEmail', email);
-                            showNotification('Verification successful! Redirecting...', 'success');
-                            setTimeout(() => {
-                                hideLoading();
-                                window.location.href = 'home.html';
-                            }, 1500);
+                        if (snapshot.exists()) {
+                            let found = false;
+                            let foundEmaId = '';
+                            
+                            snapshot.forEach((childSnapshot) => {
+                                const userData = childSnapshot.val();
+                                if (userData.phone === phone) {
+                                    found = true;
+                                    foundEmaId = childSnapshot.key;
+                                }
+                            });
+                            
+                            if (found) {
+                                showMessage(forgotIdMessage, `Your EMA ID is: ${foundEmaId}`, 'success');
+                            } else {
+                                showMessage(forgotIdMessage, 'No account found with the provided email and phone number', 'error');
+                            }
                         } else {
-                            hideLoading();
-                            showNotification('The provided information does not match our records', 'error');
+                            showMessage(forgotIdMessage, 'No account found with the provided email', 'error');
                         }
-                    } else {
-                        hideLoading();
-                        showNotification('User not found', 'error');
-                    }
-                })
-                .catch((error) => {
-                    hideLoading();
-                    showNotification('Verification failed: ' + error.message, 'error');
+                    })
+                    .catch((error) => {
+                        forgotIdLoader.style.display = 'none';
+                        forgotIdForm.querySelector('button[type="submit"]').disabled = false;
+                        showMessage(forgotIdMessage, 'Error: ' + error.message, 'error');
+                    });
+            });
+
+            function showView(view) {
+                document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+                view.classList.add('active');
+            }
+
+            function showMessage(element, message, type) {
+                element.textContent = message;
+                element.className = 'message ' + type;
+                element.style.display = 'block';
+                
+                setTimeout(() => {
+                    element.style.display = 'none';
+                }, 5000);
+            }
+
+            function generateEmaId() {
+                const randomNum = Math.floor(100000 + Math.random() * 900000);
+                return randomNum + '-E';
+            }
+
+            function compressImage(file, quality) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const img = new Image();
+                        img.onload = function() {
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+                            
+                            let width = img.width;
+                            let height = img.height;
+                            
+                            if (width > height) {
+                                if (width > 400) {
+                                    height *= 400 / width;
+                                    width = 400;
+                                }
+                            } else {
+                                if (height > 400) {
+                                    width *= 400 / height;
+                                    height = 400;
+                                }
+                            }
+                            
+                            canvas.width = width;
+                            canvas.height = height;
+                            
+                            ctx.drawImage(img, 0, 0, width, height);
+                            
+                            canvas.toBlob(function(blob) {
+                                resolve(blob);
+                            }, 'image/jpeg', quality);
+                        };
+                        img.src = event.target.result;
+                    };
+                    reader.readAsDataURL(file);
                 });
+            }
         });
     </script>
 </body>
