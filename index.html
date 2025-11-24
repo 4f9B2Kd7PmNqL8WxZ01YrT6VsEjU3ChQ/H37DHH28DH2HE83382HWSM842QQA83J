@@ -4,11 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EMA - Elephant Monitoring App</title>
-     <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/mona-sans" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/mona-sans" crossorigin="anonymous">
+
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-    
+
     <style>
         :root {
             --green: #42a75a;
@@ -27,11 +30,11 @@
             -moz-user-select: none;
             -ms-user-select: none;
         }
-        
+
         html, body {
             height: 100%;
         }
-        
+
         body {
             margin: 0;
             font-family: "Mona Sans", "Inter", "Helvetica Neue", Arial, sans-serif;
@@ -81,7 +84,7 @@
             text-align: center;
             color: #111;
         }
-        
+
         p.lead {
             text-align: center;
             font-size: 13px;
@@ -93,7 +96,7 @@
         form {
             margin-top: 6px;
         }
-        
+
         .field {
             position: relative;
             margin-bottom: 12px;
@@ -248,7 +251,7 @@
             background: linear-gradient(180deg, #ffffff, #f8fff8);
             border: 1px solid rgba(66,167,90,0.08);
         }
-        
+
         .big-illustration .material-symbols-outlined {
             font-size: 48px;
             color: var(--green);
@@ -327,16 +330,16 @@
             body {
                 padding: 18px;
             }
-            
+
             .card {
                 padding: 18px;
             }
-            
+
             .badge {
                 width: 68px;
                 height: 68px;
             }
-            
+
             .big-illustration {
                 width: 98px;
                 height: 98px;
@@ -345,23 +348,25 @@
     </style>
 </head>
 <body>
+
     <div class="card" role="main" aria-labelledby="title">
+
         <section id="login-screen" class="screen" aria-hidden="false">
             <div class="badge" aria-hidden="true">
                 <img src="https://www.mediafire.com/convkey/9884/4tvqloa9af9utcazg.jpg?size_id=3" alt="EMA Logo">
             </div>
 
             <h1 id="title">Login to EMA</h1>
-            <p class="lead">Enter your EMA ID | ඔබගේ EMA කේතය ඇතුළත් කරන්න</p>
+            <p class="lead">Enter your EMA ID to access the Elephant Monitoring App. | ඔබගේ EMA කේතය ඇතුලත් කරන්න</p>
 
             <div id="loginMessage" class="message"></div>
-            
+
             <form id="login-form" onsubmit="return false" autocomplete="on">
                 <div class="field">
                     <label for="emaId">EMA ID</label>
                     <div class="input">
                         <span class="material-symbols-outlined" aria-hidden="true">badge</span>
-                        <input id="emaId" type="text" placeholder="Enter your EMA ID (e.g., 123456 or 123456-E)" required />
+                        <input id="emaId" type="text" placeholder="කේත 123456 හෝ 123456-E ලෙස ඇතුළත් කළ හැකිය" required />
                     </div>
                     <div id="emaIdError" class="error-text"></div>
                 </div>
@@ -371,21 +376,21 @@
 
             <a class="link" href="#" onclick="showScreen('register-screen');return false;">Create a new account</a>
             <a class="link" href="#" onclick="showScreen('forgot-screen');return false;">Forgot EMA ID?</a>
-            
+
             <div class="footer">Project EMA by Aveesha Ninsara Pelawaththa @2025</div>
         </section>
-        
+
         <section id="register-screen" class="screen" aria-hidden="true" style="display:none;">
             <div class="badge" aria-hidden="true">
                 <img src="https://www.mediafire.com/convkey/9884/4tvqloa9af9utcazg.jpg?size_id=3" alt="EMA Logo">
             </div>
 
             <h1>Register for EMA</h1>
-            <p class="lead">Create your account to continue | ඉදිරියට යාමට ඔබගේ ගිණුම සාදන්න</p>
+            <p class="lead">Create your account to help monitor and protect elephants.</p>
 
             <div id="registerMessage" class="message"></div>
             <div id="registerLoader" class="loader"></div>
-            
+
             <form id="register-form" onsubmit="return false" autocomplete="on">
                 <div class="profile-upload-container">
                     <label for="profilePicture" class="profile-upload-label">
@@ -394,7 +399,7 @@
                     </label>
                     <input type="file" id="profilePicture" class="profile-upload-input" accept="image/*">
                 </div>
-                
+
                 <div class="field">
                     <label for="fullName">Full Name</label>
                     <div class="input">
@@ -403,7 +408,7 @@
                     </div>
                     <div id="fullNameError" class="error-text"></div>
                 </div>
-                
+
                 <div class="field">
                     <label for="phone">Phone Number</label>
                     <div class="input">
@@ -412,7 +417,7 @@
                     </div>
                     <div id="phoneError" class="error-text"></div>
                 </div>
-                
+
                 <div class="field">
                     <label for="district">District</label>
                     <div class="input">
@@ -448,7 +453,7 @@
                     </div>
                     <div id="districtError" class="error-text"></div>
                 </div>
-                
+
                 <div class="field">
                     <label for="email">Email</label>
                     <div class="input">
@@ -465,21 +470,19 @@
             <div class="footer">By creating an account you agree to our Terms & Privacy.</div>
         </section>
 
-        <!-- SUCCESS SCREEN -->
         <section id="success-screen" class="screen" aria-hidden="true" style="display:none;">
             <div class="big-illustration">
                 <span class="material-symbols-outlined">task_alt</span>
             </div>
 
             <h1>Registration Successful!</h1>
-            <p class="lead">Your EMA ID has been generated. Please save it for future logins. | ඔබගේ EMA කේතය නිර්මාණය කර ඇති අතර ඔබට එය පහතින් දැකිය හැක. කරුණාකර අනාගතයේදී මෙම දුරකථනයෙන් හෝ වෙනත් දුරකථනයකින් පිවිසුම් සඳහා එය සුරකින්න.</p>
-            
+            <p class="lead">Your EMA ID has been generated. Please save it for future logins. | ඔබගේ EMA කේතය නිර්මාණය කර ඇත. වෙනත් දුරක්තනවලදී ඔබගේ ගිනුමග පිවිසීමට මෙම අංකය අවශ්‍ය බැවින් එය සුරකින්න.</p>
+
             <div id="generatedEmaId" class="ema-id"></div>
-            
+
             <button class="btn" id="goToLoginBtn">GO TO LOGIN</button>
         </section>
 
-        <!-- FORGOT ID SCREEN -->
         <section id="forgot-screen" class="screen" aria-hidden="true" style="display:none;">
             <div class="big-illustration">
                 <span class="material-symbols-outlined">badge</span>
@@ -490,7 +493,7 @@
 
             <div id="forgotIdMessage" class="message"></div>
             <div id="forgotIdLoader" class="loader"></div>
-            
+
             <form id="forgot-form" onsubmit="return false" autocomplete="on">
                 <div class="field">
                     <label for="forgotEmail">Email Address</label>
@@ -500,7 +503,7 @@
                     </div>
                     <div id="forgotEmailError" class="error-text"></div>
                 </div>
-                
+
                 <div class="field">
                     <label for="forgotPhone">Phone Number</label>
                     <div class="input">
@@ -519,6 +522,7 @@
     </div>
 
     <script>
+
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('selectstart', event => event.preventDefault());
         document.addEventListener('dragstart', event => event.preventDefault());
@@ -533,9 +537,10 @@
             measurementId: "G-TRDREJFMQ9",
             databaseURL: "https://emausers-9837a-default-rtdb.asia-southeast1.firebasedatabase.app/"
         };
-        
+
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
+
         const loginBtn = document.getElementById('loginBtn');
         const registerBtn = document.getElementById('registerBtn');
         const backToLoginBtn = document.getElementById('backToLoginBtn');
@@ -572,7 +577,7 @@
             const emaIdInput = document.getElementById('emaId').value.trim();
             const loginMessage = document.getElementById('loginMessage');
             const emaIdError = document.getElementById('emaIdError');
-            
+
             if (!emaIdInput) {
                 showError('emaIdError', 'Please enter your EMA ID');
                 return;
@@ -619,16 +624,16 @@
             const profilePicture = document.getElementById('profilePicture').files[0];
             const registerMessage = document.getElementById('registerMessage');
             const registerLoader = document.getElementById('registerLoader');
-            
+
             let isValid = true;
-            
+
             if (!fullName) {
                 showError('fullNameError', 'Please enter your full name');
                 isValid = false;
             } else {
                 hideError('fullNameError');
             }
-            
+
             if (!phone) {
                 showError('phoneError', 'Please enter your phone number');
                 isValid = false;
@@ -638,14 +643,14 @@
             } else {
                 hideError('phoneError');
             }
-            
+
             if (!district) {
                 showError('districtError', 'Please select your district');
                 isValid = false;
             } else {
                 hideError('districtError');
             }
-            
+
             if (!email) {
                 showError('emailError', 'Please enter your email');
                 isValid = false;
@@ -655,7 +660,7 @@
             } else {
                 hideError('emailError');
             }
-            
+
             if (!isValid) return;
 
             registerLoader.style.display = 'block';
@@ -677,7 +682,7 @@
                     .then(() => {
                         registerLoader.style.display = 'none';
                         registerBtn.disabled = false;
-                        
+
                         document.getElementById('generatedEmaId').textContent = emaId;
                         showScreen('success-screen');
                     })
@@ -712,9 +717,9 @@
             const phone = document.getElementById('forgotPhone').value.trim();
             const forgotIdMessage = document.getElementById('forgotIdMessage');
             const forgotIdLoader = document.getElementById('forgotIdLoader');
-            
+
             let isValid = true;
-            
+
             if (!email) {
                 showError('forgotEmailError', 'Please enter your email');
                 isValid = false;
@@ -724,7 +729,7 @@
             } else {
                 hideError('forgotEmailError');
             }
-            
+
             if (!phone) {
                 showError('forgotPhoneError', 'Please enter your phone number');
                 isValid = false;
@@ -734,7 +739,7 @@
             } else {
                 hideError('forgotPhoneError');
             }
-            
+
             if (!isValid) return;
 
             forgotIdLoader.style.display = 'block';
@@ -744,11 +749,11 @@
                 .then((snapshot) => {
                     forgotIdLoader.style.display = 'none';
                     findIdBtn.disabled = false;
-                    
+
                     if (snapshot.exists()) {
                         let found = false;
                         let foundEmaId = '';
-                        
+
                         snapshot.forEach((childSnapshot) => {
                             const userData = childSnapshot.val();
                             if (userData.phone === phone) {
@@ -756,14 +761,14 @@
                                 foundEmaId = childSnapshot.key;
                             }
                         });
-                        
+
                         if (found) {
                             showMessage(forgotIdMessage, `Your EMA ID is: ${foundEmaId}`, 'success');
                         } else {
-                            showError('forgotPhoneError', 'සපයා ඇති විද්‍යුත් තැපෑල සහ දුරකථන අංකය සහිත ගිණුමක් හමු නොවීය.');
+                            showError('forgotPhoneError', 'No account found with the provided email and phone number');
                         }
                     } else {
-                        showError('forgotEmailError', 'ලබා දී ඇති විද්‍යුත් තැපෑල සමඟ කිසිදු ගිණුමක් හමු නොවීය.'');
+                        showError('forgotEmailError', 'No account found with the provided email');
                     }
                 })
                 .catch((error) => {
@@ -772,7 +777,7 @@
                     showMessage(forgotIdMessage, 'Error: ' + error.message, 'error');
                 });
         }
-        
+
         function showScreen(id) {
             const screens = document.querySelectorAll('.screen');
             screens.forEach(s => {
@@ -784,7 +789,7 @@
                     s.setAttribute('aria-hidden', 'true');
                 }
             });
-            
+
             setTimeout(() => {
                 const firstInput = document.querySelector('#' + id + ' input');
                 if (firstInput) firstInput.focus();
@@ -795,7 +800,7 @@
             element.textContent = message;
             element.className = 'message ' + type;
             element.style.display = 'block';
-            
+
             setTimeout(() => {
                 element.style.display = 'none';
             }, 5000);
@@ -829,10 +834,10 @@
                     img.onload = function() {
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
-                        
+
                         let width = img.width;
                         let height = img.height;
-                        
+
                         if (width > height) {
                             if (width > 400) {
                                 height *= 400 / width;
@@ -844,12 +849,12 @@
                                 height = 400;
                             }
                         }
-                        
+
                         canvas.width = width;
                         canvas.height = height;
-                        
+
                         ctx.drawImage(img, 0, 0, width, height);
-                        
+
                         canvas.toBlob(function(blob) {
                             resolve(blob);
                         }, 'image/jpeg', quality);
