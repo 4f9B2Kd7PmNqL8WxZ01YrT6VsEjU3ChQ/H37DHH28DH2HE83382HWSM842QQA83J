@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,20 +9,24 @@
     <style>
         :root {
             --primary-color: #2E7D32;
-            --primary-light: #60AD5E;
-            --primary-dark: #005005;
+            --primary-light: #4CAF50;
+            --primary-dark: #1B5E20;
             --secondary-color: #81C784;
-            --mint-color: #A5D6A7;
-            --parakeet-color: #8BC34A;
-            --nature-green: #4CAF50;
-            --background-color: #E8F5E9;
+            --accent-color: #8BC34A;
+            --background-color: #F5F9F5;
             --surface-color: #FFFFFF;
             --error-color: #D32F2F;
+            --warning-color: #FF9800;
+            --success-color: #388E3C;
             --text-primary: #212121;
-            --text-secondary: #757575;
-            --border-radius: 12px;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
+            --text-secondary: #616161;
+            --text-disabled: #BDBDBD;
+            --border-color: #E0E0E0;
+            --border-radius: 8px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.15);
+            --transition: all 0.2s ease;
         }
 
         * {
@@ -39,7 +41,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            background-color: var(--background-color);
             color: var(--text-primary);
             min-height: 100vh;
             display: flex;
@@ -49,7 +51,7 @@
 
         .app-container {
             width: 100%;
-            max-width: 450px;
+            max-width: 420px;
             margin: 0 auto;
             padding: 20px;
             flex: 1;
@@ -60,107 +62,119 @@
 
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
 
         .logo {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             margin: 0 auto 20px;
             display: block;
             border-radius: 50%;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--shadow-md);
+            border: 3px solid var(--surface-color);
         }
 
         .title {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 700;
             color: var(--primary-dark);
             margin-bottom: 8px;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
 
         .subtitle {
-            font-size: 18px;
+            font-size: 16px;
             color: var(--text-secondary);
             font-weight: 400;
         }
 
         .content {
             width: 100%;
-            background: rgba(255, 255, 255, 0.85);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
+            background-color: var(--surface-color);
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .form-group label {
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
-            color: var(--primary-dark);
+            color: var(--text-primary);
+            font-size: 14px;
         }
 
         .form-control {
             width: 100%;
-            padding: 14px 16px;
-            border: 2px solid transparent;
-            border-radius: 12px;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
             font-size: 16px;
             transition: var(--transition);
-            background-color: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            background-color: var(--surface-color);
         }
 
         .form-control:focus {
             outline: none;
-            border-color: var(--parakeet-color);
-            box-shadow: 0 0 0 3px rgba(139, 195, 74, 0.2);
-            background-color: white;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+
+        .form-control.error {
+            border-color: var(--error-color);
+        }
+
+        select.form-control {
+            cursor: pointer;
         }
 
         .btn {
             display: inline-block;
-            padding: 14px 24px;
-            background: linear-gradient(135deg, var(--parakeet-color) 0%, var(--nature-green) 100%);
+            padding: 12px 24px;
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: var(--border-radius);
             font-size: 16px;
             font-weight: 500;
             cursor: pointer;
             transition: var(--transition);
             text-align: center;
             width: 100%;
-            margin-top: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 8px;
+            box-shadow: var(--shadow-sm);
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            background-color: var(--primary-dark);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
         }
 
         .btn-secondary {
-            background: transparent;
+            background-color: transparent;
             color: var(--primary-color);
             border: 2px solid var(--primary-color);
         }
 
         .btn-secondary:hover {
-            background-color: rgba(46, 125, 50, 0.08);
-            transform: translateY(-2px);
+            background-color: rgba(46, 125, 50, 0.04);
         }
 
         .btn:disabled {
-            background: #BDBDBD;
+            background-color: var(--text-disabled);
             cursor: not-allowed;
             transform: none;
+            box-shadow: none;
         }
 
         .divider {
@@ -173,39 +187,47 @@
             content: '';
             flex: 1;
             height: 1px;
-            background-color: rgba(0, 0, 0, 0.1);
+            background-color: var(--border-color);
         }
 
         .divider span {
             padding: 0 16px;
             color: var(--text-secondary);
+            font-size: 14px;
         }
 
         .message {
-            padding: 16px;
+            padding: 12px 16px;
             border-radius: var(--border-radius);
             margin-bottom: 20px;
             display: none;
+            font-size: 14px;
         }
 
         .message.error {
-            background-color: rgba(211, 47, 47, 0.1);
+            background-color: #FFEBEE;
             color: var(--error-color);
-            border: 1px solid rgba(211, 47, 47, 0.2);
+            border: 1px solid #FFCDD2;
         }
 
         .message.success {
-            background-color: rgba(76, 175, 80, 0.1);
-            color: var(--primary-dark);
-            border: 1px solid rgba(76, 175, 80, 0.2);
+            background-color: #E8F5E9;
+            color: var(--success-color);
+            border: 1px solid #C8E6C9;
+        }
+
+        .message.warning {
+            background-color: #FFF3E0;
+            color: var(--warning-color);
+            border: 1px solid #FFE0B2;
         }
 
         .loader {
-            border: 4px solid rgba(46, 125, 50, 0.1);
-            border-top: 4px solid var(--primary-color);
+            border: 3px solid #F5F5F5;
+            border-top: 3px solid var(--primary-color);
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 32px;
+            height: 32px;
             animation: spin 1s linear infinite;
             margin: 20px auto;
             display: none;
@@ -225,19 +247,20 @@
         }
 
         .ema-id {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 700;
             color: var(--primary-color);
             text-align: center;
             margin: 20px 0;
             padding: 16px;
-            background-color: rgba(46, 125, 50, 0.08);
+            background-color: #F1F8E9;
             border-radius: var(--border-radius);
+            border: 1px solid #C8E6C9;
         }
 
         .success-icon {
             font-size: 64px;
-            color: var(--primary-color);
+            color: var(--success-color);
             text-align: center;
             margin: 20px 0;
         }
@@ -247,7 +270,7 @@
             overflow: hidden;
             display: inline-block;
             width: 100%;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .file-input-wrapper input[type=file] {
@@ -258,27 +281,28 @@
         .file-input-label {
             display: block;
             padding: 12px 16px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border: 2px dashed var(--parakeet-color);
-            border-radius: 12px;
+            background-color: #FAFAFA;
+            border: 2px dashed var(--border-color);
+            border-radius: var(--border-radius);
             cursor: pointer;
             transition: var(--transition);
             text-align: center;
         }
 
         .file-input-label:hover {
-            background-color: rgba(139, 195, 74, 0.1);
+            background-color: #F5F5F5;
+            border-color: var(--primary-color);
         }
 
         .preview-image {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             object-fit: cover;
             margin: 0 auto 20px;
             display: block;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-            border: 4px solid white;
+            box-shadow: var(--shadow-md);
+            border: 3px solid var(--surface-color);
         }
 
         .forgot-link {
@@ -288,6 +312,8 @@
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
+            font-size: 14px;
+            font-weight: 500;
         }
 
         .forgot-link:hover {
@@ -301,11 +327,11 @@
 
         .profile-upload-label {
             display: inline-block;
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
-            background-color: rgba(139, 195, 74, 0.1);
-            border: 3px dashed var(--parakeet-color);
+            background-color: #F5F5F5;
+            border: 2px dashed var(--border-color);
             cursor: pointer;
             position: relative;
             overflow: hidden;
@@ -313,7 +339,8 @@
         }
 
         .profile-upload-label:hover {
-            background-color: rgba(139, 195, 74, 0.2);
+            background-color: #EEEEEE;
+            border-color: var(--primary-color);
         }
 
         .profile-upload-label .material-icons {
@@ -321,74 +348,38 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 36px;
-            color: var(--parakeet-color);
+            font-size: 32px;
+            color: var(--text-secondary);
         }
 
         .profile-upload-input {
             display: none;
         }
 
-        .verification-container {
-            display: flex;
-            gap: 10px;
-        }
-
-        .verification-container .form-control {
-            flex: 1;
-        }
-
-        .verification-btn {
-            background: linear-gradient(135deg, var(--mint-color) 0%, var(--parakeet-color) 100%);
-            padding: 14px;
-            border-radius: 12px;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-weight: 500;
-            transition: var(--transition);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .verification-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .verification-btn:disabled {
-            background: #BDBDBD;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .otp-container {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            display: none;
-        }
-
-        .otp-input {
-            flex: 1;
-            text-align: center;
-            font-size: 18px;
-            font-weight: 500;
-        }
-
         .error-text {
             color: var(--error-color);
-            font-size: 14px;
-            margin-top: 5px;
+            font-size: 12px;
+            margin-top: 4px;
             display: none;
+        }
+
+        .input-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
         }
 
         @media (max-width: 480px) {
             .app-container {
-                padding: 15px;
+                padding: 16px;
             }
             
             .content {
-                padding: 20px;
+                padding: 24px;
+            }
+            
+            .title {
+                font-size: 24px;
             }
         }
     </style>
@@ -407,6 +398,7 @@
                 <div class="form-group">
                     <label for="emaId">EMA ID</label>
                     <input type="text" id="emaId" class="form-control" placeholder="Enter your EMA ID (e.g., 123456 or 123456-E)">
+                    <div class="input-hint">You can enter either 123456 or 123456-E format</div>
                     <div id="emaIdError" class="error-text"></div>
                 </div>
                 <button id="loginBtn" class="btn">LOGIN</button>
@@ -431,27 +423,15 @@
                     
                     <div class="form-group">
                         <label for="fullName">Full Name</label>
-                        <input type="text" id="fullName" class="form-control" required>
+                        <input type="text" id="fullName" class="form-control" placeholder="Enter your full name" required>
                         <div id="fullNameError" class="error-text"></div>
                     </div>
                     
                     <div class="form-group">
                         <label for="phone">Phone Number</label>
-                        <div class="verification-container">
-                            <input type="tel" id="phone" class="form-control" placeholder="947XXXXXXXX" required>
-                            <button type="button" id="verifyBtn" class="verification-btn">Verify</button>
-                        </div>
+                        <input type="tel" id="phone" class="form-control" placeholder="07XXXXXXXX or 947XXXXXXXX" required>
+                        <div class="input-hint">Valid formats: 07XXXXXXXX, 947XXXXXXXX, or +947XXXXXXXX</div>
                         <div id="phoneError" class="error-text"></div>
-                        
-                        <div id="otpContainer" class="otp-container">
-                            <input type="text" id="otp1" class="form-control otp-input" maxlength="1" required>
-                            <input type="text" id="otp2" class="form-control otp-input" maxlength="1" required>
-                            <input type="text" id="otp3" class="form-control otp-input" maxlength="1" required>
-                            <input type="text" id="otp4" class="form-control otp-input" maxlength="1" required>
-                            <input type="text" id="otp5" class="form-control otp-input" maxlength="1" required>
-                            <input type="text" id="otp6" class="form-control otp-input" maxlength="1" required>
-                        </div>
-                        <div id="otpError" class="error-text"></div>
                     </div>
                     
                     <div class="form-group">
@@ -489,11 +469,11 @@
                     
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" class="form-control" required>
+                        <input type="email" id="email" class="form-control" placeholder="Enter your email address" required>
                         <div id="emailError" class="error-text"></div>
                     </div>
                     
-                    <button type="submit" class="btn" id="submitBtn" disabled>REGISTER</button>
+                    <button type="submit" class="btn">REGISTER</button>
                     <button type="button" id="backToLoginBtn" class="btn btn-secondary">BACK TO LOGIN</button>
                 </form>
                 <div id="registerLoader" class="loader"></div>
@@ -503,24 +483,25 @@
                 <div class="success-icon">
                     <span class="material-icons">check_circle</span>
                 </div>
-                <h2 style="text-align: center; margin-bottom: 10px;">Registration Successful!</h2>
-                <p style="text-align: center; color: var(--text-secondary); margin-bottom: 20px;">Your EMA ID has been generated. Please save it for future logins.</p>
+                <h2 style="text-align: center; margin-bottom: 10px; color: var(--text-primary);">Registration Successful!</h2>
+                <p style="text-align: center; color: var(--text-secondary); margin-bottom: 20px; font-size: 14px;">Your EMA ID has been generated. Please save it for future logins.</p>
                 <div id="generatedEmaId" class="ema-id"></div>
                 <button id="goToLoginBtn" class="btn">GO TO LOGIN</button>
             </div>
 
             <div id="forgotIdView" class="view">
                 <div id="forgotIdMessage" class="message"></div>
-                <h2 style="text-align: center; margin-bottom: 20px;">Find Your EMA ID</h2>
+                <h2 style="text-align: center; margin-bottom: 20px; color: var(--text-primary);">Find Your EMA ID</h2>
                 <form id="forgotIdForm">
                     <div class="form-group">
                         <label for="forgotEmail">Email</label>
-                        <input type="email" id="forgotEmail" class="form-control" required>
+                        <input type="email" id="forgotEmail" class="form-control" placeholder="Enter your email address" required>
                         <div id="forgotEmailError" class="error-text"></div>
                     </div>
                     <div class="form-group">
                         <label for="forgotPhone">Phone Number</label>
-                        <input type="tel" id="forgotPhone" class="form-control" required>
+                        <input type="tel" id="forgotPhone" class="form-control" placeholder="07XXXXXXXX or 947XXXXXXXX" required>
+                        <div class="input-hint">Valid formats: 07XXXXXXXX, 947XXXXXXXX, or +947XXXXXXXX</div>
                         <div id="forgotPhoneError" class="error-text"></div>
                     </div>
                     <button type="submit" class="btn">FIND MY ID</button>
@@ -580,21 +561,6 @@
             const registerLoader = document.getElementById('registerLoader');
             const forgotIdLoader = document.getElementById('forgotIdLoader');
 
-            const verifyBtn = document.getElementById('verifyBtn');
-            const otpContainer = document.getElementById('otpContainer');
-            const otpInputs = [
-                document.getElementById('otp1'),
-                document.getElementById('otp2'),
-                document.getElementById('otp3'),
-                document.getElementById('otp4'),
-                document.getElementById('otp5'),
-                document.getElementById('otp6')
-            ];
-            const submitBtn = document.getElementById('submitBtn');
-
-            let phoneVerified = false;
-            let generatedOtp = '';
-
             registerBtn.addEventListener('click', function() {
                 showView(registerView);
             });
@@ -627,6 +593,34 @@
                     reader.readAsDataURL(file);
                 }
             });
+
+            function validatePhoneNumber(phone) {
+                const cleanedPhone = phone.replace(/\s+/g, '');
+                
+                if (cleanedPhone.startsWith('+947')) {
+                    const number = cleanedPhone.substring(3);
+                    return validateSriLankanNumber(number);
+                } else if (cleanedPhone.startsWith('947')) {
+                    const number = cleanedPhone.substring(3);
+                    return validateSriLankanNumber(number);
+                } else if (cleanedPhone.startsWith('07')) {
+                    const number = cleanedPhone.substring(2);
+                    return validateSriLankanNumber(number);
+                }
+                
+                return false;
+            }
+
+            function validateSriLankanNumber(number) {
+                if (number.length !== 8) return false;
+                
+                const mobilePrefixes = ['71', '72', '74', '75', '76', '77', '78', '70'];
+                const landlinePrefixes = ['11', '31', '32', '33', '34', '35', '36', '37', '38', '41', '45', '47', '65', '66', '67', '81', '91', '21', '23', '24', '25', '26', '27'];
+                
+                const prefix = number.substring(0, 2);
+                
+                return mobilePrefixes.includes(prefix) || landlinePrefixes.includes(prefix);
+            }
 
             loginBtn.addEventListener('click', function() {
                 const emaIdInput = document.getElementById('emaId').value.trim();
@@ -670,88 +664,6 @@
                     });
             });
 
-            verifyBtn.addEventListener('click', function() {
-                const phoneInput = document.getElementById('phone').value.trim();
-                const phoneError = document.getElementById('phoneError');
-                
-                if (!phoneInput) {
-                    showError('phoneError', 'Please enter your phone number');
-                    return;
-                }
-
-                if (!/^94[0-9]{9}$/.test(phoneInput)) {
-                    showError('phoneError', 'Please enter a valid Sri Lankan phone number (e.g., 94712345678)');
-                    return;
-                }
-
-                hideError('phoneError');
-                
-                verifyBtn.disabled = true;
-                verifyBtn.textContent = 'Sending...';
-                
-                generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-                
-                fetch('https://app.text.lk/api/v3/sms/send', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': 'Bearer 2286|ctQpLiY5ybaiB7ubXGLZda8SGaVFvkImsylqYMZ7fe522ece',
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        recipient: phoneInput,
-                        sender_id: 'EMA',
-                        type: 'plain',
-                        message: `Your EMA verification code is: ${generatedOtp}`
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    verifyBtn.disabled = false;
-                    verifyBtn.textContent = 'Verify';
-                    
-                    if (data.status === 'success') {
-                        otpContainer.style.display = 'flex';
-                        showMessage(document.getElementById('registerMessage'), 'Verification code sent to your phone', 'success');
-                    } else {
-                        showError('phoneError', 'Failed to send verification code. Please try again.');
-                    }
-                })
-                .catch(error => {
-                    verifyBtn.disabled = false;
-                    verifyBtn.textContent = 'Verify';
-                    showError('phoneError', 'Error: ' + error.message);
-                });
-            });
-
-            otpInputs.forEach((input, index) => {
-                input.addEventListener('input', function() {
-                    if (input.value.length === 1 && index < otpInputs.length - 1) {
-                        otpInputs[index + 1].focus();
-                    }
-                    
-                    const enteredOtp = otpInputs.map(input => input.value).join('');
-                    if (enteredOtp.length === 6) {
-                        if (enteredOtp === generatedOtp) {
-                            phoneVerified = true;
-                            submitBtn.disabled = false;
-                            hideError('otpError');
-                            showMessage(document.getElementById('registerMessage'), 'Phone number verified successfully', 'success');
-                        } else {
-                            showError('otpError', 'Invalid verification code');
-                            phoneVerified = false;
-                            submitBtn.disabled = true;
-                        }
-                    }
-                });
-                
-                input.addEventListener('keydown', function(e) {
-                    if (e.key === 'Backspace' && input.value === '' && index > 0) {
-                        otpInputs[index - 1].focus();
-                    }
-                });
-            });
-
             registerForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
@@ -767,6 +679,9 @@
                 if (!fullName) {
                     showError('fullNameError', 'Please enter your full name');
                     isValid = false;
+                } else if (fullName.length < 3) {
+                    showError('fullNameError', 'Full name must be at least 3 characters');
+                    isValid = false;
                 } else {
                     hideError('fullNameError');
                 }
@@ -774,18 +689,11 @@
                 if (!phone) {
                     showError('phoneError', 'Please enter your phone number');
                     isValid = false;
-                } else if (!/^94[0-9]{9}$/.test(phone)) {
-                    showError('phoneError', 'Please enter a valid Sri Lankan phone number (e.g., 94712345678)');
+                } else if (!validatePhoneNumber(phone)) {
+                    showError('phoneError', 'Please enter a valid Sri Lankan phone number');
                     isValid = false;
                 } else {
                     hideError('phoneError');
-                }
-                
-                if (!phoneVerified) {
-                    showError('otpError', 'Please verify your phone number');
-                    isValid = false;
-                } else {
-                    hideError('otpError');
                 }
                 
                 if (!district) {
@@ -808,14 +716,14 @@
                 if (!isValid) return;
 
                 registerLoader.style.display = 'block';
-                submitBtn.disabled = true;
+                registerForm.querySelector('button[type="submit"]').disabled = true;
 
                 const emaId = generateEmaId();
 
                 const processRegistration = (profilePictureBase64) => {
                     const userData = {
                         fullName,
-                        phone,
+                        phone: phone.replace(/\s+/g, ''),
                         district,
                         email,
                         profilePicture: profilePictureBase64,
@@ -825,14 +733,14 @@
                     database.ref('users/' + emaId).set(userData)
                         .then(() => {
                             registerLoader.style.display = 'none';
-                            submitBtn.disabled = false;
+                            registerForm.querySelector('button[type="submit"]').disabled = false;
                             
                             document.getElementById('generatedEmaId').textContent = emaId;
                             showView(successView);
                         })
                         .catch((error) => {
                             registerLoader.style.display = 'none';
-                            submitBtn.disabled = false;
+                            registerForm.querySelector('button[type="submit"]').disabled = false;
                             showMessage(registerMessage, 'Error: ' + error.message, 'error');
                         });
                 };
@@ -848,7 +756,7 @@
                         })
                         .catch(error => {
                             registerLoader.style.display = 'none';
-                            submitBtn.disabled = false;
+                            registerForm.querySelector('button[type="submit"]').disabled = false;
                             showMessage(registerMessage, 'Error processing image: ' + error.message, 'error');
                         });
                 } else {
@@ -878,8 +786,8 @@
                 if (!phone) {
                     showError('forgotPhoneError', 'Please enter your phone number');
                     isValid = false;
-                } else if (!/^94[0-9]{9}$/.test(phone)) {
-                    showError('forgotPhoneError', 'Please enter a valid Sri Lankan phone number (e.g., 94712345678)');
+                } else if (!validatePhoneNumber(phone)) {
+                    showError('forgotPhoneError', 'Please enter a valid Sri Lankan phone number');
                     isValid = false;
                 } else {
                     hideError('forgotPhoneError');
@@ -901,7 +809,7 @@
                             
                             snapshot.forEach((childSnapshot) => {
                                 const userData = childSnapshot.val();
-                                if (userData.phone === phone) {
+                                if (userData.phone === phone.replace(/\s+/g, '')) {
                                     found = true;
                                     foundEmaId = childSnapshot.key;
                                 }
@@ -942,11 +850,21 @@
                 const element = document.getElementById(elementId);
                 element.textContent = message;
                 element.style.display = 'block';
+                
+                const input = element.previousElementSibling;
+                if (input && input.classList.contains('form-control')) {
+                    input.classList.add('error');
+                }
             }
 
             function hideError(elementId) {
                 const element = document.getElementById(elementId);
                 element.style.display = 'none';
+                
+                const input = element.previousElementSibling;
+                if (input && input.classList.contains('form-control')) {
+                    input.classList.remove('error');
+                }
             }
 
             function generateEmaId() {
