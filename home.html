@@ -506,7 +506,7 @@
             width: 100%;
             height: 100%;
             background: rgba(255,255,255,0.9);
-            display: flex;
+            display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -1245,13 +1245,29 @@
             color: white;
         }
 
-        /* Hide Leaflet controls */
-        .leaflet-control-zoom {
-            display: none !important;
+        /* Report type selection screen */
+        .report-type-selection {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
-        .leaflet-control-attribution {
-            display: none !important;
+        .report-type-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .report-type-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .report-type-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 40px;
         }
 
         /* Responsive adjustments */
@@ -1417,14 +1433,18 @@
         <div class="report-form-content">
             <!-- Report type selection -->
             <div class="report-slide active" id="reportTypeSlide">
-                <div class="report-options">
-                    <div class="report-option sighting" id="sightingOption">
-                        <i class="fas fa-eye"></i>
-                        Elephant Sighting
-                    </div>
-                    <div class="report-option accident" id="accidentOption">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        Elephant Accident
+                <div class="report-type-selection">
+                    <h2 class="report-type-title">What would you like to report?</h2>
+                    <p class="report-type-subtitle">Select one of the options below to continue</p>
+                    <div class="report-options">
+                        <div class="report-option sighting" id="sightingOption">
+                            <i class="fas fa-eye"></i>
+                            Elephant Sighting
+                        </div>
+                        <div class="report-option accident" id="accidentOption">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Elephant Accident
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1468,7 +1488,7 @@
                     <div class="dial-button-action dial-backspace" id="countBackspace">
                         <span class="material-symbols-outlined">backspace</span>
                     </div>
-                    <div class="dial-button-action dial-correct" id="countCorrect">Correct</div>
+                    <div class="dial-button-action dial-correct" id="countCorrect">Continue</div>
                 </div>
             </div>
             
@@ -1718,7 +1738,7 @@
     <input type="file" id="reportImageInput4" accept="image/*" style="display: none;">
     
     <!-- Loader -->
-    <div class="loader-container" id="loader" style="display: none;">
+    <div class="loader-container" id="loader">
         <div class="loader"></div>
         <div class="loader-text">Loading your data...</div>
     </div>
@@ -1819,7 +1839,6 @@
             const hasVisited = localStorage.getItem('emaHasVisited');
             if (!hasVisited) {
                 welcomeBanner.style.display = 'flex';
-                localStorage.setItem('emaHasVisited', 'true');
             } else {
                 welcomeBanner.style.display = 'none';
             }
@@ -2230,14 +2249,6 @@
 
         // Load user data from Firebase
         function loadUserData() {
-            // Check if EMA ID exists first
-            emaId = localStorage.getItem('emaId');
-            if (!emaId) {
-                window.location.href = 'index.html';
-                return;
-            }
-
-            // Show loader
             loader.style.display = 'flex';
 
             database.ref('users/' + emaId).once('value')
@@ -2257,9 +2268,6 @@
                         
                         // Initialize map after loading user data
                         initializeMap();
-                        
-                        // Hide loader
-                        loader.style.display = 'none';
                     } else {
                         alert('User data not found. Please login again.');
                         window.location.href = 'index.html';
@@ -2329,7 +2337,7 @@
                 // Store the location for the report
                 reportLocation = e.latlng;
                 
-                // Open report form immediately without adding a marker
+                // Open report form immediately
                 openReportForm();
             });
 
