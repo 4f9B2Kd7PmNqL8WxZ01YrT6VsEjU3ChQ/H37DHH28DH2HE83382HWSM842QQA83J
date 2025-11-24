@@ -1254,31 +1254,6 @@
             display: none !important;
         }
 
-        /* Report type selection screen */
-        .report-type-selection {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        .report-type-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .report-type-title {
-            font-size: 28px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .report-type-subtitle {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 40px;
-        }
-
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .report-options {
@@ -1442,18 +1417,14 @@
         <div class="report-form-content">
             <!-- Report type selection -->
             <div class="report-slide active" id="reportTypeSlide">
-                <div class="report-type-selection">
-                    <h2 class="report-type-title">What would you like to report?</h2>
-                    <p class="report-type-subtitle">Select one of the options below to continue</p>
-                    <div class="report-options">
-                        <div class="report-option sighting" id="sightingOption">
-                            <i class="fas fa-eye"></i>
-                            Elephant Sighting
-                        </div>
-                        <div class="report-option accident" id="accidentOption">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            Elephant Accident
-                        </div>
+                <div class="report-options">
+                    <div class="report-option sighting" id="sightingOption">
+                        <i class="fas fa-eye"></i>
+                        Elephant Sighting
+                    </div>
+                    <div class="report-option accident" id="accidentOption">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Elephant Accident
                     </div>
                 </div>
             </div>
@@ -1497,7 +1468,7 @@
                     <div class="dial-button-action dial-backspace" id="countBackspace">
                         <span class="material-symbols-outlined">backspace</span>
                     </div>
-                    <div class="dial-button-action dial-correct" id="countCorrect">Continue</div>
+                    <div class="dial-button-action dial-correct" id="countCorrect">Correct</div>
                 </div>
             </div>
             
@@ -1747,7 +1718,7 @@
     <input type="file" id="reportImageInput4" accept="image/*" style="display: none;">
     
     <!-- Loader -->
-    <div class="loader-container" id="loader">
+    <div class="loader-container" id="loader" style="display: none;">
         <div class="loader"></div>
         <div class="loader-text">Loading your data...</div>
     </div>
@@ -1848,6 +1819,7 @@
             const hasVisited = localStorage.getItem('emaHasVisited');
             if (!hasVisited) {
                 welcomeBanner.style.display = 'flex';
+                localStorage.setItem('emaHasVisited', 'true');
             } else {
                 welcomeBanner.style.display = 'none';
             }
@@ -1909,6 +1881,22 @@
 
         reportDetailsClose.addEventListener('click', function() {
             reportDetailsModal.classList.remove('active');
+        });
+
+        retryLocationBtn.addEventListener('click', function() {
+            locationErrorModal.classList.remove('active');
+            initializeMap();
+        });
+
+        openSettingsBtn.addEventListener('click', function() {
+            // Open device settings (works on most mobile devices)
+            if (navigator.userAgent.includes('Android')) {
+                window.location.href = 'app-settings:location';
+            } else if (navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad')) {
+                window.location.href = 'app-settings:root=LOCATION_SERVICES';
+            } else {
+                window.open('https://support.google.com/?p=android_location_settings');
+            }
         });
 
         // Prevent info modal from closing when clicking outside
@@ -2242,6 +2230,14 @@
 
         // Load user data from Firebase
         function loadUserData() {
+            // Check if EMA ID exists first
+            emaId = localStorage.getItem('emaId');
+            if (!emaId) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Show loader
             loader.style.display = 'flex';
 
             database.ref('users/' + emaId).once('value')
@@ -2261,6 +2257,9 @@
                         
                         // Initialize map after loading user data
                         initializeMap();
+                        
+                        // Hide loader
+                        loader.style.display = 'none';
                     } else {
                         alert('User data not found. Please login again.');
                         window.location.href = 'index.html';
@@ -2352,9 +2351,6 @@
                     })
                 }).addTo(map);
                 
-                // Center map on user location
-                map.setView([lat, lng], 12);
-                
                 // Watch for location changes
                 navigator.geolocation.watchPosition(
                     (newPosition) => {
@@ -2374,6 +2370,11 @@
             
             // Load reports
             loadReports();
+        }
+
+        // Show location error modal
+        function showLocationError() {
+            locationErrorModal.classList.add('active');
         }
 
         // Load reports from Firebase
@@ -2538,11 +2539,6 @@
             }
         }
 
-        // Show location error modal
-        function showLocationError() {
-            locationErrorModal.classList.add('active');
-        }
-
         // Open edit profile modal
         function openEditProfileModal() {
             if (!userData) return;
@@ -2672,3 +2668,88 @@
             for (let i = 1; i <= 4; i++) {
                 const uploadBox = document.getElementById(`imageUpload${i}`);
                 uploadBox.classList.remove('has-image');
+                uploadBox.innerHTML = `
+                    <i class="fas fa-camera"></i>
+                    <div>Image ${i}</div>
+                `;
+            }
+            
+            // Reset radio selections
+            document.querySelectorAll('.radio-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Show form
+            reportFormContainer.classList.add('active');
+            showSlide('reportTypeSlide');
+        }
+
+        // Close report form
+        function closeReportForm() {
+            reportFormContainer.classList.remove('active');
+            
+            // Don't remove the report location marker - keep it on map
+        }
+
+        // Show specific slide in report form
+        function showSlide(slideId) {
+            // Hide all slides
+            document.querySelectorAll('.report-slide').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // Show requested slide
+            document.getElementById(slideId).classList.add('active');
+        }
+
+        // Generate report ID
+        function generateReportId(type) {
+            const prefix = type === 'sighting' ? 'S' : 'A';
+            const randomNum = Math.floor(100000000000 + Math.random() * 900000000);
+            return randomNum + '-' + prefix;
+        }
+
+        // Compress image
+        function compressImage(file, quality) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        let width = img.width;
+                        let height = img.height;
+                        
+                        // Calculate new dimensions to achieve target file size
+                        const maxDimension = 800; // Adjust as needed
+                        if (width > height) {
+                            if (width > maxDimension) {
+                                height *= maxDimension / width;
+                                width = maxDimension;
+                            }
+                        } else {
+                            if (height > maxDimension) {
+                                width *= maxDimension / height;
+                                height = maxDimension;
+                            }
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        canvas.toBlob(function(blob) {
+                            resolve(blob);
+                        }, 'image/jpeg', quality);
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+    </script>
+</body>
+</html>
