@@ -26,6 +26,9 @@
             --card-radius: 20px;
             --glass: rgba(255,255,255,0.92);
             --background-light: #f5f7f5;
+            --blue: #4285F4;
+            --red: #EA4335;
+            --yellow: #FBBC05;
         }
 
         * {
@@ -90,6 +93,31 @@
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid white;
+            position: relative;
+        }
+
+        .user-avatar-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .user-avatar:hover .user-avatar-overlay {
+            opacity: 1;
+        }
+
+        .user-avatar-overlay .material-symbols-outlined {
+            color: white;
+            font-size: 18px;
         }
 
         .user-info {
@@ -159,6 +187,66 @@
         .map-toggle .material-symbols-outlined {
             font-size: 24px;
             color: var(--green);
+        }
+
+        /* User location button */
+        .user-location-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--glass);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            backdrop-filter: blur(6px) saturate(110%);
+            border: 1px solid rgba(255,255,255,0.2);
+            z-index: 1000;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .user-location-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+
+        .user-location-btn .material-symbols-outlined {
+            font-size: 24px;
+            color: var(--blue);
+        }
+
+        /* Info button */
+        .info-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--glass);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            backdrop-filter: blur(6px) saturate(110%);
+            border: 1px solid rgba(255,255,255,0.2);
+            z-index: 1000;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .info-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+
+        .info-btn .material-symbols-outlined {
+            font-size: 24px;
+            color: var(--muted);
         }
 
         /* Welcome banner */
@@ -328,6 +416,20 @@
             background: transparent;
         }
 
+        .input select {
+            border: 0;
+            outline: 0;
+            font-size: 15px;
+            flex: 1;
+            background: transparent;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+
         .input .material-symbols-outlined {
             font-size: 18px;
             color: var(--muted);
@@ -411,6 +513,709 @@
             box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.3), 0 0 0 6px rgba(66, 133, 244, 0.1);
         }
 
+        .report-marker {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .sighting-marker {
+            background: var(--green);
+        }
+
+        .accident-marker {
+            background: var(--red);
+        }
+
+        .accident-medical-marker {
+            background: var(--yellow);
+        }
+
+        /* Report location marker */
+        .report-location-marker {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(66, 167, 90, 0.7);
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px rgba(66, 167, 90, 0.3), 0 0 0 6px rgba(66, 167, 90, 0.1);
+            transform: translate(-50%, -50%);
+            animation: pulse 1.5s infinite;
+            z-index: 1000;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(66, 167, 90, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(66, 167, 90, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(66, 167, 90, 0);
+            }
+        }
+
+        /* Report add button */
+        .report-add-btn {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(66, 167, 90, 0.3);
+            z-index: 1000;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* Report popup cloud */
+        .report-popup-cloud {
+            position: absolute;
+            background: white;
+            border-radius: 20px;
+            padding: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .report-popup-cloud::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 10px 10px 0;
+            border-style: solid;
+            border-color: white transparent transparent;
+        }
+
+        /* Report form container */
+        .report-form-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 3000;
+            display: none;
+            flex-direction: column;
+        }
+
+        .report-form-container.active {
+            display: flex;
+        }
+
+        .report-form-header {
+            padding: 20px;
+            background: var(--green);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .report-form-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .report-form-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .report-form-close:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .report-form-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .report-slide {
+            display: none;
+            height: 100%;
+        }
+
+        .report-slide.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .report-options {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: 100%;
+        }
+
+        .report-option {
+            flex: 1;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 24px;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .report-option.sighting {
+            background: var(--green);
+        }
+
+        .report-option.accident {
+            background: var(--red);
+        }
+
+        .report-option:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .report-option .material-symbols-outlined {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .report-question {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .radio-options {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .radio-option {
+            flex: 1;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #e6e6e6;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .radio-option.selected {
+            border-color: var(--green);
+            background: rgba(66, 167, 90, 0.1);
+        }
+
+        .radio-option .material-symbols-outlined {
+            font-size: 40px;
+            margin-bottom: 10px;
+            color: var(--muted);
+        }
+
+        .radio-option.selected .material-symbols-outlined {
+            color: var(--green);
+        }
+
+        /* Dial pad */
+        .dial-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .dial-button {
+            aspect-ratio: 1;
+            border-radius: 15px;
+            border: 1px solid #e6e6e6;
+            background: white;
+            font-size: 24px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dial-button:hover {
+            background: #f5f5f5;
+        }
+
+        .dial-button:active {
+            transform: scale(0.95);
+            background: #e6e6e6;
+        }
+
+        .dial-display {
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            background: #f5f5f5;
+        }
+
+        .dial-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .dial-button-action {
+            flex: 1;
+            padding: 15px;
+            border-radius: 15px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .dial-correct {
+            background: var(--green);
+            color: white;
+        }
+
+        .dial-backspace {
+            background: #f5f5f5;
+        }
+
+        /* Image upload */
+        .image-upload-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .image-upload-box {
+            aspect-ratio: 1;
+            border-radius: 15px;
+            border: 2px dashed #e6e6e6;
+            background: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-upload-box:hover {
+            border-color: var(--green);
+            background: rgba(66, 167, 90, 0.05);
+        }
+
+        .image-upload-box .material-symbols-outlined {
+            font-size: 40px;
+            color: var(--muted);
+            margin-bottom: 10px;
+        }
+
+        .image-upload-box.has-image {
+            border-style: solid;
+            padding: 0;
+        }
+
+        .image-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-remove {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* Text area */
+        .text-area {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px solid #e6e6e6;
+            font-size: 16px;
+            resize: none;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .text-area:focus {
+            border-color: var(--green);
+        }
+
+        /* Submit button */
+        .submit-button {
+            padding: 18px;
+            border-radius: 15px;
+            background: var(--green);
+            color: white;
+            border: none;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .submit-button:hover {
+            background: var(--green-strong);
+        }
+
+        .submit-button:disabled {
+            background: #BDBDBD;
+            cursor: not-allowed;
+        }
+
+        /* Success modal */
+        .success-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 4000;
+        }
+
+        .success-modal.active {
+            display: flex;
+        }
+
+        .success-content {
+            background: white;
+            border-radius: var(--card-radius);
+            padding: 30px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            animation: slideUp 0.4s ease;
+        }
+
+        .success-gif {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .success-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--green);
+            margin-bottom: 15px;
+        }
+
+        .success-message {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 25px;
+        }
+
+        .success-button {
+            background: var(--green);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .success-button:hover {
+            background: var(--green-strong);
+        }
+
+        /* Report details modal */
+        .report-details-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            flex-direction: column;
+            z-index: 4000;
+        }
+
+        .report-details-modal.active {
+            display: flex;
+        }
+
+        .report-details-content {
+            background: white;
+            border-radius: var(--card-radius) var(--card-radius) 0 0;
+            padding: 20px;
+            width: 100%;
+            max-width: 100%;
+            flex: 1;
+            overflow-y: auto;
+            animation: slideUp 0.4s ease;
+        }
+
+        .report-details-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e6e6e6;
+        }
+
+        .report-details-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .report-details-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .report-details-close:hover {
+            background: #e0e0e0;
+        }
+
+        .report-info {
+            margin-bottom: 20px;
+        }
+
+        .report-info-label {
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 5px;
+        }
+
+        .report-info-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .report-images {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .report-image {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .report-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .report-action-btn {
+            flex: 1;
+            padding: 15px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .call-btn {
+            background: var(--green);
+            color: white;
+        }
+
+        .download-btn {
+            background: var(--blue);
+            color: white;
+        }
+
+        /* Info modal */
+        .info-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            flex-direction: column;
+            z-index: 4000;
+        }
+
+        .info-modal.active {
+            display: flex;
+        }
+
+        .info-content {
+            background: white;
+            border-radius: var(--card-radius);
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            margin: auto;
+            animation: slideUp 0.4s ease;
+        }
+
+        .info-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .info-section {
+            margin-bottom: 25px;
+        }
+
+        .info-section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--green);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-section-title .material-symbols-outlined {
+            font-size: 24px;
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .info-item .material-symbols-outlined {
+            color: var(--green);
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .info-item-text {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        .marker-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .marker-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .marker-legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .marker-legend-text {
+            font-size: 14px;
+            color: #555;
+        }
+
         /* Hide Leaflet controls */
         .leaflet-control-zoom {
             display: none !important;
@@ -418,6 +1223,21 @@
 
         .leaflet-control-attribution {
             display: none !important;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .report-options {
+                flex-direction: column;
+            }
+            
+            .image-upload-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .report-images {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -427,7 +1247,12 @@
     
     <!-- User profile pill card -->
     <div class="user-pill" id="userPill">
-        <img id="userAvatar" class="user-avatar" src="" alt="User Avatar">
+        <div class="user-avatar-container">
+            <img id="userAvatar" class="user-avatar" src="" alt="User Avatar">
+            <div class="user-avatar-overlay">
+                <span class="material-symbols-outlined">camera_alt</span>
+            </div>
+        </div>
         <div class="user-info">
             <p id="userName" class="user-name">Loading...</p>
             <p id="userEmaId" class="user-ema-id">Loading...</p>
@@ -440,6 +1265,16 @@
     <!-- Map toggle button -->
     <div class="map-toggle" id="mapToggleBtn">
         <span class="material-symbols-outlined">layers</span>
+    </div>
+    
+    <!-- User location button -->
+    <div class="user-location-btn" id="userLocationBtn">
+        <span class="material-symbols-outlined">my_location</span>
+    </div>
+    
+    <!-- Info button -->
+    <div class="info-btn" id="infoBtn">
+        <span class="material-symbols-outlined">info</span>
     </div>
     
     <!-- Welcome banner -->
@@ -533,6 +1368,292 @@
         </div>
     </div>
     
+    <!-- Report form container -->
+    <div class="report-form-container" id="reportFormContainer">
+        <div class="report-form-header">
+            <div class="report-form-title" id="reportFormTitle">Report</div>
+            <div class="report-form-close" id="reportFormClose">
+                <span class="material-symbols-outlined">close</span>
+            </div>
+        </div>
+        
+        <div class="report-form-content">
+            <!-- Report type selection -->
+            <div class="report-slide active" id="reportTypeSlide">
+                <div class="report-options">
+                    <div class="report-option sighting" id="sightingOption">
+                        <span class="material-symbols-outlined">visibility</span>
+                        Elephant Sighting
+                    </div>
+                    <div class="report-option accident" id="accidentOption">
+                        <span class="material-symbols-outlined">warning</span>
+                        Elephant Accident
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Elephant/Tusker selection -->
+            <div class="report-slide" id="elephantTypeSlide">
+                <h3 class="report-question">What did you see?</h3>
+                <div class="radio-options">
+                    <div class="radio-option" id="elephantOption">
+                        <span class="material-symbols-outlined">pets</span>
+                        Elephant
+                    </div>
+                    <div class="radio-option" id="tuskerOption">
+                        <span class="material-symbols-outlined">emoji_nature</span>
+                        Tusker
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Count selection -->
+            <div class="report-slide" id="countSlide">
+                <h3 class="report-question">How many did you see?</h3>
+                <div class="dial-display" id="countDisplay">0</div>
+                <div class="dial-pad">
+                    <div class="dial-button" data-value="1">1</div>
+                    <div class="dial-button" data-value="2">2</div>
+                    <div class="dial-button" data-value="3">3</div>
+                    <div class="dial-button" data-value="4">4</div>
+                    <div class="dial-button" data-value="5">5</div>
+                    <div class="dial-button" data-value="6">6</div>
+                    <div class="dial-button" data-value="7">7</div>
+                    <div class="dial-button" data-value="8">8</div>
+                    <div class="dial-button" data-value="9">9</div>
+                    <div class="dial-button" data-value="*">*</div>
+                    <div class="dial-button" data-value="0">0</div>
+                    <div class="dial-button" data-value="#">
+                        <span class="material-symbols-outlined">backspace</span>
+                    </div>
+                </div>
+                <div class="dial-actions">
+                    <div class="dial-button-action dial-backspace" id="countBackspace">
+                        <span class="material-symbols-outlined">backspace</span>
+                    </div>
+                    <div class="dial-button-action dial-correct" id="countCorrect">Correct</div>
+                </div>
+            </div>
+            
+            <!-- Image upload -->
+            <div class="report-slide" id="imagesSlide">
+                <h3 class="report-question">Add images (max 4)</h3>
+                <div class="image-upload-container">
+                    <div class="image-upload-box" id="imageUpload1">
+                        <span class="material-symbols-outlined">add_photo_alternate</span>
+                        <div>Image 1</div>
+                    </div>
+                    <div class="image-upload-box" id="imageUpload2">
+                        <span class="material-symbols-outlined">add_photo_alternate</span>
+                        <div>Image 2</div>
+                    </div>
+                    <div class="image-upload-box" id="imageUpload3">
+                        <span class="material-symbols-outlined">add_photo_alternate</span>
+                        <div>Image 3</div>
+                    </div>
+                    <div class="image-upload-box" id="imageUpload4">
+                        <span class="material-symbols-outlined">add_photo_alternate</span>
+                        <div>Image 4</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Description -->
+            <div class="report-slide" id="descriptionSlide">
+                <h3 class="report-question">Brief Description</h3>
+                <textarea class="text-area" id="reportDescription" placeholder="Describe what you saw..."></textarea>
+                <button class="submit-button" id="submitReportBtn">Submit Report</button>
+            </div>
+            
+            <!-- Accident specific questions -->
+            <div class="report-slide" id="injurySlide">
+                <h3 class="report-question">Were there any injuries?</h3>
+                <div class="radio-options">
+                    <div class="radio-option" id="injuredHumansOption">
+                        <span class="material-symbols-outlined">person</span>
+                        Injured Humans
+                    </div>
+                    <div class="radio-option" id="injuredElephantsOption">
+                        <span class="material-symbols-outlined">pets</span>
+                        Injured Elephants
+                    </div>
+                </div>
+            </div>
+            
+            <div class="report-slide" id="medicalHelpSlide">
+                <h3 class="report-question">Is medical help needed?</h3>
+                <div class="radio-options">
+                    <div class="radio-option" id="medicalYesOption">
+                        <span class="material-symbols-outlined">emergency</span>
+                        Yes
+                    </div>
+                    <div class="radio-option" id="medicalNoOption">
+                        <span class="material-symbols-outlined">check_circle</span>
+                        No
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Success modal -->
+    <div class="success-modal" id="successModal">
+        <div class="success-content">
+            <div class="success-gif">
+                <img src="https://media.tenor.com/bm8Q6yAlsPsAAAAj/verified.gif" alt="Success" width="150" height="150">
+            </div>
+            <h2 class="success-title">Report Submitted!</h2>
+            <p class="success-message">Your report has been successfully submitted. Thank you for helping protect elephants!</p>
+            <button class="success-button" id="successCloseBtn">Close</button>
+        </div>
+    </div>
+    
+    <!-- Report details modal -->
+    <div class="report-details-modal" id="reportDetailsModal">
+        <div class="report-details-content">
+            <div class="report-details-header">
+                <h3 class="report-details-title" id="reportDetailsTitle">Report Details</h3>
+                <div class="report-details-close" id="reportDetailsClose">
+                    <span class="material-symbols-outlined">close</span>
+                </div>
+            </div>
+            
+            <div class="report-info">
+                <div class="report-info-label">Report Type</div>
+                <div class="report-info-value" id="reportTypeValue">-</div>
+            </div>
+            
+            <div class="report-info">
+                <div class="report-info-label">Date & Time</div>
+                <div class="report-info-value" id="reportDateTimeValue">-</div>
+            </div>
+            
+            <div class="report-info">
+                <div class="report-info-label">Location</div>
+                <div class="report-info-value" id="reportLocationValue">-</div>
+            </div>
+            
+            <div class="report-info">
+                <div class="report-info-label">Elephant Type</div>
+                <div class="report-info-value" id="reportElephantTypeValue">-</div>
+            </div>
+            
+            <div class="report-info">
+                <div class="report-info-label">Count</div>
+                <div class="report-info-value" id="reportCountValue">-</div>
+            </div>
+            
+            <div id="accidentSpecificInfo" style="display: none;">
+                <div class="report-info">
+                    <div class="report-info-label">Injuries</div>
+                    <div class="report-info-value" id="reportInjuriesValue">-</div>
+                </div>
+                
+                <div class="report-info">
+                    <div class="report-info-label">Medical Help Needed</div>
+                    <div class="report-info-value" id="reportMedicalHelpValue">-</div>
+                </div>
+            </div>
+            
+            <div class="report-info">
+                <div class="report-info-label">Description</div>
+                <div class="report-info-value" id="reportDescriptionValue">-</div>
+            </div>
+            
+            <div class="report-info">
+                <div class="report-info-label">Reported By</div>
+                <div class="report-info-value" id="reporterNameValue">-</div>
+            </div>
+            
+            <div class="report-info">
+                <div class="report-info-label">Contact Number</div>
+                <div class="report-info-value" id="reporterPhoneValue">-</div>
+            </div>
+            
+            <div class="report-images" id="reportImagesContainer">
+                <!-- Images will be added dynamically -->
+            </div>
+            
+            <div class="report-actions">
+                <button class="report-action-btn call-btn" id="callReporterBtn">
+                    <span class="material-symbols-outlined">call</span>
+                    Call Reporter
+                </button>
+                <button class="report-action-btn download-btn" id="downloadImagesBtn">
+                    <span class="material-symbols-outlined">download</span>
+                    Download Images
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Info modal -->
+    <div class="info-modal" id="infoModal">
+        <div class="info-content">
+            <h2 class="info-title">EMA Information</h2>
+            
+            <div class="info-section">
+                <h3 class="info-section-title">
+                    <span class="material-symbols-outlined">pets</span>
+                    About EMA
+                </h3>
+                <p class="info-item-text">
+                    EMA (Elephant Monitoring App) is a community-driven platform for tracking elephant sightings and accidents. It helps protect both elephants and humans by providing real-time information about elephant movements.
+                </p>
+            </div>
+            
+            <div class="info-section">
+                <h3 class="info-section-title">
+                    <span class="material-symbols-outlined">map</span>
+                    Map Markers
+                </h3>
+                <div class="marker-legend">
+                    <div class="marker-legend-item">
+                        <div class="marker-legend-color sighting-marker"></div>
+                        <div class="marker-legend-text">Elephant Sighting</div>
+                    </div>
+                    <div class="marker-legend-item">
+                        <div class="marker-legend-color accident-marker"></div>
+                        <div class="marker-legend-text">Elephant Accident</div>
+                    </div>
+                    <div class="marker-legend-item">
+                        <div class="marker-legend-color accident-medical-marker"></div>
+                        <div class="marker-legend-text">Accident with Medical Help Needed</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <h3 class="info-section-title">
+                    <span class="material-symbols-outlined">visibility</span>
+                    Report Visibility
+                </h3>
+                <p class="info-item-text">
+                    Only reports from the last 12 hours are visible on the map to ensure information is current and relevant. Older reports are archived in the database but not displayed on the map.
+                </p>
+            </div>
+            
+            <div class="info-section">
+                <h3 class="info-section-title">
+                    <span class="material-symbols-outlined">verified</span>
+                    Report Verification
+                </h3>
+                <p class="info-item-text">
+                    EMA uses a verification system to minimize fake reports. Users can report suspicious sightings, and our team reviews flagged content regularly.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Profile picture upload input -->
+    <input type="file" id="profilePictureInput" accept="image/*" style="display: none;">
+    
+    <!-- Report images upload inputs -->
+    <input type="file" id="reportImageInput1" accept="image/*" style="display: none;">
+    <input type="file" id="reportImageInput2" accept="image/*" style="display: none;">
+    <input type="file" id="reportImageInput3" accept="image/*" style="display: none;">
+    <input type="file" id="reportImageInput4" accept="image/*" style="display: none;">
+    
     <!-- Loader -->
     <div class="loader-container" id="loader">
         <div class="loader"></div>
@@ -577,6 +1698,16 @@
         const closeModalBtn = document.getElementById('closeModalBtn');
         const editProfileForm = document.getElementById('editProfileForm');
         const mapToggleBtn = document.getElementById('mapToggleBtn');
+        const userLocationBtn = document.getElementById('userLocationBtn');
+        const infoBtn = document.getElementById('infoBtn');
+        const reportFormContainer = document.getElementById('reportFormContainer');
+        const reportFormClose = document.getElementById('reportFormClose');
+        const successModal = document.getElementById('successModal');
+        const successCloseBtn = document.getElementById('successCloseBtn');
+        const reportDetailsModal = document.getElementById('reportDetailsModal');
+        const reportDetailsClose = document.getElementById('reportDetailsClose');
+        const infoModal = document.getElementById('infoModal');
+        const profilePictureInput = document.getElementById('profilePictureInput');
 
         // Map variables
         let map;
@@ -584,10 +1715,28 @@
         let currentMapLayer = 'osm'; // Default to OpenStreetMap
         let osmLayer;
         let esriLayer;
+        let reportMarkers = [];
+        let reportLocationMarker = null;
+        let reportLocation = null;
+        let reportPopup = null;
 
         // User data
         let userData = null;
         let emaId = null;
+
+        // Report data
+        let reportData = {
+            type: '',
+            elephantType: '',
+            count: 0,
+            images: [],
+            description: '',
+            injuries: [],
+            medicalHelpNeeded: false,
+            location: null,
+            timestamp: null,
+            reporterId: emaId
+        };
 
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
@@ -631,6 +1780,343 @@
 
         mapToggleBtn.addEventListener('click', function() {
             toggleMapLayer();
+        });
+
+        userLocationBtn.addEventListener('click', function() {
+            centerMapOnUser();
+        });
+
+        infoBtn.addEventListener('click', function() {
+            infoModal.classList.add('active');
+        });
+
+        reportFormClose.addEventListener('click', function() {
+            closeReportForm();
+        });
+
+        successCloseBtn.addEventListener('click', function() {
+            successModal.classList.remove('active');
+            location.reload();
+        });
+
+        reportDetailsClose.addEventListener('click', function() {
+            reportDetailsModal.classList.remove('active');
+        });
+
+        // Profile picture upload
+        userAvatar.addEventListener('click', function() {
+            profilePictureInput.click();
+        });
+
+        profilePictureInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                compressImage(file, 0.2)
+                    .then(compressedImage => {
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            const base64 = event.target.result;
+                            
+                            // Update UI
+                            userAvatar.src = base64;
+                            
+                            // Update user data
+                            userData.profilePicture = base64;
+                            
+                            // Save to Firebase
+                            database.ref('users/' + emaId).update({
+                                profilePicture: base64
+                            }).then(() => {
+                                alert('Profile picture updated successfully!');
+                            }).catch((error) => {
+                                console.error('Error updating profile picture:', error);
+                                alert('Error updating profile picture. Please try again.');
+                            });
+                        };
+                        reader.readAsDataURL(compressedImage);
+                    })
+                    .catch(error => {
+                        console.error('Error compressing image:', error);
+                        alert('Error processing image. Please try again.');
+                    });
+            }
+        });
+
+        // Report type selection
+        document.getElementById('sightingOption').addEventListener('click', function() {
+            reportData.type = 'sighting';
+            showSlide('elephantTypeSlide');
+        });
+
+        document.getElementById('accidentOption').addEventListener('click', function() {
+            reportData.type = 'accident';
+            showSlide('elephantTypeSlide');
+        });
+
+        // Elephant/Tusker selection
+        document.getElementById('elephantOption').addEventListener('click', function() {
+            reportData.elephantType = 'elephant';
+            
+            // Remove selection from other option
+            document.querySelectorAll('.radio-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            this.classList.add('selected');
+            
+            // Move to next slide
+            setTimeout(() => {
+                if (reportData.type === 'accident') {
+                    showSlide('injurySlide');
+                } else {
+                    showSlide('countSlide');
+                }
+            }, 300);
+        });
+
+        document.getElementById('tuskerOption').addEventListener('click', function() {
+            reportData.elephantType = 'tusker';
+            
+            // Remove selection from other option
+            document.querySelectorAll('.radio-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            this.classList.add('selected');
+            
+            // Move to next slide
+            setTimeout(() => {
+                if (reportData.type === 'accident') {
+                    showSlide('injurySlide');
+                } else {
+                    showSlide('countSlide');
+                }
+            }, 300);
+        });
+
+        // Count dial pad
+        document.querySelectorAll('.dial-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const value = this.getAttribute('data-value');
+                const countDisplay = document.getElementById('countDisplay');
+                
+                if (value === '#') {
+                    // Backspace
+                    const currentCount = countDisplay.textContent;
+                    if (currentCount.length > 0) {
+                        countDisplay.textContent = currentCount.slice(0, -1);
+                    }
+                } else if (value === '*') {
+                    // Clear
+                    countDisplay.textContent = '0';
+                } else {
+                    // Add digit
+                    const currentCount = countDisplay.textContent;
+                    if (currentCount === '0') {
+                        countDisplay.textContent = value;
+                    } else {
+                        countDisplay.textContent = currentCount + value;
+                    }
+                }
+            });
+        });
+
+        document.getElementById('countBackspace').addEventListener('click', function() {
+            const countDisplay = document.getElementById('countDisplay');
+            const currentCount = countDisplay.textContent;
+            if (currentCount.length > 0) {
+                countDisplay.textContent = currentCount.slice(0, -1);
+            }
+        });
+
+        document.getElementById('countCorrect').addEventListener('click', function() {
+            const countDisplay = document.getElementById('countDisplay');
+            reportData.count = parseInt(countDisplay.textContent) || 0;
+            
+            // Move to next slide
+            showSlide('imagesSlide');
+        });
+
+        // Image upload
+        for (let i = 1; i <= 4; i++) {
+            const uploadBox = document.getElementById(`imageUpload${i}`);
+            const input = document.getElementById(`reportImageInput${i}`);
+            
+            uploadBox.addEventListener('click', function() {
+                input.click();
+            });
+            
+            input.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    compressImage(file, 0.1) // Compress to around 50KB
+                        .then(compressedImage => {
+                            const reader = new FileReader();
+                            reader.onload = function(event) {
+                                const base64 = event.target.result;
+                                
+                                // Update UI
+                                uploadBox.classList.add('has-image');
+                                uploadBox.innerHTML = `
+                                    <img src="${base64}" class="image-preview" alt="Image ${i}">
+                                    <div class="image-remove" data-index="${i-1}">
+                                        <span class="material-symbols-outlined">close</span>
+                                    </div>
+                                `;
+                                
+                                // Store in report data
+                                reportData.images[i-1] = base64;
+                                
+                                // Add remove event listener
+                                uploadBox.querySelector('.image-remove').addEventListener('click', function(e) {
+                                    e.stopPropagation();
+                                    const index = parseInt(this.getAttribute('data-index'));
+                                    
+                                    // Reset UI
+                                    uploadBox.classList.remove('has-image');
+                                    uploadBox.innerHTML = `
+                                        <span class="material-symbols-outlined">add_photo_alternate</span>
+                                        <div>Image ${i}</div>
+                                    `;
+                                    
+                                    // Remove from report data
+                                    reportData.images[index] = null;
+                                    
+                                    // Re-add click event
+                                    uploadBox.addEventListener('click', function() {
+                                        input.click();
+                                    });
+                                });
+                            };
+                            reader.readAsDataURL(compressedImage);
+                        })
+                        .catch(error => {
+                            console.error('Error compressing image:', error);
+                            alert('Error processing image. Please try again.');
+                        });
+                }
+            });
+        }
+
+        // Accident specific questions
+        document.getElementById('injuredHumansOption').addEventListener('click', function() {
+            if (!reportData.injuries.includes('humans')) {
+                reportData.injuries.push('humans');
+            }
+            
+            // Remove selection from other option
+            document.querySelectorAll('#injurySlide .radio-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            this.classList.add('selected');
+            
+            // Move to next slide
+            setTimeout(() => {
+                showSlide('medicalHelpSlide');
+            }, 300);
+        });
+
+        document.getElementById('injuredElephantsOption').addEventListener('click', function() {
+            if (!reportData.injuries.includes('elephants')) {
+                reportData.injuries.push('elephants');
+            }
+            
+            // Remove selection from other option
+            document.querySelectorAll('#injurySlide .radio-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            this.classList.add('selected');
+            
+            // Move to next slide
+            setTimeout(() => {
+                showSlide('medicalHelpSlide');
+            }, 300);
+        });
+
+        document.getElementById('medicalYesOption').addEventListener('click', function() {
+            reportData.medicalHelpNeeded = true;
+            
+            // Remove selection from other option
+            document.querySelectorAll('#medicalHelpSlide .radio-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            this.classList.add('selected');
+            
+            // Move to next slide
+            setTimeout(() => {
+                showSlide('countSlide');
+            }, 300);
+        });
+
+        document.getElementById('medicalNoOption').addEventListener('click', function() {
+            reportData.medicalHelpNeeded = false;
+            
+            // Remove selection from other option
+            document.querySelectorAll('#medicalHelpSlide .radio-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            this.classList.add('selected');
+            
+            // Move to next slide
+            setTimeout(() => {
+                showSlide('countSlide');
+            }, 300);
+        });
+
+        // Submit report
+        document.getElementById('submitReportBtn').addEventListener('click', function() {
+            reportData.description = document.getElementById('reportDescription').value;
+            reportData.location = reportLocation;
+            reportData.timestamp = new Date().toISOString();
+            reportData.reporterId = emaId;
+            
+            // Show loader
+            loader.style.display = 'flex';
+            
+            // Generate report ID
+            const reportId = generateReportId(reportData.type);
+            
+            // Save to Firebase
+            database.ref('reports/' + reportId).set(reportData)
+                .then(() => {
+                    // Save a copy in user's reports
+                    database.ref('users/' + emaId + '/reports/' + reportId).set({
+                        reportId: reportId,
+                        timestamp: reportData.timestamp
+                    }).then(() => {
+                        // Hide loader
+                        loader.style.display = 'none';
+                        
+                        // Show success modal
+                        successModal.classList.add('active');
+                        
+                        // Close report form
+                        closeReportForm();
+                    }).catch((error) => {
+                        console.error('Error saving report to user:', error);
+                        loader.style.display = 'none';
+                        alert('Error submitting report. Please try again.');
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error saving report:', error);
+                    loader.style.display = 'none';
+                    alert('Error submitting report. Please try again.');
+                });
+        });
+
+        // Report details modal actions
+        document.getElementById('callReporterBtn').addEventListener('click', function() {
+            const phoneNumber = document.getElementById('reporterPhoneValue').textContent;
+            window.location.href = `tel:${phoneNumber}`;
+        });
+
+        document.getElementById('downloadImagesBtn').addEventListener('click', function() {
+            const images = document.querySelectorAll('#reportImagesContainer .report-image');
+            images.forEach((img, index) => {
+                const link = document.createElement('a');
+                link.href = img.src;
+                link.download = `report_image_${index + 1}.jpg`;
+                link.click();
+            });
         });
 
         // Load user data from Firebase
@@ -688,6 +2174,43 @@
                 attribution: ''
             });
 
+            // Add double click event for reporting
+            map.on('dblclick', function(e) {
+                // Remove existing marker and popup
+                if (reportLocationMarker) {
+                    map.removeLayer(reportLocationMarker);
+                }
+                if (reportPopup) {
+                    map.removeLayer(reportPopup);
+                }
+                
+                // Add new marker
+                reportLocation = e.latlng;
+                reportLocationMarker = L.marker(e.latlng, {
+                    icon: L.divIcon({
+                        className: 'report-location-marker',
+                        iconSize: [30, 30],
+                        iconAnchor: [15, 15]
+                    })
+                }).addTo(map);
+                
+                // Add popup
+                reportPopup = L.popup({
+                    closeButton: false,
+                    className: 'report-popup-cloud'
+                }).setContent(`
+                    <div class="report-popup-cloud">
+                        <div class="report-add-btn" id="openReportFormBtn">+</div>
+                    </div>
+                `).setLatLng(e.latlng).openOn(map);
+                
+                // Add click event to open report form
+                document.getElementById('openReportFormBtn').addEventListener('click', function() {
+                    map.closePopup();
+                    openReportForm();
+                });
+            });
+
             // Get user location
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
@@ -729,12 +2252,142 @@
                     },
                     (error) => {
                         console.error('Error getting location:', error);
-                        alert('Unable to get your location. Please enable location services.');
+                        // Continue without location
                     }
                 );
-            } else {
-                alert('Geolocation is not supported by your browser.');
             }
+            
+            // Load reports
+            loadReports();
+        }
+
+        // Load reports from Firebase
+        function loadReports() {
+            const twelveHoursAgo = new Date();
+            twelveHoursAgo.setHours(twelveHoursAgo.getHours() - 12);
+            
+            database.ref('reports').orderByChild('timestamp').startAt(twelveHoursAgo.toISOString()).once('value')
+                .then((snapshot) => {
+                    if (snapshot.exists()) {
+                        snapshot.forEach((childSnapshot) => {
+                            const report = childSnapshot.val();
+                            const reportId = childSnapshot.key;
+                            
+                            // Add marker to map
+                            addReportMarker(reportId, report);
+                        });
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error loading reports:', error);
+                });
+        }
+
+        // Add report marker to map
+        function addReportMarker(reportId, report) {
+            if (!report.location) return;
+            
+            let markerClass = 'report-marker';
+            let iconColor = '';
+            
+            if (report.type === 'sighting') {
+                markerClass += ' sighting-marker';
+                iconColor = 'var(--green)';
+            } else if (report.type === 'accident') {
+                if (report.medicalHelpNeeded) {
+                    markerClass += ' accident-medical-marker';
+                    iconColor = 'var(--yellow)';
+                } else {
+                    markerClass += ' accident-marker';
+                    iconColor = 'var(--red)';
+                }
+            }
+            
+            const marker = L.marker([report.location.lat, report.location.lng], {
+                icon: L.divIcon({
+                    className: markerClass,
+                    iconSize: [24, 24],
+                    iconAnchor: [12, 12]
+                })
+            }).addTo(map);
+            
+            // Add click event to show details
+            marker.on('click', function() {
+                showReportDetails(reportId, report);
+            });
+            
+            // Store marker reference
+            reportMarkers.push({
+                id: reportId,
+                marker: marker,
+                timestamp: new Date(report.timestamp)
+            });
+        }
+
+        // Show report details
+        function showReportDetails(reportId, report) {
+            // Update modal content
+            document.getElementById('reportTypeValue').textContent = report.type === 'sighting' ? 'Elephant Sighting' : 'Elephant Accident';
+            document.getElementById('reportDateTimeValue').textContent = new Date(report.timestamp).toLocaleString();
+            document.getElementById('reportLocationValue').textContent = `Lat: ${report.location.lat.toFixed(6)}, Lng: ${report.location.lng.toFixed(6)}`;
+            document.getElementById('reportElephantTypeValue').textContent = report.elephantType === 'elephant' ? 'Elephant' : 'Tusker';
+            document.getElementById('reportCountValue').textContent = report.count;
+            document.getElementById('reportDescriptionValue').textContent = report.description || 'No description provided';
+            
+            // Get reporter info
+            database.ref('users/' + report.reporterId).once('value')
+                .then((snapshot) => {
+                    if (snapshot.exists()) {
+                        const reporter = snapshot.val();
+                        document.getElementById('reporterNameValue').textContent = reporter.fullName;
+                        document.getElementById('reporterPhoneValue').textContent = reporter.phone;
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error loading reporter info:', error);
+                });
+            
+            // Show accident specific info if applicable
+            if (report.type === 'accident') {
+                document.getElementById('accidentSpecificInfo').style.display = 'block';
+                
+                let injuriesText = '';
+                if (report.injuries.includes('humans') && report.injuries.includes('elephants')) {
+                    injuriesText = 'Humans and Elephants';
+                } else if (report.injuries.includes('humans')) {
+                    injuriesText = 'Humans';
+                } else if (report.injuries.includes('elephants')) {
+                    injuriesText = 'Elephants';
+                } else {
+                    injuriesText = 'None';
+                }
+                
+                document.getElementById('reportInjuriesValue').textContent = injuriesText;
+                document.getElementById('reportMedicalHelpValue').textContent = report.medicalHelpNeeded ? 'Yes' : 'No';
+            } else {
+                document.getElementById('accidentSpecificInfo').style.display = 'none';
+            }
+            
+            // Add images
+            const imagesContainer = document.getElementById('reportImagesContainer');
+            imagesContainer.innerHTML = '';
+            
+            if (report.images && report.images.length > 0) {
+                report.images.forEach((imageBase64, index) => {
+                    if (imageBase64) {
+                        const img = document.createElement('img');
+                        img.src = imageBase64;
+                        img.className = 'report-image';
+                        img.alt = `Report image ${index + 1}`;
+                        imagesContainer.appendChild(img);
+                    }
+                });
+            } else {
+                imagesContainer.style.display = 'none';
+            }
+            
+            // Show modal
+            reportDetailsModal.classList.add('active');
         }
 
         // Toggle between map layers
@@ -747,6 +2400,26 @@
                 map.removeLayer(esriLayer);
                 map.addLayer(osmLayer);
                 currentMapLayer = 'osm';
+            }
+        }
+
+        // Center map on user location
+        function centerMapOnUser() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        
+                        map.setView([lat, lng], 14);
+                    },
+                    (error) => {
+                        console.error('Error getting location:', error);
+                        alert('Unable to get your location. Please enable location services.');
+                    }
+                );
+            } else {
+                alert('Geolocation is not supported by your browser.');
             }
         }
 
@@ -853,6 +2526,119 @@
                     saveBtn.disabled = false;
                     saveBtn.textContent = 'Save Changes';
                 });
+        }
+
+        // Open report form
+        function openReportForm() {
+            // Reset report data
+            reportData = {
+                type: '',
+                elephantType: '',
+                count: 0,
+                images: [],
+                description: '',
+                injuries: [],
+                medicalHelpNeeded: false,
+                location: reportLocation,
+                timestamp: null,
+                reporterId: emaId
+            };
+            
+            // Reset form UI
+            document.getElementById('countDisplay').textContent = '0';
+            document.getElementById('reportDescription').value = '';
+            
+            // Reset image uploads
+            for (let i = 1; i <= 4; i++) {
+                const uploadBox = document.getElementById(`imageUpload${i}`);
+                uploadBox.classList.remove('has-image');
+                uploadBox.innerHTML = `
+                    <span class="material-symbols-outlined">add_photo_alternate</span>
+                    <div>Image ${i}</div>
+                `;
+            }
+            
+            // Reset radio selections
+            document.querySelectorAll('.radio-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Show form
+            reportFormContainer.classList.add('active');
+            showSlide('reportTypeSlide');
+        }
+
+        // Close report form
+        function closeReportForm() {
+            reportFormContainer.classList.remove('active');
+            
+            // Remove report location marker
+            if (reportLocationMarker) {
+                map.removeLayer(reportLocationMarker);
+                reportLocationMarker = null;
+            }
+            
+            reportLocation = null;
+        }
+
+        // Show specific slide in report form
+        function showSlide(slideId) {
+            // Hide all slides
+            document.querySelectorAll('.report-slide').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // Show requested slide
+            document.getElementById(slideId).classList.add('active');
+        }
+
+        // Generate report ID
+        function generateReportId(type) {
+            const prefix = type === 'sighting' ? 'S' : 'A';
+            const randomNum = Math.floor(100000000000 + Math.random() * 900000000);
+            return randomNum + '-' + prefix;
+        }
+
+        // Compress image
+        function compressImage(file, quality) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        let width = img.width;
+                        let height = img.height;
+                        
+                        // Calculate new dimensions to achieve target file size
+                        const maxDimension = 800; // Adjust as needed
+                        if (width > height) {
+                            if (width > maxDimension) {
+                                height *= maxDimension / width;
+                                width = maxDimension;
+                            }
+                        } else {
+                            if (height > maxDimension) {
+                                width *= maxDimension / height;
+                                height = maxDimension;
+                            }
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        canvas.toBlob(function(blob) {
+                            resolve(blob);
+                        }, 'image/jpeg', quality);
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
         }
 
         // Helper functions
