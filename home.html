@@ -2,384 +2,204 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EMA - Home</title>
-    <link href="https://fonts.googleapis.com/css2?family=Mona+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMA - Elephant Monitoring App</title>
+    
+    <!-- Mona Sans Font -->
+    <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/mona-sans" crossorigin="anonymous">
+    
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    
     <style>
         :root {
-            --primary-green: #2a9d8f;
-            --mint-green: #81b29a;
-            --grayish-blue: #3d405b;
-            --light-gray: #f4f1de;
-            --dark-green: #264653;
-            --accent: #e76f51;
-            --pending-color: #f39c12;
-            --rejected-color: #e74c3c;
-            --accepted-color: #2ecc71;
-            --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            --border-radius: 16px;
+            --green: #42a75a;
+            --green-strong: #2f8a45;
+            --muted: #7a7a7a;
+            --card-radius: 20px;
+            --glass: rgba(255,255,255,0.92);
+            --background-light: #f5f7f5;
+            --error-color: #D32F2F;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
         
-        * {
+        html, body {
+            height: 100%;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Mona Sans', sans-serif;
+            font-family: "Mona Sans", "Inter", "Helvetica Neue", Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow: hidden;
         }
-        
+
         body {
-            background-color: #f8f9fa;
-            color: #333;
-            overflow-x: hidden;
-            padding-bottom: 80px;
-            position: relative;
+            background-color: var(--background-light);
         }
-        
-        .app-header {
-            background-color: var(--primary-green);
-            color: white;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        .app-title {
-            font-size: 24px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-        }
-        
-        .app-title .material-icons {
-            margin-right: 10px;
-            font-size: 28px;
-        }
-        
-        .header-actions {
-            display: flex;
-            align-items: center;
-        }
-        
-        .header-btn {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            padding: 8px;
-            margin-left: 8px;
-            border-radius: 50%;
-            transition: background-color 0.3s;
-        }
-        
-        .header-btn:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-        
-        .welcome-section {
-            background: linear-gradient(135deg, var(--primary-green), var(--mint-green));
-            color: white;
-            padding: 25px 20px;
-            border-radius: 0 0 30px 30px;
-            margin-bottom: 20px;
-        }
-        
-        .welcome-text {
-            font-size: 22px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        
-        .user-name {
-            font-size: 28px;
-            font-weight: 700;
-        }
-        
-        .profile-card {
-            background-color: white;
-            margin: 0 20px 20px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
-            overflow: hidden;
-        }
-        
-        .profile-header {
-            display: flex;
-            padding: 20px;
-            align-items: center;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        
-        .profile-pic {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background-color: #f0f0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-            overflow: hidden;
-            border: 3px solid var(--primary-green);
-        }
-        
-        .profile-pic img {
-            width: 100%;
+
+        /* Map container */
+        #map {
             height: 100%;
-            object-fit: cover;
-        }
-        
-        .profile-pic .material-icons {
-            font-size: 40px;
-            color: var(--grayish-blue);
-        }
-        
-        .profile-info {
-            flex: 1;
-        }
-        
-        .profile-name {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        
-        .profile-status {
-            display: flex;
-            align-items: center;
-            font-size: 14px;
-            color: #666;
-        }
-        
-        .profile-status .material-icons {
-            font-size: 16px;
-            margin-right: 5px;
-            color: var(--primary-green);
-        }
-        
-        .profile-details {
-            padding: 20px;
-        }
-        
-        .detail-row {
-            display: flex;
-            margin-bottom: 15px;
-            align-items: center;
-        }
-        
-        .detail-row:last-child {
-            margin-bottom: 0;
-        }
-        
-        .detail-row .material-icons {
-            font-size: 20px;
-            margin-right: 15px;
-            color: var(--primary-green);
-        }
-        
-        .detail-label {
-            font-weight: 500;
-            margin-right: 10px;
-            min-width: 60px;
-            color: #666;
-        }
-        
-        .detail-value {
-            flex: 1;
-        }
-        
-        .edit-profile-btn {
-            background: none;
-            border: none;
-            color: var(--primary-green);
-            cursor: pointer;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            margin-top: 15px;
-            padding: 10px 0;
             width: 100%;
-            justify-content: center;
-            border-top: 1px solid #f0f0f0;
+            z-index: 1;
         }
-        
-        .edit-profile-btn .material-icons {
-            font-size: 18px;
-            margin-right: 5px;
+
+        /* Welcome banner */
+        .welcome-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            z-index: 1000;
+            transform: translateY(0);
+            transition: transform 0.5s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
-        
-        .section-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin: 20px 20px 15px;
-            color: var(--grayish-blue);
+
+        .welcome-banner.hidden {
+            transform: translateY(-100%);
         }
-        
-        .action-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            padding: 0 20px;
-        }
-        
-        .action-card {
-            background-color: white;
-            border-radius: var(--border-radius);
-            padding: 20px 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            box-shadow: var(--card-shadow);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            height: 120px;
-        }
-        
-        .action-card:active {
-            transform: scale(0.95);
-        }
-        
-        .action-card .material-icons {
-            font-size: 32px;
-            margin-bottom: 10px;
-            color: var(--primary-green);
-        }
-        
-        .action-card span {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--grayish-blue);
+
+        .welcome-content {
+            max-width: 600px;
+            margin: 0 auto;
             text-align: center;
         }
-        
-        .fab {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+
+        .welcome-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--green);
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            z-index: 100;
-            transition: all 0.3s ease;
-        }
-        
-        .fab:active {
-            transform: scale(0.95);
-        }
-        
-        .fab .material-icons {
-            font-size: 28px;
-        }
-        
-        .agent-card {
-            background-color: white;
-            margin: 0 20px 20px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
-            overflow: hidden;
-            display: none;
-        }
-        
-        .agent-header {
-            background-color: var(--grayish-blue);
-            color: white;
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .agent-title {
-            font-size: 18px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-        }
-        
-        .agent-title .material-icons {
-            margin-right: 8px;
-        }
-        
-        .agent-status {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        
-        .status-pending {
-            background-color: var(--pending-color);
-        }
-        
-        .status-rejected {
-            background-color: var(--rejected-color);
-        }
-        
-        .status-accepted {
-            background-color: var(--accepted-color);
-        }
-        
-        .agent-content {
-            padding: 20px;
-        }
-        
-        .agent-description {
-            margin-bottom: 15px;
-            color: #666;
-        }
-        
-        .agent-actions {
-            display: flex;
             gap: 10px;
         }
-        
-        .agent-btn {
-            flex: 1;
-            padding: 12px;
+
+        .welcome-message {
+            font-size: 16px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .welcome-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
             border: none;
-            border-radius: 8px;
-            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            color: var(--muted);
+            font-size: 24px;
+        }
+
+        /* User profile card */
+        .profile-card {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 999;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
+        }
+
+        .profile-name {
+            font-weight: 600;
+            color: #333;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .profile-edit {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--muted);
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
         }
-        
-        .agent-btn .material-icons {
-            margin-right: 5px;
-            font-size: 18px;
+
+        .profile-edit:hover {
+            background: rgba(66, 167, 90, 0.1);
+            color: var(--green);
         }
-        
-        .apply-btn {
-            background-color: var(--pending-color);
-            color: white;
+
+        /* Map toggle button */
+        .map-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
-        
-        .retry-btn {
-            background-color: var(--rejected-color);
-            color: white;
+
+        .map-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
         }
-        
-        .status-btn {
-            background-color: var(--accepted-color);
-            color: white;
+
+        .map-toggle .material-symbols-outlined {
+            font-size: 24px;
+            color: var(--green);
         }
-        
+
+        /* Edit profile modal */
         .modal {
             display: none;
             position: fixed;
@@ -387,933 +207,451 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 200;
-            justify-content: flex-end;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+            align-items: center;
+            justify-content: center;
         }
-        
+
+        .modal.active {
+            display: flex;
+        }
+
         .modal-content {
-            background-color: white;
-            width: 100%;
-            max-height: 90vh;
-            border-radius: 30px 30px 0 0;
-            padding: 25px;
-            overflow-y: auto;
-            position: relative;
+            background: white;
+            border-radius: var(--card-radius);
+            width: 90%;
+            max-width: 450px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: modalFadeIn 0.3s ease;
         }
-        
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
-        
+
         .modal-title {
-            font-size: 24px;
-            font-weight: 600;
-            color: var(--grayish-blue);
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
         }
-        
-        .close-modal {
+
+        .modal-close {
             background: none;
             border: none;
-            color: var(--grayish-blue);
             cursor: pointer;
-            font-size: 28px;
-            width: 40px;
-            height: 40px;
+            color: var(--muted);
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s;
+            transition: all 0.2s ease;
         }
-        
-        .close-modal:hover {
-            background-color: #f0f0f0;
+
+        .modal-close:hover {
+            background: rgba(0, 0, 0, 0.05);
+            color: #333;
         }
-        
-        .report-options {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        
-        .report-option {
-            background-color: #f9f9f9;
-            border-radius: var(--border-radius);
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-        
-        .report-option:active {
-            transform: scale(0.98);
-        }
-        
-        .report-option.selected {
-            border-color: var(--primary-green);
-            background-color: rgba(42, 157, 143, 0.1);
-        }
-        
-        .report-option .material-icons {
-            font-size: 32px;
-            margin-right: 15px;
-            color: var(--primary-green);
-        }
-        
-        .report-option-content h3 {
-            font-size: 18px;
-            margin-bottom: 5px;
-        }
-        
-        .report-option-content p {
-            font-size: 14px;
-            color: #666;
-        }
-        
-        .location-picker {
-            background-color: #f9f9f9;
-            border-radius: var(--border-radius);
-            padding: 20px;
-            margin-bottom: 25px;
-        }
-        
-        .location-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .location-header .material-icons {
-            font-size: 24px;
-            margin-right: 10px;
-            color: var(--primary-green);
-        }
-        
-        .location-header h3 {
-            font-size: 18px;
-            font-weight: 600;
-        }
-        
-        .location-options {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .location-option {
-            flex: 1;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: var(--border-radius);
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .location-option.active {
-            background-color: var(--primary-green);
-            color: white;
-            border-color: var(--primary-green);
-        }
-        
-        .location-option .material-icons {
-            font-size: 24px;
-            margin-bottom: 8px;
-        }
-        
-        .location-option span {
-            font-size: 14px;
-            font-weight: 500;
-        }
-        
-        .map-container {
-            height: 200px;
-            background-color: #f0f0f0;
-            border-radius: var(--border-radius);
-            margin-top: 15px;
-            display: none;
+
+        .field {
             position: relative;
-            overflow: hidden;
+            margin-bottom: 16px;
         }
-        
-        .map-placeholder {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #999;
-        }
-        
-        .map-placeholder .material-icons {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
-        
-        .form-section {
-            margin-bottom: 25px;
-        }
-        
-        .form-section-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: var(--grayish-blue);
-            display: flex;
-            align-items: center;
-        }
-        
-        .form-section-title .material-icons {
-            font-size: 20px;
-            margin-right: 8px;
-            color: var(--primary-green);
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
+
+        .field label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--grayish-blue);
-        }
-        
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: var(--border-radius);
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-        
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            border-color: var(--primary-green);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(42, 157, 143, 0.1);
-        }
-        
-        .form-group textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-        
-        .image-upload-container {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .image-upload-box {
-            flex: 1;
-            height: 120px;
-            border: 2px dashed #e0e0e0;
-            border-radius: var(--border-radius);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        
-        .image-upload-box:hover {
-            border-color: var(--primary-green);
-        }
-        
-        .image-upload-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .image-upload-box .material-icons {
-            font-size: 30px;
-            color: #aaa;
-        }
-        
-        .image-upload-box span {
             font-size: 14px;
-            color: #aaa;
-            margin-top: 5px;
+            color: #555;
+            margin-bottom: 6px;
+            font-weight: 600;
         }
-        
-        .submit-btn {
-            background-color: var(--primary-green);
+
+        .input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid #e6e6e6;
+            background: #fff;
+            font-size: 15px;
+            outline: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input input {
+            border: 0;
+            outline: 0;
+            font-size: 15px;
+            flex: 1;
+            background: transparent;
+        }
+
+        .input .material-symbols-outlined {
+            font-size: 18px;
+            color: var(--muted);
+        }
+
+        .error-text {
+            color: var(--error-color);
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .btn {
+            display: inline-block;
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: var(--green);
             color: white;
             border: none;
-            padding: 15px;
-            border-radius: var(--border-radius);
-            font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 15px;
             cursor: pointer;
-            width: 100%;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            margin-top: 8px;
+            box-shadow: 0 6px 18px rgba(66,167,90,0.16);
+            transition: all 0.2s ease;
         }
-        
-        .submit-btn .material-icons {
-            margin-right: 8px;
+
+        .btn:hover {
+            background: var(--green-strong);
         }
-        
-        .submit-btn:active {
-            transform: scale(0.98);
+
+        .btn:disabled {
+            background: #BDBDBD;
+            cursor: not-allowed;
         }
-        
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--green);
+            border: 1px solid var(--green);
+            box-shadow: none;
+            margin-top: 12px;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(66, 167, 90, 0.05);
+        }
+
+        /* Loading overlay */
         .loading-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(255, 255, 255, 0.9);
-            display: none;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            z-index: 300;
+            justify-content: center;
+            z-index: 1002;
         }
-        
-        .loading-spinner {
+
+        .loading-overlay.hidden {
+            display: none;
+        }
+
+        .loader {
+            border: 4px solid rgba(66, 167, 90, 0.1);
+            border-top: 4px solid var(--green);
+            border-radius: 50%;
             width: 50px;
             height: 50px;
-            border: 5px solid rgba(42, 157, 143, 0.3);
-            border-radius: 50%;
-            border-top-color: var(--primary-green);
-            animation: spin 1s ease-in-out infinite;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
         }
-        
-        .loading-text {
-            margin-top: 15px;
-            font-weight: 500;
-            color: var(--grayish-blue);
-        }
-        
+
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-        
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            border-radius: var(--border-radius);
-            color: white;
-            font-weight: 500;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            transform: translateX(150%);
-            transition: transform 0.3s ease;
-            z-index: 400;
-            max-width: 80%;
-        }
-        
-        .notification.success {
-            background-color: var(--accepted-color);
-        }
-        
-        .notification.error {
-            background-color: var(--rejected-color);
-        }
-        
-        .notification.info {
-            background-color: var(--primary-green);
-        }
-        
-        .notification.show {
-            transform: translateX(0);
-        }
-        
-        .edit-profile-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 200;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .edit-profile-content {
-            background-color: white;
-            width: 90%;
-            max-width: 400px;
-            border-radius: var(--border-radius);
-            padding: 25px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        
-        .edit-profile-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .edit-profile-title {
-            font-size: 22px;
-            font-weight: 600;
-            color: var(--grayish-blue);
-        }
-        
-        .close-edit-profile {
-            background: none;
-            border: none;
-            color: var(--grayish-blue);
-            cursor: pointer;
-            font-size: 24px;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s;
-        }
-        
-        .close-edit-profile:hover {
-            background-color: #f0f0f0;
-        }
-        
-        .edit-profile-pic-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .edit-profile-pic {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background-color: #f0f0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 10px;
-            overflow: hidden;
-            border: 3px solid var(--primary-green);
-        }
-        
-        .edit-profile-pic img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .edit-profile-pic .material-icons {
-            font-size: 40px;
-            color: var(--grayish-blue);
-        }
-        
-        .edit-profile-pic-btn {
-            background-color: var(--mint-green);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-        }
-        
-        .edit-profile-pic-btn .material-icons {
-            font-size: 18px;
-            margin-right: 5px;
-        }
-        
-        .edit-profile-pic-btn:hover {
-            background-color: var(--primary-green);
-        }
-        
-        .form-row {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .form-row .form-group {
-            flex: 1;
-        }
-        
-        .nic-upload-container {
-            margin-bottom: 20px;
-        }
-        
-        .nic-upload-box {
-            height: 150px;
-            border: 2px dashed #e0e0e0;
-            border-radius: var(--border-radius);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        
-        .nic-upload-box:hover {
-            border-color: var(--primary-green);
-        }
-        
-        .nic-upload-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-        
-        .nic-upload-box .material-icons {
-            font-size: 40px;
-            color: #aaa;
-        }
-        
-        .nic-upload-box span {
-            font-size: 14px;
-            color: #aaa;
-            margin-top: 5px;
-        }
-        
-        .date-time-display {
-            background-color: #f9f9f9;
-            border-radius: var(--border-radius);
-            padding: 15px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .date-time-display .material-icons {
-            font-size: 24px;
-            margin-right: 15px;
-            color: var(--primary-green);
-        }
-        
-        .date-time-info {
-            flex: 1;
-        }
-        
-        .date-time-label {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 5px;
-        }
-        
-        .date-time-value {
+
+        .loading-text {
             font-size: 16px;
+            color: var(--muted);
             font-weight: 500;
         }
-        
-        @media (max-width: 480px) {
-            .action-grid {
-                grid-template-columns: repeat(2, 1fr);
+
+        /* User location marker */
+        .user-location-marker {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #4285F4;
+            border: 3px solid white;
+            box-shadow: 0 0 20px rgba(66, 133, 244, 0.6);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.7);
             }
-            
-            .form-row {
-                flex-direction: column;
-                gap: 0;
+            70% {
+                box-shadow: 0 0 0 10px rgba(66, 133, 244, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(66, 133, 244, 0);
+            }
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            padding: 16px 24px;
+            border-radius: 50px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            z-index: 1003;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--green);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--error-color);
+        }
+
+        .toast-message {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        /* Map controls */
+        .map-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 999;
+        }
+
+        .map-control-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .map-control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .map-control-btn .material-symbols-outlined {
+            font-size: 20px;
+            color: var(--green);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .profile-card {
+                left: 10px;
+                top: 10px;
+            }
+
+            .map-toggle {
+                right: 10px;
+                top: 10px;
+            }
+
+            .map-controls {
+                bottom: 10px;
+                right: 10px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="app-header">
-        <h1 class="app-title">
-            <span class="material-icons">pets</span>
-            EMA
-        </h1>
-        <div class="header-actions">
-            <button class="header-btn">
-                <span class="material-icons">notifications</span>
-            </button>
-            <button class="header-btn">
-                <span class="material-icons">settings</span>
-            </button>
-        </div>
-    </div>
-    
-    <div class="welcome-section">
-        <div class="welcome-text">Welcome back,</div>
-        <div class="user-name" id="userName">Loading...</div>
-    </div>
-    
-    <div class="profile-card">
-        <div class="profile-header">
-            <div class="profile-pic" id="userProfilePic">
-                <span class="material-icons">person</span>
+    <!-- Welcome Banner -->
+    <div id="welcomeBanner" class="welcome-banner">
+        <button class="welcome-close" id="closeWelcome">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+        <div class="welcome-content">
+            <div class="welcome-title">
+                <span class="material-symbols-outlined">elephant</span>
+                Welcome to EMA
             </div>
-            <div class="profile-info">
-                <div class="profile-name" id="userProfileName">Loading...</div>
-                <div class="profile-status">
-                    <span class="material-icons">verified_user</span>
-                    <span>Registered User</span>
-                </div>
-            </div>
-        </div>
-        <div class="profile-details">
-            <div class="detail-row">
-                <span class="material-icons">phone</span>
-                <span class="detail-value" id="userPhone">Loading...</span>
-            </div>
-            <div class="detail-row">
-                <span class="material-icons">badge</span>
-                <span class="detail-value" id="userNIC">Loading...</span>
-            </div>
-            <div class="detail-row">
-                <span class="material-icons">location_on</span>
-                <span class="detail-value" id="userLocation">Loading...</span>
-            </div>
-            <button class="edit-profile-btn" id="editProfileBtn">
-                <span class="material-icons">edit</span>
-                Edit Profile
-            </button>
-        </div>
-    </div>
-    
-    <div class="agent-card" id="agentCard">
-        <div class="agent-header">
-            <div class="agent-title">
-                <span class="material-icons">assignment_ind</span>
-                Agent Status
-            </div>
-            <div class="agent-status" id="agentStatus">Pending</div>
-        </div>
-        <div class="agent-content">
-            <div class="agent-description" id="agentDescription">
-                Your agent application is currently being reviewed.
-            </div>
-            <div class="agent-actions">
-                <button class="agent-btn apply-btn" id="applyAgentBtn">
-                    <span class="material-icons">how_to_reg</span>
-                    Apply as Agent
-                </button>
-                <button class="agent-btn retry-btn" id="retryAgentBtn" style="display: none;">
-                    <span class="material-icons">refresh</span>
-                    Retry Application
-                </button>
-                <button class="agent-btn status-btn" id="viewAgentBtn" style="display: none;">
-                    <span class="material-icons">visibility</span>
-                    View Agent Status
-                </button>
+            <div class="welcome-message">
+                This is EMA, Elephant Monitoring App. You can report elephant sightings, see reports from other users, help avoid fake reports, and contribute to elephant conservation efforts.
             </div>
         </div>
     </div>
-    
-    <h2 class="section-title">Quick Actions</h2>
-    <div class="action-grid">
-        <button class="action-card" onclick="window.location.href='alerts.html'">
-            <span class="material-icons">notifications</span>
-            <span>Alerts</span>
-        </button>
-        <button class="action-card" onclick="window.location.href='map.html'">
-            <span class="material-icons">map</span>
-            <span>Map</span>
-        </button>
-        <button class="action-card" onclick="window.location.href='ai.html'">
-            <span class="material-icons">psychology</span>
-            <span>AI</span>
-        </button>
-        <button class="action-card" onclick="window.location.href='ana.html'">
-            <span class="material-icons">analytics</span>
-            <span>Analytics</span>
-        </button>
-        <button class="action-card" onclick="window.location.href='status.html'">
-            <span class="material-icons">info</span>
-            <span>Status</span>
-        </button>
-        <button class="action-card" onclick="window.location.href='crops.html'">
-            <span class="material-icons">grass</span>
-            <span>Crops</span>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loader"></div>
+        <div class="loading-text">Loading your data...</div>
+    </div>
+
+    <!-- Map Container -->
+    <div id="map"></div>
+
+    <!-- User Profile Card -->
+    <div id="profileCard" class="profile-card">
+        <img id="profileAvatar" class="profile-avatar" src="" alt="Profile">
+        <div id="profileName" class="profile-name">Loading...</div>
+        <button id="editProfileBtn" class="profile-edit">
+            <span class="material-symbols-outlined">edit</span>
         </button>
     </div>
-    
-    <button class="fab" id="fabBtn">
-        <span class="material-icons">add</span>
-    </button>
-    
-    <!-- Report Modal -->
-    <div class="modal" id="reportModal">
+
+    <!-- Map Toggle Button -->
+    <div id="mapToggle" class="map-toggle">
+        <span class="material-symbols-outlined">layers</span>
+    </div>
+
+    <!-- Map Controls -->
+    <div class="map-controls">
+        <button id="locateBtn" class="map-control-btn" title="Find my location">
+            <span class="material-symbols-outlined">my_location</span>
+        </button>
+        <button id="reportBtn" class="map-control-btn" title="Report elephant sighting">
+            <span class="material-symbols-outlined">add_location_alt</span>
+        </button>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="editModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Report an Incident</h2>
-                <button class="close-modal" id="closeReportModal">&times;</button>
-            </div>
-            
-            <div class="location-picker">
-                <div class="location-header">
-                    <span class="material-icons">location_on</span>
-                    <h3>Location</h3>
-                </div>
-                <div class="location-options">
-                    <div class="location-option active" id="currentLocation">
-                        <span class="material-icons">my_location</span>
-                        <span>Current Location</span>
-                    </div>
-                    <div class="location-option" id="mapLocation">
-                        <span class="material-icons">place</span>
-                        <span>Select on Map</span>
-                    </div>
-                </div>
-                <div class="map-container" id="mapContainer">
-                    <div class="map-placeholder">
-                        <span class="material-icons">map</span>
-                        <span>Map will be displayed here</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="report-options">
-                <div class="report-option" id="sightingOption">
-                    <span class="material-icons">visibility</span>
-                    <div class="report-option-content">
-                        <h3>Elephant Sighting</h3>
-                        <p>Report a recent elephant sighting</p>
-                    </div>
-                </div>
-                <div class="report-option" id="accidentOption">
-                    <span class="material-icons">warning</span>
-                    <div class="report-option-content">
-                        <h3>Elephant/Human Accident</h3>
-                        <p>Report an accident involving elephants</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Date and Time Display -->
-            <div class="date-time-display">
-                <span class="material-icons">schedule</span>
-                <div class="date-time-info">
-                    <div class="date-time-label">Report Date & Time</div>
-                    <div class="date-time-value" id="reportDateTime">Loading...</div>
-                </div>
-            </div>
-            
-            <!-- Sighting Form -->
-            <div id="sightingForm" style="display: none;">
-                <div class="form-section">
-                    <div class="form-section-title">
-                        <span class="material-icons">visibility</span>
-                        Sighting Details
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="elephantCount">Number of Elephants</label>
-                        <input type="number" id="elephantCount" min="1" placeholder="Enter number of elephants">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="elephantDescription">Description</label>
-                        <textarea id="elephantDescription" placeholder="Describe the elephants (age, size, behavior, etc.)"></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Upload Images (max 2)</label>
-                        <div class="image-upload-container">
-                            <div class="image-upload-box" id="sightingImage1">
-                                <span class="material-icons">add_photo_alternate</span>
-                                <span>Tap to upload</span>
-                            </div>
-                            <div class="image-upload-box" id="sightingImage2">
-                                <span class="material-icons">add_photo_alternate</span>
-                                <span>Tap to upload</span>
-                            </div>
-                        </div>
-                        <input type="file" id="sightingImageInput1" accept="image/*" style="display: none;">
-                        <input type="file" id="sightingImageInput2" accept="image/*" style="display: none;">
-                    </div>
-                </div>
-                
-                <button class="submit-btn" id="submitSightingBtn">
-                    <span class="material-icons">send</span>
-                    Submit Sighting Report
+                <h2 class="modal-title">Edit Profile</h2>
+                <button id="closeModal" class="modal-close">
+                    <span class="material-symbols-outlined">close</span>
                 </button>
             </div>
-            
-            <!-- Accident Form -->
-            <div id="accidentForm" style="display: none;">
-                <div class="form-section">
-                    <div class="form-section-title">
-                        <span class="material-icons">warning</span>
-                        Accident Details
+
+            <div id="editMessage" class="message"></div>
+
+            <form id="editForm">
+                <div class="field">
+                    <label for="editFullName">Full Name</label>
+                    <div class="input">
+                        <span class="material-symbols-outlined">person</span>
+                        <input id="editFullName" type="text" placeholder="Enter your full name" required />
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="accidentType">Type of Accident</label>
-                        <select id="accidentType">
-                            <option value="">Select type</option>
-                            <option value="property">Property Damage</option>
-                            <option value="crop">Crop Damage</option>
-                            <option value="injury">Human Injury</option>
-                            <option value="fatal">Fatal Incident</option>
+                    <div id="editFullNameError" class="error-text"></div>
+                </div>
+                
+                <div class="field">
+                    <label for="editPhone">Phone Number</label>
+                    <div class="input">
+                        <span class="material-symbols-outlined">phone</span>
+                        <input id="editPhone" type="tel" placeholder="Enter 10-digit phone number" required />
+                    </div>
+                    <div id="editPhoneError" class="error-text"></div>
+                </div>
+                
+                <div class="field">
+                    <label for="editDistrict">District</label>
+                    <div class="input">
+                        <span class="material-symbols-outlined">location_on</span>
+                        <select id="editDistrict" required>
+                            <option value="">Select District</option>
+                            <option value="Ampara">Ampara</option>
+                            <option value="Anuradhapura">Anuradhapura</option>
+                            <option value="Badulla">Badulla</option>
+                            <option value="Batticaloa">Batticaloa</option>
+                            <option value="Colombo">Colombo</option>
+                            <option value="Galle">Galle</option>
+                            <option value="Gampaha">Gampaha</option>
+                            <option value="Hambantota">Hambantota</option>
+                            <option value="Jaffna">Jaffna</option>
+                            <option value="Kalutara">Kalutara</option>
+                            <option value="Kandy">Kandy</option>
+                            <option value="Kegalle">Kegalle</option>
+                            <option value="Kilinochchi">Kilinochchi</option>
+                            <option value="Kurunegala">Kurunegala</option>
+                            <option value="Mannar">Mannar</option>
+                            <option value="Matale">Matale</option>
+                            <option value="Matara">Matara</option>
+                            <option value="Monaragala">Monaragala</option>
+                            <option value="Mullaitivu">Mullaitivu</option>
+                            <option value="Nuwara Eliya">Nuwara Eliya</option>
+                            <option value="Polonnaruwa">Polonnaruwa</option>
+                            <option value="Puttalam">Puttalam</option>
+                            <option value="Ratnapura">Ratnapura</option>
+                            <option value="Trincomalee">Trincomalee</option>
+                            <option value="Vavuniya">Vavuniya</option>
                         </select>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="accidentDescription">Description</label>
-                        <textarea id="accidentDescription" placeholder="Describe the accident in detail"></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Upload Images (max 2)</label>
-                        <div class="image-upload-container">
-                            <div class="image-upload-box" id="accidentImage1">
-                                <span class="material-icons">add_photo_alternate</span>
-                                <span>Tap to upload</span>
-                            </div>
-                            <div class="image-upload-box" id="accidentImage2">
-                                <span class="material-icons">add_photo_alternate</span>
-                                <span>Tap to upload</span>
-                            </div>
-                        </div>
-                        <input type="file" id="accidentImageInput1" accept="image/*" style="display: none;">
-                        <input type="file" id="accidentImageInput2" accept="image/*" style="display: none;">
-                    </div>
+                    <div id="editDistrictError" class="error-text"></div>
                 </div>
                 
-                <button class="submit-btn" id="submitAccidentBtn">
-                    <span class="material-icons">send</span>
-                    Submit Accident Report
-                </button>
-            </div>
+                <div class="field">
+                    <label for="editEmail">Email</label>
+                    <div class="input">
+                        <span class="material-symbols-outlined">mail</span>
+                        <input id="editEmail" type="email" placeholder="Enter your email address" required />
+                    </div>
+                    <div id="editEmailError" class="error-text"></div>
+                </div>
+
+                <button type="button" class="btn" id="saveProfileBtn">SAVE CHANGES</button>
+                <button type="button" class="btn btn-secondary" id="cancelEditBtn">CANCEL</button>
+            </form>
         </div>
     </div>
-    
-    <!-- Agent Application Modal -->
-    <div class="modal" id="agentModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Apply as EMA Agent</h2>
-                <button class="close-modal" id="closeAgentModal">&times;</button>
-            </div>
-            
-            <div class="form-group">
-                <label for="agentName">Full Name</label>
-                <input type="text" id="agentName" placeholder="Enter your full name">
-            </div>
-            
-            <div class="form-group">
-                <label for="agentNIC">NIC Number</label>
-                <input type="text" id="agentNIC" placeholder="Enter your NIC number">
-            </div>
-            
-            <div class="nic-upload-container">
-                <label>Upload Front of NIC</label>
-                <div class="nic-upload-box" id="nicFrontUpload">
-                    <span class="material-icons">badge</span>
-                    <span>Tap to upload NIC front</span>
-                </div>
-                <input type="file" id="nicFrontInput" accept="image/*" style="display: none;">
-            </div>
-            
-            <button class="submit-btn" id="submitAgentBtn">
-                <span class="material-icons">send</span>
-                Submit Application
-            </button>
-        </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <div class="toast-message" id="toastMessage"></div>
     </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
-    <!-- Edit Profile Modal -->
-    <div class="edit-profile-modal" id="editProfileModal">
-        <div class="edit-profile-content">
-            <div class="edit-profile-header">
-                <h2 class="edit-profile-title">Edit Profile</h2>
-                <button class="close-edit-profile" id="closeEditProfileModal">&times;</button>
-            </div>
-            
-            <div class="edit-profile-pic-container">
-                <div class="edit-profile-pic" id="editProfilePicPreview">
-                    <span class="material-icons">person</span>
-                </div>
-                <input type="file" id="editProfilePicInput" accept="image/*" style="display: none;">
-                <button class="edit-profile-pic-btn" id="editProfilePicBtn">
-                    <span class="material-icons">photo_camera</span>
-                    Change Profile Picture
-                </button>
-            </div>
-            
-            <div class="form-group">
-                <label for="editName">Full Name</label>
-                <input type="text" id="editName" placeholder="Enter your full name">
-            </div>
-            
-            <div class="form-group">
-                <label for="editPhone">Phone Number</label>
-                <input type="tel" id="editPhone" placeholder="Enter your phone number">
-            </div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="editProvince">Province</label>
-                    <select id="editProvince">
-                        <option value="">Select Province</option>
-                        <option value="Western">Western</option>
-                        <option value="Central">Central</option>
-                        <option value="Southern">Southern</option>
-                        <option value="Northern">Northern</option>
-                        <option value="Eastern">Eastern</option>
-                        <option value="North Western">North Western</option>
-                        <option value="North Central">North Central</option>
-                        <option value="Uva">Uva</option>
-                        <option value="Sabaragamuwa">Sabaragamuwa</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="editDistrict">District</label>
-                    <select id="editDistrict">
-                        <option value="">Select District</option>
-                    </select>
-                </div>
-            </div>
-            
-            <button class="submit-btn" id="saveProfileBtn">
-                <span class="material-icons">save</span>
-                Save Changes
-            </button>
-        </div>
-    </div>
-    
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner"></div>
-        <div class="loading-text" id="loadingText">Processing...</div>
-    </div>
-    
-    <div class="notification" id="notification"></div>
-    
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <script>
-        // Designed and developed by Aveesha Ninsara. Copyright Prohibited
-        
+        // Prevent right-click, copy, and text selection
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('selectstart', event => event.preventDefault());
+        document.addEventListener('dragstart', event => event.preventDefault());
+
         // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCtIvVHA0Q_iuTIFNanoU8RhV4oC60L_YM",
@@ -1325,811 +663,380 @@
             measurementId: "G-TRDREJFMQ9",
             databaseURL: "https://emausers-9837a-default-rtdb.asia-southeast1.firebasedatabase.app/"
         };
-        
+
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-        
-        // Sri Lanka districts by province
-        const districtsByProvince = {
-            "Western": ["Colombo", "Gampaha", "Kalutara"],
-            "Central": ["Kandy", "Matale", "Nuwara Eliya"],
-            "Southern": ["Galle", "Matara", "Hambantota"],
-            "Northern": ["Jaffna", "Kilinochchi", "Mannar", "Vavuniya", "Mullaitivu"],
-            "Eastern": ["Batticaloa", "Ampara", "Trincomalee"],
-            "North Western": ["Kurunegala", "Puttalam"],
-            "North Central": ["Anuradhapura", "Polonnaruwa"],
-            "Uva": ["Badulla", "Monaragala"],
-            "Sabaragamuwa": ["Ratnapura", "Kegalle"]
-        };
-        
+
         // DOM elements
-        const userName = document.getElementById('userName');
-        const userProfileName = document.getElementById('userProfileName');
-        const userProfilePic = document.getElementById('userProfilePic');
-        const userPhone = document.getElementById('userPhone');
-        const userNIC = document.getElementById('userNIC');
-        const userLocation = document.getElementById('userLocation');
-        const editProfileBtn = document.getElementById('editProfileBtn');
-        const agentCard = document.getElementById('agentCard');
-        const agentStatus = document.getElementById('agentStatus');
-        const agentDescription = document.getElementById('agentDescription');
-        const applyAgentBtn = document.getElementById('applyAgentBtn');
-        const retryAgentBtn = document.getElementById('retryAgentBtn');
-        const viewAgentBtn = document.getElementById('viewAgentBtn');
-        const fabBtn = document.getElementById('fabBtn');
-        const reportModal = document.getElementById('reportModal');
-        const closeReportModal = document.getElementById('closeReportModal');
-        const sightingOption = document.getElementById('sightingOption');
-        const accidentOption = document.getElementById('accidentOption');
-        const sightingForm = document.getElementById('sightingForm');
-        const accidentForm = document.getElementById('accidentForm');
-        const currentLocation = document.getElementById('currentLocation');
-        const mapLocation = document.getElementById('mapLocation');
-        const mapContainer = document.getElementById('mapContainer');
-        const reportDateTime = document.getElementById('reportDateTime');
-        const sightingImage1 = document.getElementById('sightingImage1');
-        const sightingImage2 = document.getElementById('sightingImage2');
-        const sightingImageInput1 = document.getElementById('sightingImageInput1');
-        const sightingImageInput2 = document.getElementById('sightingImageInput2');
-        const accidentImage1 = document.getElementById('accidentImage1');
-        const accidentImage2 = document.getElementById('accidentImage2');
-        const accidentImageInput1 = document.getElementById('accidentImageInput1');
-        const accidentImageInput2 = document.getElementById('accidentImageInput2');
-        const submitSightingBtn = document.getElementById('submitSightingBtn');
-        const submitAccidentBtn = document.getElementById('submitAccidentBtn');
-        const agentModal = document.getElementById('agentModal');
-        const closeAgentModal = document.getElementById('closeAgentModal');
-        const submitAgentBtn = document.getElementById('submitAgentBtn');
-        const nicFrontUpload = document.getElementById('nicFrontUpload');
-        const nicFrontInput = document.getElementById('nicFrontInput');
-        const editProfileModal = document.getElementById('editProfileModal');
-        const closeEditProfileModal = document.getElementById('closeEditProfileModal');
-        const editProfilePicPreview = document.getElementById('editProfilePicPreview');
-        const editProfilePicInput = document.getElementById('editProfilePicInput');
-        const editProfilePicBtn = document.getElementById('editProfilePicBtn');
-        const editName = document.getElementById('editName');
-        const editPhone = document.getElementById('editPhone');
-        const editProvince = document.getElementById('editProvince');
-        const editDistrict = document.getElementById('editDistrict');
-        const saveProfileBtn = document.getElementById('saveProfileBtn');
+        const welcomeBanner = document.getElementById('welcomeBanner');
+        const closeWelcome = document.getElementById('closeWelcome');
         const loadingOverlay = document.getElementById('loadingOverlay');
-        const loadingText = document.getElementById('loadingText');
-        const notification = document.getElementById('notification');
-        
+        const profileCard = document.getElementById('profileCard');
+        const profileAvatar = document.getElementById('profileAvatar');
+        const profileName = document.getElementById('profileName');
+        const editProfileBtn = document.getElementById('editProfileBtn');
+        const mapToggle = document.getElementById('mapToggle');
+        const locateBtn = document.getElementById('locateBtn');
+        const reportBtn = document.getElementById('reportBtn');
+        const editModal = document.getElementById('editModal');
+        const closeModal = document.getElementById('closeModal');
+        const editForm = document.getElementById('editForm');
+        const saveProfileBtn = document.getElementById('saveProfileBtn');
+        const cancelEditBtn = document.getElementById('cancelEditBtn');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+
         // Variables
-        let currentUserData = null;
-        let sightingImage1Base64 = '';
-        let sightingImage2Base64 = '';
-        let accidentImage1Base64 = '';
-        let accidentImage2Base64 = '';
-        let nicFrontBase64 = '';
-        let editProfilePicBase64 = '';
-        let reportLocation = { lat: null, lng: null };
-        let useCurrentLocationForReport = true;
-        let selectedReportType = null;
-        
-        // Check if user is logged in
-        window.addEventListener('load', () => {
-            const userEmail = localStorage.getItem('emaUserEmail');
-            if (!userEmail) {
-                window.location.href = 'index.html';
-            } else {
-                loadUserData(userEmail);
-                updateDateTime();
-                setInterval(updateDateTime, 60000); // Update every minute
+        let map;
+        let userMarker;
+        let currentLayer = 'osm'; // Default to OpenStreetMap
+        let userData;
+        let emaId;
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            emaId = localStorage.getItem('emaId');
+            if (!emaId) {
+                window.location.href = 'login.html';
+                return;
             }
+
+            // Check if welcome banner should be shown
+            const hasSeenWelcome = localStorage.getItem('hasSeenWelcome');
+            if (!hasSeenWelcome) {
+                welcomeBanner.classList.remove('hidden');
+            }
+
+            // Initialize map
+            initMap();
+
+            // Load user data
+            loadUserData();
+
+            // Request location permission
+            requestLocationPermission();
         });
-        
-        // Update date and time display
-        function updateDateTime() {
-            const now = new Date();
-            const options = { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric', 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            };
-            reportDateTime.textContent = now.toLocaleDateString('en-US', options);
-        }
-        
-        // Load user data from Firebase
-        function loadUserData(email) {
-            showLoading('Loading your profile...');
+
+        // Initialize map
+        function initMap() {
+            // Default center (Sri Lanka)
+            const defaultCenter = [7.8731, 80.7718];
             
-            database.ref('users').orderByChild('email').equalTo(email).once('value')
+            // Create map
+            map = L.map('map').setView(defaultCenter, 8);
+
+            // Add default tile layer (OpenStreetMap)
+            const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            });
+
+            // Add ESRI World Imagery layer
+            const esriLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+            });
+
+            // Add default layer
+            osmLayer.addTo(map);
+
+            // Map toggle functionality
+            mapToggle.addEventListener('click', function() {
+                if (currentLayer === 'osm') {
+                    map.removeLayer(osmLayer);
+                    esriLayer.addTo(map);
+                    currentLayer = 'esri';
+                    showToast('Switched to satellite view', 'success');
+                } else {
+                    map.removeLayer(esriLayer);
+                    osmLayer.addTo(map);
+                    currentLayer = 'osm';
+                    showToast('Switched to map view', 'success');
+                }
+            });
+
+            // Locate button functionality
+            locateBtn.addEventListener('click', function() {
+                locateUser();
+            });
+
+            // Report button functionality
+            reportBtn.addEventListener('click', function() {
+                // This would open a report form in a real implementation
+                showToast('Report feature coming soon!', 'success');
+            });
+        }
+
+        // Load user data
+        function loadUserData() {
+            database.ref('users/' + emaId).once('value')
                 .then((snapshot) => {
                     if (snapshot.exists()) {
-                        const userData = snapshot.val();
-                        const userKey = Object.keys(userData)[0];
-                        currentUserData = userData[userKey];
-                        currentUserData.key = userKey;
+                        userData = snapshot.val();
+                        updateProfileUI();
                         
-                        // Update UI with user data
-                        userName.textContent = currentUserData.name || 'User';
-                        userProfileName.textContent = currentUserData.name || 'User';
-                        userPhone.textContent = currentUserData.phone || 'N/A';
-                        userNIC.textContent = currentUserData.nic || 'N/A';
-                        
-                        if (currentUserData.province && currentUserData.district) {
-                            userLocation.textContent = `${currentUserData.district}, ${currentUserData.province}`;
+                        // If user has location data, show it on map
+                        if (userData.latitude && userData.longitude) {
+                            showUserLocation(userData.latitude, userData.longitude);
                         } else {
-                            userLocation.textContent = 'N/A';
+                            // Try to get user's current location
+                            locateUser();
                         }
-                        
-                        if (currentUserData.profilePicture) {
-                            userProfilePic.innerHTML = `<img src="${currentUserData.profilePicture}" alt="Profile">`;
-                        }
-                        
-                        // Check agent status
-                        checkAgentStatus();
-                        
-                        hideLoading();
                     } else {
-                        hideLoading();
-                        showNotification('User data not found', 'error');
-                        setTimeout(() => {
-                            window.location.href = 'index.html';
-                        }, 2000);
+                        showToast('User data not found', 'error');
+                        window.location.href = 'login.html';
                     }
                 })
                 .catch((error) => {
-                    hideLoading();
-                    showNotification('Error loading user data: ' + error.message, 'error');
+                    showToast('Error loading user data: ' + error.message, 'error');
+                    window.location.href = 'login.html';
+                })
+                .finally(() => {
+                    // Hide loading overlay
+                    loadingOverlay.classList.add('hidden');
                 });
         }
-        
-        // Check agent status
-        function checkAgentStatus() {
-            if (currentUserData && currentUserData.agentinfo && currentUserData.agentinfo.dat) {
-                const agentInfo = currentUserData.agentinfo.dat;
-                const status = agentInfo.agentStatus || 'X';
-                
-                agentCard.style.display = 'block';
-                agentStatus.textContent = status === 'X' ? 'Pending' : (status === 'C' ? 'Rejected' : 'Accepted');
-                
-                if (status === 'X') {
-                    agentStatus.className = 'agent-status status-pending';
-                    agentDescription.textContent = 'Your agent application is currently being reviewed.';
-                    applyAgentBtn.style.display = 'none';
-                    retryAgentBtn.style.display = 'none';
-                    viewAgentBtn.style.display = 'none';
-                } else if (status === 'C') {
-                    agentStatus.className = 'agent-status status-rejected';
-                    agentDescription.textContent = 'Your agent application has been rejected. You can apply again.';
-                    applyAgentBtn.style.display = 'none';
-                    retryAgentBtn.style.display = 'flex';
-                    viewAgentBtn.style.display = 'none';
-                } else if (status === 'A') {
-                    agentStatus.className = 'agent-status status-accepted';
-                    agentDescription.textContent = 'Congratulations! You are now an EMA agent.';
-                    applyAgentBtn.style.display = 'none';
-                    retryAgentBtn.style.display = 'none';
-                    viewAgentBtn.style.display = 'flex';
-                }
+
+        // Update profile UI
+        function updateProfileUI() {
+            // Update profile name
+            profileName.textContent = userData.fullName || 'User';
+            
+            // Update profile avatar
+            if (userData.profilePicture) {
+                profileAvatar.src = userData.profilePicture;
             } else {
-                // No agent application yet
-                agentCard.style.display = 'block';
-                agentStatus.textContent = 'Not Applied';
-                agentStatus.className = 'agent-status';
-                agentDescription.textContent = 'Apply to become an EMA agent and help protect elephants.';
-                applyAgentBtn.style.display = 'flex';
-                retryAgentBtn.style.display = 'none';
-                viewAgentBtn.style.display = 'none';
+                // Use default avatar
+                profileAvatar.src = 'https://picsum.photos/seed/ema-user/100/100.jpg';
             }
         }
-        
-        // Show notification
-        function showNotification(message, type) {
-            notification.textContent = message;
-            notification.className = `notification ${type}`;
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-        
-        // Show loading overlay
-        function showLoading(text) {
-            loadingText.textContent = text;
-            loadingOverlay.style.display = 'flex';
-        }
-        
-        // Hide loading overlay
-        function hideLoading() {
-            loadingOverlay.style.display = 'none';
-        }
-        
-        // Compress image to base64
-        function compressImage(file, callback) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    
-                    // Calculate new dimensions to keep aspect ratio but reduce size
-                    let width = img.width;
-                    let height = img.height;
-                    const maxSize = 800;
-                    
-                    if (width > height) {
-                        if (width > maxSize) {
-                            height = height * (maxSize / width);
-                            width = maxSize;
-                        }
-                    } else {
-                        if (height > maxSize) {
-                            width = width * (maxSize / height);
-                            height = maxSize;
-                        }
-                    }
-                    
-                    canvas.width = width;
-                    canvas.height = height;
-                    
-                    ctx.drawImage(img, 0, 0, width, height);
-                    
-                    // Try to get base64 under 20KB by adjusting quality
-                    let quality = 0.7;
-                    let base64 = canvas.toDataURL('image/jpeg', quality);
-                    
-                    while (base64.length > 20000 && quality > 0.1) {
-                        quality -= 0.1;
-                        base64 = canvas.toDataURL('image/jpeg', quality);
-                    }
-                    
-                    callback(base64);
-                };
-                img.src = event.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-        
-        // Get current location
-        function getCurrentLocation(callback) {
+
+        // Request location permission
+        function requestLocationPermission() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
-                        callback({
-                            lat: position.coords.latitude,
-                            lng: position.coords.longitude
-                        });
+                        // Permission granted
+                        console.log('Location permission granted');
                     },
                     (error) => {
-                        showNotification('Unable to get your current location', 'error');
-                        callback(null);
+                        // Permission denied or error
+                        console.error('Location permission denied:', error);
+                        showToast('Location permission denied. Some features may not work properly.', 'error');
                     }
                 );
             } else {
-                showNotification('Geolocation is not supported by your browser', 'error');
-                callback(null);
+                console.error('Geolocation is not supported by this browser');
+                showToast('Geolocation is not supported by your browser', 'error');
             }
         }
-        
-        // Event Listeners
-        
-        // FAB button
-        fabBtn.addEventListener('click', () => {
-            reportModal.style.display = 'flex';
-            // Get current location by default
-            getCurrentLocation((location) => {
-                if (location) {
-                    reportLocation = location;
-                }
-            });
-        });
-        
-        // Close report modal
-        closeReportModal.addEventListener('click', () => {
-            reportModal.style.display = 'none';
-            // Reset form state
-            selectedReportType = null;
-            sightingOption.classList.remove('selected');
-            accidentOption.classList.remove('selected');
-            sightingForm.style.display = 'none';
-            accidentForm.style.display = 'none';
-        });
-        
-        // Report options
-        sightingOption.addEventListener('click', () => {
-            selectedReportType = 'sighting';
-            sightingOption.classList.add('selected');
-            accidentOption.classList.remove('selected');
-            sightingForm.style.display = 'block';
-            accidentForm.style.display = 'none';
-        });
-        
-        accidentOption.addEventListener('click', () => {
-            selectedReportType = 'accident';
-            accidentOption.classList.add('selected');
-            sightingOption.classList.remove('selected');
-            accidentForm.style.display = 'block';
-            sightingForm.style.display = 'none';
-        });
-        
-        // Location options
-        currentLocation.addEventListener('click', () => {
-            currentLocation.classList.add('active');
-            mapLocation.classList.remove('active');
-            mapContainer.style.display = 'none';
-            useCurrentLocationForReport = true;
-            
-            // Get current location
-            getCurrentLocation((location) => {
-                if (location) {
-                    reportLocation = location;
-                }
-            });
-        });
-        
-        mapLocation.addEventListener('click', () => {
-            mapLocation.classList.add('active');
-            currentLocation.classList.remove('active');
-            mapContainer.style.display = 'block';
-            useCurrentLocationForReport = false;
-            
-            // In a real app, you would initialize a map here
-            showNotification('Map functionality would be implemented here', 'info');
-        });
-        
-        // Image upload for sighting
-        sightingImage1.addEventListener('click', () => {
-            sightingImageInput1.click();
-        });
-        
-        sightingImageInput1.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                compressImage(file, (base64) => {
-                    sightingImage1Base64 = base64;
-                    sightingImage1.innerHTML = `<img src="${base64}" alt="Sighting Image 1">`;
-                });
-            }
-        });
-        
-        sightingImage2.addEventListener('click', () => {
-            sightingImageInput2.click();
-        });
-        
-        sightingImageInput2.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                compressImage(file, (base64) => {
-                    sightingImage2Base64 = base64;
-                    sightingImage2.innerHTML = `<img src="${base64}" alt="Sighting Image 2">`;
-                });
-            }
-        });
-        
-        // Image upload for accident
-        accidentImage1.addEventListener('click', () => {
-            accidentImageInput1.click();
-        });
-        
-        accidentImageInput1.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                compressImage(file, (base64) => {
-                    accidentImage1Base64 = base64;
-                    accidentImage1.innerHTML = `<img src="${base64}" alt="Accident Image 1">`;
-                });
-            }
-        });
-        
-        accidentImage2.addEventListener('click', () => {
-            accidentImageInput2.click();
-        });
-        
-        accidentImageInput2.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                compressImage(file, (base64) => {
-                    accidentImage2Base64 = base64;
-                    accidentImage2.innerHTML = `<img src="${base64}" alt="Accident Image 2">`;
-                });
-            }
-        });
-        
-        // Submit sighting report
-        submitSightingBtn.addEventListener('click', () => {
-            const count = document.getElementById('elephantCount').value;
-            const description = document.getElementById('elephantDescription').value;
-            
-            if (!count) {
-                showNotification('Please enter the number of elephants', 'error');
-                return;
-            }
-            
-            if (useCurrentLocationForReport && !reportLocation.lat) {
-                showNotification('Getting your location...', 'info');
-                getCurrentLocation((location) => {
-                    if (location) {
-                        reportLocation = location;
-                        submitSightingReport(count, description);
-                    } else {
-                        showNotification('Unable to get your location. Please try again or select location on map', 'error');
+
+        // Locate user
+        function locateUser() {
+            if (navigator.geolocation) {
+                locateBtn.disabled = true;
+                locateBtn.innerHTML = '<span class="material-symbols-outlined">hourglass_empty</span>';
+                
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const { latitude, longitude } = position.coords;
+                        showUserLocation(latitude, longitude);
+                        
+                        // Save location to database
+                        if (userData) {
+                            database.ref('users/' + emaId).update({
+                                latitude: latitude,
+                                longitude: longitude,
+                                lastLocationUpdate: new Date().toISOString()
+                            });
+                        }
+                        
+                        showToast('Location found!', 'success');
+                    },
+                    (error) => {
+                        console.error('Error getting location:', error);
+                        showToast('Could not get your location', 'error');
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 60000
                     }
+                ).finally(() => {
+                    locateBtn.disabled = false;
+                    locateBtn.innerHTML = '<span class="material-symbols-outlined">my_location</span>';
                 });
             } else {
-                submitSightingReport(count, description);
+                showToast('Geolocation is not supported by your browser', 'error');
             }
-        });
-        
-        function submitSightingReport(count, description) {
-            showLoading('Submitting your sighting report...');
-            
-            // Generate a unique key for this report
-            const reportKey = database.ref().child('sightings').push().key;
-            
-            // Get current date and time
-            const now = new Date();
-            const date = now.toISOString().split('T')[0];
-            const time = now.toTimeString().split(' ')[0].substring(0, 5);
-            
-            // Create report object
-            const report = {
-                date,
-                time,
-                count: parseInt(count),
-                description,
-                image1: sightingImage1Base64,
-                image2: sightingImage2Base64,
-                location: reportLocation,
-                reportedBy: currentUserData.email,
-                reportedByName: currentUserData.name,
-                timestamp: firebase.database.ServerValue.TIMESTAMP
-            };
-            
-            // Save report to Firebase
-            database.ref('sightings/' + reportKey).set(report)
-                .then(() => {
-                    // Add report key to user's reports
-                    const userReportsRef = database.ref('users/' + currentUserData.key + '/reports');
-                    
-                    // Get current reports count
-                    userReportsRef.once('value')
-                        .then((snapshot) => {
-                            const reports = snapshot.val() || {};
-                            const newReportCount = (reports.count || 0) + 1;
-                            
-                            // Update reports count and add this report key
-                            reports.count = newReportCount;
-                            if (!reports.sightings) {
-                                reports.sightings = [];
-                            }
-                            reports.sightings.push(reportKey);
-                            
-                            return userReportsRef.set(reports);
-                        })
-                        .then(() => {
-                            hideLoading();
-                            showNotification('Sighting report submitted successfully!', 'success');
-                            
-                            // Reset form
-                            document.getElementById('elephantCount').value = '';
-                            document.getElementById('elephantDescription').value = '';
-                            sightingImage1Base64 = '';
-                            sightingImage2Base64 = '';
-                            sightingImage1.innerHTML = '<span class="material-icons">add_photo_alternate</span><span>Tap to upload</span>';
-                            sightingImage2.innerHTML = '<span class="material-icons">add_photo_alternate</span><span>Tap to upload</span>';
-                            
-                            // Close modal
-                            reportModal.style.display = 'none';
-                        })
-                        .catch((error) => {
-                            hideLoading();
-                            showNotification('Error updating your reports: ' + error.message, 'error');
-                        });
-                })
-                .catch((error) => {
-                    hideLoading();
-                    showNotification('Error submitting report: ' + error.message, 'error');
-                });
         }
-        
-        // Submit accident report
-        submitAccidentBtn.addEventListener('click', () => {
-            const type = document.getElementById('accidentType').value;
-            const description = document.getElementById('accidentDescription').value;
-            
-            if (!type) {
-                showNotification('Please select the type of accident', 'error');
-                return;
+
+        // Show user location on map
+        function showUserLocation(latitude, longitude) {
+            // Remove existing marker if any
+            if (userMarker) {
+                map.removeLayer(userMarker);
             }
             
-            if (useCurrentLocationForReport && !reportLocation.lat) {
-                showNotification('Getting your location...', 'info');
-                getCurrentLocation((location) => {
-                    if (location) {
-                        reportLocation = location;
-                        submitAccidentReport(type, description);
-                    } else {
-                        showNotification('Unable to get your location. Please try again or select location on map', 'error');
-                    }
-                });
+            // Create custom icon for user location
+            const userIcon = L.divIcon({
+                className: 'user-location-marker',
+                iconSize: [20, 20],
+                iconAnchor: [10, 10]
+            });
+            
+            // Add marker to map
+            userMarker = L.marker([latitude, longitude], { icon: userIcon }).addTo(map);
+            
+            // Center map on user location
+            map.setView([latitude, longitude], 13);
+        }
+
+        // Event listeners
+        closeWelcome.addEventListener('click', function() {
+            welcomeBanner.classList.add('hidden');
+            localStorage.setItem('hasSeenWelcome', 'true');
+        });
+
+        editProfileBtn.addEventListener('click', function() {
+            // Populate form with current data
+            document.getElementById('editFullName').value = userData.fullName || '';
+            document.getElementById('editPhone').value = userData.phone || '';
+            document.getElementById('editDistrict').value = userData.district || '';
+            document.getElementById('editEmail').value = userData.email || '';
+            
+            // Show modal
+            editModal.classList.add('active');
+        });
+
+        closeModal.addEventListener('click', function() {
+            editModal.classList.remove('active');
+        });
+
+        cancelEditBtn.addEventListener('click', function() {
+            editModal.classList.remove('active');
+        });
+
+        saveProfileBtn.addEventListener('click', function() {
+            // Get form values
+            const fullName = document.getElementById('editFullName').value.trim();
+            const phone = document.getElementById('editPhone').value.trim();
+            const district = document.getElementById('editDistrict').value;
+            const email = document.getElementById('editEmail').value.trim();
+            
+            let isValid = true;
+            
+            // Validate full name
+            if (!fullName) {
+                showError('editFullNameError', 'Please enter your full name');
+                isValid = false;
             } else {
-                submitAccidentReport(type, description);
+                hideError('editFullNameError');
             }
+            
+            // Validate phone
+            if (!phone) {
+                showError('editPhoneError', 'Please enter your phone number');
+                isValid = false;
+            } else if (!/^[0-9]{10}$/.test(phone)) {
+                showError('editPhoneError', 'Please enter a valid 10-digit phone number');
+                isValid = false;
+            } else {
+                hideError('editPhoneError');
+            }
+            
+            // Validate district
+            if (!district) {
+                showError('editDistrictError', 'Please select your district');
+                isValid = false;
+            } else {
+                hideError('editDistrictError');
+            }
+            
+            // Validate email
+            if (!email) {
+                showError('editEmailError', 'Please enter your email');
+                isValid = false;
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showError('editEmailError', 'Please enter a valid email address');
+                isValid = false;
+            } else {
+                hideError('editEmailError');
+            }
+            
+            if (!isValid) return;
+            
+            // Disable button and show loading
+            saveProfileBtn.disabled = true;
+            saveProfileBtn.textContent = 'SAVING...';
+            
+            // Update user data in database
+            database.ref('users/' + emaId).update({
+                fullName: fullName,
+                phone: phone,
+                district: district,
+                email: email,
+                lastUpdated: new Date().toISOString()
+            })
+            .then(() => {
+                // Update local data
+                userData = {
+                    ...userData,
+                    fullName: fullName,
+                    phone: phone,
+                    district: district,
+                    email: email
+                };
+                
+                // Update UI
+                updateProfileUI();
+                
+                // Close modal
+                editModal.classList.remove('active');
+                
+                // Show success message
+                showToast('Profile updated successfully!', 'success');
+                
+                // Reload page after a short delay
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            })
+            .catch((error) => {
+                showToast('Error updating profile: ' + error.message, 'error');
+            })
+            .finally(() => {
+                // Re-enable button
+                saveProfileBtn.disabled = false;
+                saveProfileBtn.textContent = 'SAVE CHANGES';
+            });
         });
-        
-        function submitAccidentReport(type, description) {
-            showLoading('Submitting your accident report...');
+
+        // Helper functions
+        function showToast(message, type = 'success') {
+            toastMessage.textContent = message;
+            toast.className = 'toast ' + type;
+            toast.classList.add('show');
             
-            // Generate a unique key for this report
-            const reportKey = database.ref().child('accidents').push().key;
-            
-            // Get current date and time
-            const now = new Date();
-            const date = now.toISOString().split('T')[0];
-            const time = now.toTimeString().split(' ')[0].substring(0, 5);
-            
-            // Create report object
-            const report = {
-                date,
-                time,
-                type,
-                description,
-                image1: accidentImage1Base64,
-                image2: accidentImage2Base64,
-                location: reportLocation,
-                reportedBy: currentUserData.email,
-                reportedByName: currentUserData.name,
-                timestamp: firebase.database.ServerValue.TIMESTAMP
-            };
-            
-            // Save report to Firebase
-            database.ref('accidents/' + reportKey).set(report)
-                .then(() => {
-                    // Add report key to user's reports
-                    const userReportsRef = database.ref('users/' + currentUserData.key + '/reports');
-                    
-                    // Get current reports count
-                    userReportsRef.once('value')
-                        .then((snapshot) => {
-                            const reports = snapshot.val() || {};
-                            const newReportCount = (reports.count || 0) + 1;
-                            
-                            // Update reports count and add this report key
-                            reports.count = newReportCount;
-                            if (!reports.accidents) {
-                                reports.accidents = [];
-                            }
-                            reports.accidents.push(reportKey);
-                            
-                            return userReportsRef.set(reports);
-                        })
-                        .then(() => {
-                            hideLoading();
-                            showNotification('Accident report submitted successfully!', 'success');
-                            
-                            // Reset form
-                            document.getElementById('accidentType').value = '';
-                            document.getElementById('accidentDescription').value = '';
-                            accidentImage1Base64 = '';
-                            accidentImage2Base64 = '';
-                            accidentImage1.innerHTML = '<span class="material-icons">add_photo_alternate</span><span>Tap to upload</span>';
-                            accidentImage2.innerHTML = '<span class="material-icons">add_photo_alternate</span><span>Tap to upload</span>';
-                            
-                            // Close modal
-                            reportModal.style.display = 'none';
-                        })
-                        .catch((error) => {
-                            hideLoading();
-                            showNotification('Error updating your reports: ' + error.message, 'error');
-                        });
-                })
-                .catch((error) => {
-                    hideLoading();
-                    showNotification('Error submitting report: ' + error.message, 'error');
-                });
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
         }
-        
-        // Agent application
-        applyAgentBtn.addEventListener('click', () => {
-            agentModal.style.display = 'flex';
-        });
-        
-        retryAgentBtn.addEventListener('click', () => {
-            agentModal.style.display = 'flex';
-        });
-        
-        viewAgentBtn.addEventListener('click', () => {
-            window.location.href = 'agent.html';
-        });
-        
-        closeAgentModal.addEventListener('click', () => {
-            agentModal.style.display = 'none';
-        });
-        
-        // NIC front upload
-        nicFrontUpload.addEventListener('click', () => {
-            nicFrontInput.click();
-        });
-        
-        nicFrontInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                compressImage(file, (base64) => {
-                    nicFrontBase64 = base64;
-                    nicFrontUpload.innerHTML = `<img src="${base64}" alt="NIC Front">`;
-                });
-            }
-        });
-        
-        // Submit agent application
-        submitAgentBtn.addEventListener('click', () => {
-            const name = document.getElementById('agentName').value;
-            const nic = document.getElementById('agentNIC').value;
-            
-            if (!name || !nic || !nicFrontBase64) {
-                showNotification('Please fill in all required fields and upload your NIC', 'error');
-                return;
-            }
-            
-            showLoading('Submitting your agent application...');
-            
-            // Create agent application object
-            const agentApplication = {
-                name,
-                nic,
-                nicFront: nicFrontBase64,
-                agentStatus: 'X', // X for pending
-                appliedDate: firebase.database.ServerValue.TIMESTAMP
-            };
-            
-            // Save agent application to Firebase
-            database.ref('users/' + currentUserData.key + '/agentinfo/dat').set(agentApplication)
-                .then(() => {
-                    hideLoading();
-                    showNotification('Agent application submitted successfully!', 'success');
-                    
-                    // Reset form
-                    document.getElementById('agentName').value = '';
-                    document.getElementById('agentNIC').value = '';
-                    nicFrontBase64 = '';
-                    nicFrontUpload.innerHTML = '<span class="material-icons">badge</span><span>Tap to upload NIC front</span>';
-                    
-                    // Update agent status in UI
-                    currentUserData.agentinfo = { dat: agentApplication };
-                    checkAgentStatus();
-                    
-                    // Close modal
-                    agentModal.style.display = 'none';
-                })
-                .catch((error) => {
-                    hideLoading();
-                    showNotification('Error submitting application: ' + error.message, 'error');
-                });
-        });
-        
-        // Edit profile
-        editProfileBtn.addEventListener('click', () => {
-            // Pre-fill form with current data
-            editName.value = currentUserData.name || '';
-            editPhone.value = currentUserData.phone || '';
-            editProvince.value = currentUserData.province || '';
-            
-            // Update district options based on province
-            updateDistrictOptions(editDistrict, currentUserData.province);
-            editDistrict.value = currentUserData.district || '';
-            
-            // Set profile picture
-            if (currentUserData.profilePicture) {
-                editProfilePicPreview.innerHTML = `<img src="${currentUserData.profilePicture}" alt="Profile">`;
-                editProfilePicBase64 = currentUserData.profilePicture;
-            }
-            
-            editProfileModal.style.display = 'flex';
-        });
-        
-        closeEditProfileModal.addEventListener('click', () => {
-            editProfileModal.style.display = 'none';
-        });
-        
-        // Profile picture upload
-        editProfilePicBtn.addEventListener('click', () => {
-            editProfilePicInput.click();
-        });
-        
-        editProfilePicInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                compressImage(file, (base64) => {
-                    editProfilePicBase64 = base64;
-                    editProfilePicPreview.innerHTML = `<img src="${base64}" alt="Profile">`;
-                });
-            }
-        });
-        
-        // Update district options based on province
-        function updateDistrictOptions(districtSelect, province) {
-            districtSelect.innerHTML = '<option value="">Select District</option>';
-            
-            if (province && districtsByProvince[province]) {
-                districtsByProvince[province].forEach(district => {
-                    const option = document.createElement('option');
-                    option.value = district;
-                    option.textContent = district;
-                    districtSelect.appendChild(option);
-                });
+
+        function showError(elementId, message) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.textContent = message;
+                element.style.display = 'block';
             }
         }
-        
-        // Province change handler
-        editProvince.addEventListener('change', () => {
-            updateDistrictOptions(editDistrict, editProvince.value);
-        });
-        
-        // Save profile changes
-        saveProfileBtn.addEventListener('click', () => {
-            const name = editName.value;
-            const phone = editPhone.value;
-            const province = editProvince.value;
-            const district = editDistrict.value;
-            
-            if (!name || !phone || !province || !district) {
-                showNotification('Please fill in all fields', 'error');
-                return;
+
+        function hideError(elementId) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.style.display = 'none';
             }
-            
-            showLoading('Updating your profile...');
-            
-            // Update user data
-            const updates = {
-                name,
-                phone,
-                province,
-                district
-            };
-            
-            // Update profile picture if changed
-            if (editProfilePicBase64 && editProfilePicBase64 !== currentUserData.profilePicture) {
-                updates.profilePicture = editProfilePicBase64;
-            }
-            
-            database.ref('users/' + currentUserData.key).update(updates)
-                .then(() => {
-                    hideLoading();
-                    showNotification('Profile updated successfully!', 'success');
-                    
-                    // Update current user data
-                    Object.assign(currentUserData, updates);
-                    
-                    // Update UI
-                    userName.textContent = name;
-                    userProfileName.textContent = name;
-                    userPhone.textContent = phone;
-                    userLocation.textContent = `${district}, ${province}`;
-                    
-                    if (updates.profilePicture) {
-                        userProfilePic.innerHTML = `<img src="${updates.profilePicture}" alt="Profile">`;
-                    }
-                    
-                    // Close modal
-                    editProfileModal.style.display = 'none';
-                })
-                .catch((error) => {
-                    hideLoading();
-                    showNotification('Error updating profile: ' + error.message, 'error');
-                });
-        });
-        
-        // Close modals when clicking outside
-        window.addEventListener('click', (e) => {
-            if (e.target === reportModal) {
-                reportModal.style.display = 'none';
-            }
-            if (e.target === agentModal) {
-                agentModal.style.display = 'none';
-            }
-            if (e.target === editProfileModal) {
-                editProfileModal.style.display = 'none';
-            }
-        });
+        }
     </script>
 </body>
 </html>
