@@ -11,6 +11,9 @@
     <!-- Material Symbols -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
@@ -559,37 +562,6 @@
             }
         }
 
-        /* Report add button */
-        .report-add-btn {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--green);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(66, 167, 90, 0.3);
-            z-index: 1000;
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-10px);
-            }
-            60% {
-                transform: translateY(-5px);
-            }
-        }
-
         /* Report popup cloud */
         .report-popup-cloud {
             position: absolute;
@@ -716,7 +688,7 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.15);
         }
 
-        .report-option .material-symbols-outlined {
+        .report-option i {
             font-size: 60px;
             margin-bottom: 15px;
         }
@@ -751,13 +723,13 @@
             background: rgba(66, 167, 90, 0.1);
         }
 
-        .radio-option .material-symbols-outlined {
+        .radio-option i {
             font-size: 40px;
             margin-bottom: 10px;
             color: var(--muted);
         }
 
-        .radio-option.selected .material-symbols-outlined {
+        .radio-option.selected i {
             color: var(--green);
         }
 
@@ -854,7 +826,7 @@
             background: rgba(66, 167, 90, 0.05);
         }
 
-        .image-upload-box .material-symbols-outlined {
+        .image-upload-box i {
             font-size: 40px;
             color: var(--muted);
             margin-bottom: 10px;
@@ -1162,7 +1134,7 @@
             gap: 10px;
         }
 
-        .info-section-title .material-symbols-outlined {
+        .info-section-title i {
             font-size: 24px;
         }
 
@@ -1178,7 +1150,7 @@
             gap: 10px;
         }
 
-        .info-item .material-symbols-outlined {
+        .info-item i {
             color: var(--green);
             font-size: 20px;
             flex-shrink: 0;
@@ -1382,11 +1354,11 @@
             <div class="report-slide active" id="reportTypeSlide">
                 <div class="report-options">
                     <div class="report-option sighting" id="sightingOption">
-                        <span class="material-symbols-outlined">visibility</span>
+                        <i class="fas fa-eye"></i>
                         Elephant Sighting
                     </div>
                     <div class="report-option accident" id="accidentOption">
-                        <span class="material-symbols-outlined">warning</span>
+                        <i class="fas fa-exclamation-triangle"></i>
                         Elephant Accident
                     </div>
                 </div>
@@ -1397,11 +1369,11 @@
                 <h3 class="report-question">What did you see?</h3>
                 <div class="radio-options">
                     <div class="radio-option" id="elephantOption">
-                        <span class="material-symbols-outlined">pets</span>
+                        <i class="fas fa-elephant"></i>
                         Elephant
                     </div>
                     <div class="radio-option" id="tuskerOption">
-                        <span class="material-symbols-outlined">emoji_nature</span>
+                        <i class="fas fa-tusk"></i>
                         Tusker
                     </div>
                 </div>
@@ -1431,7 +1403,7 @@
                     <div class="dial-button-action dial-backspace" id="countBackspace">
                         <span class="material-symbols-outlined">backspace</span>
                     </div>
-                    <div class="dial-button-action dial-correct" id="countCorrect">Correct</div>
+                    <div class="dial-button-action dial-correct" id="countCorrect">Continue</div>
                 </div>
             </div>
             
@@ -1440,21 +1412,24 @@
                 <h3 class="report-question">Add images (max 4)</h3>
                 <div class="image-upload-container">
                     <div class="image-upload-box" id="imageUpload1">
-                        <span class="material-symbols-outlined">add_photo_alternate</span>
+                        <i class="fas fa-camera"></i>
                         <div>Image 1</div>
                     </div>
                     <div class="image-upload-box" id="imageUpload2">
-                        <span class="material-symbols-outlined">add_photo_alternate</span>
+                        <i class="fas fa-camera"></i>
                         <div>Image 2</div>
                     </div>
                     <div class="image-upload-box" id="imageUpload3">
-                        <span class="material-symbols-outlined">add_photo_alternate</span>
+                        <i class="fas fa-camera"></i>
                         <div>Image 3</div>
                     </div>
                     <div class="image-upload-box" id="imageUpload4">
-                        <span class="material-symbols-outlined">add_photo_alternate</span>
+                        <i class="fas fa-camera"></i>
                         <div>Image 4</div>
                     </div>
+                </div>
+                <div class="dial-actions">
+                    <div class="dial-button-action dial-correct" id="continueToDescription">Continue</div>
                 </div>
             </div>
             
@@ -1470,11 +1445,11 @@
                 <h3 class="report-question">Were there any injuries?</h3>
                 <div class="radio-options">
                     <div class="radio-option" id="injuredHumansOption">
-                        <span class="material-symbols-outlined">person</span>
+                        <i class="fas fa-user-injured"></i>
                         Injured Humans
                     </div>
                     <div class="radio-option" id="injuredElephantsOption">
-                        <span class="material-symbols-outlined">pets</span>
+                        <i class="fas fa-elephant-injured"></i>
                         Injured Elephants
                     </div>
                 </div>
@@ -1484,11 +1459,11 @@
                 <h3 class="report-question">Is medical help needed?</h3>
                 <div class="radio-options">
                     <div class="radio-option" id="medicalYesOption">
-                        <span class="material-symbols-outlined">emergency</span>
+                        <i class="fas fa-ambulance"></i>
                         Yes
                     </div>
                     <div class="radio-option" id="medicalNoOption">
-                        <span class="material-symbols-outlined">check_circle</span>
+                        <i class="fas fa-check-circle"></i>
                         No
                     </div>
                 </div>
@@ -1576,11 +1551,11 @@
             
             <div class="report-actions">
                 <button class="report-action-btn call-btn" id="callReporterBtn">
-                    <span class="material-symbols-outlined">call</span>
+                    <i class="fas fa-phone"></i>
                     Call Reporter
                 </button>
                 <button class="report-action-btn download-btn" id="downloadImagesBtn">
-                    <span class="material-symbols-outlined">download</span>
+                    <i class="fas fa-download"></i>
                     Download Images
                 </button>
             </div>
@@ -1594,7 +1569,7 @@
             
             <div class="info-section">
                 <h3 class="info-section-title">
-                    <span class="material-symbols-outlined">pets</span>
+                    <i class="fas fa-elephant"></i>
                     About EMA
                 </h3>
                 <p class="info-item-text">
@@ -1604,7 +1579,7 @@
             
             <div class="info-section">
                 <h3 class="info-section-title">
-                    <span class="material-symbols-outlined">map</span>
+                    <i class="fas fa-map-marked-alt"></i>
                     Map Markers
                 </h3>
                 <div class="marker-legend">
@@ -1625,17 +1600,17 @@
             
             <div class="info-section">
                 <h3 class="info-section-title">
-                    <span class="material-symbols-outlined">visibility</span>
+                    <i class="fas fa-eye"></i>
                     Report Visibility
                 </h3>
                 <p class="info-item-text">
-                    Only reports from the last 12 hours are visible on the map to ensure information is current and relevant. Older reports are archived in the database but not displayed on the map.
+                    Only reports from last 12 hours are visible on map to ensure information is current and relevant. Older reports are archived in database but not displayed on map.
                 </p>
             </div>
             
             <div class="info-section">
                 <h3 class="info-section-title">
-                    <span class="material-symbols-outlined">verified</span>
+                    <i class="fas fa-check-circle"></i>
                     Report Verification
                 </h3>
                 <p class="info-item-text">
@@ -1935,6 +1910,11 @@
             showSlide('imagesSlide');
         });
 
+        // Continue from images to description
+        document.getElementById('continueToDescription').addEventListener('click', function() {
+            showSlide('descriptionSlide');
+        });
+
         // Image upload
         for (let i = 1; i <= 4; i++) {
             const uploadBox = document.getElementById(`imageUpload${i}`);
@@ -1973,7 +1953,7 @@
                                     // Reset UI
                                     uploadBox.classList.remove('has-image');
                                     uploadBox.innerHTML = `
-                                        <span class="material-symbols-outlined">add_photo_alternate</span>
+                                        <i class="fas fa-camera"></i>
                                         <div>Image ${i}</div>
                                     `;
                                     
@@ -2252,13 +2232,12 @@
                     },
                     (error) => {
                         console.error('Error getting location:', error);
-                        // Continue without location
+                        alert('Unable to get your location. Please enable location services.');
                     }
                 );
+            } else {
+                alert('Geolocation is not supported by your browser.');
             }
-            
-            // Load reports
-            loadReports();
         }
 
         // Load reports from Firebase
@@ -2553,7 +2532,7 @@
                 const uploadBox = document.getElementById(`imageUpload${i}`);
                 uploadBox.classList.remove('has-image');
                 uploadBox.innerHTML = `
-                    <span class="material-symbols-outlined">add_photo_alternate</span>
+                    <i class="fas fa-camera"></i>
                     <div>Image ${i}</div>
                 `;
             }
@@ -2572,13 +2551,8 @@
         function closeReportForm() {
             reportFormContainer.classList.remove('active');
             
-            // Remove report location marker
-            if (reportLocationMarker) {
-                map.removeLayer(reportLocationMarker);
-                reportLocationMarker = null;
-            }
-            
-            reportLocation = null;
+            // Don't remove the report location marker - keep it on map
+            // The green glowing marker stays there when cancelled
         }
 
         // Show specific slide in report form
