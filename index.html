@@ -305,7 +305,7 @@
 
         .message.error {
             background-color: rgba(211, 47, 47, 0.1);
-            color: var(--error-color);
+            color: #D32F2F;
             border: 1px solid rgba(211, 47, 47, 0.2);
         }
 
@@ -405,6 +405,7 @@
             <p class="lead">Create your account to help monitor and protect elephants.</p>
 
             <div id="registerMessage" class="message"></div>
+            <div id="registerLoader" class="loader"></div>
             
             <form id="register-form" onsubmit="return false" autocomplete="on">
                 <div class="profile-upload-container">
@@ -509,6 +510,7 @@
             <p class="lead">Enter your email and phone number to retrieve your EMA ID.</p>
 
             <div id="forgotIdMessage" class="message"></div>
+            <div id="forgotIdLoader" class="loader"></div>
             
             <form id="forgot-form" onsubmit="return false" autocomplete="on">
                 <div class="field">
@@ -560,11 +562,6 @@
         const database = firebase.database();
 
         // DOM elements
-        const loginScreen = document.getElementById('login-screen');
-        const registerScreen = document.getElementById('register-screen');
-        const successScreen = document.getElementById('success-screen');
-        const forgotScreen = document.getElementById('forgot-screen');
-
         const loginBtn = document.getElementById('loginBtn');
         const registerBtn = document.getElementById('registerBtn');
         const backToLoginBtn = document.getElementById('backToLoginBtn');
@@ -577,10 +574,6 @@
         const profilePictureInput = document.getElementById('profilePicture');
         const previewImage = document.getElementById('previewImage');
         const profileIcon = document.getElementById('profileIcon');
-
-        const loginLoader = document.getElementById('loginLoader');
-        const registerLoader = document.getElementById('registerLoader');
-        const forgotIdLoader = document.getElementById('forgotIdLoader');
 
         // Event listeners
         registerBtn.addEventListener('click', handleRegister);
@@ -619,12 +612,13 @@
                 emaIdToCheck = emaIdInput + '-E';
             }
 
-            loginLoader.style.display = 'block';
+            const registerLoader = document.getElementById('registerLoader');
+            registerLoader.style.display = 'block';
             loginBtn.disabled = true;
 
             database.ref('users/' + emaIdToCheck).once('value')
                 .then((snapshot) => {
-                    loginLoader.style.display = 'none';
+                    registerLoader.style.display = 'none';
                     loginBtn.disabled = false;
 
                     if (snapshot.exists()) {
@@ -638,7 +632,7 @@
                     }
                 })
                 .catch((error) => {
-                    loginLoader.style.display = 'none';
+                    registerLoader.style.display = 'none';
                     loginBtn.disabled = false;
                     showError('emaIdError', 'Error: ' + error.message);
                 });
@@ -652,6 +646,7 @@
             const email = document.getElementById('email').value.trim();
             const profilePicture = document.getElementById('profilePicture').files[0];
             const registerMessage = document.getElementById('registerMessage');
+            const registerLoader = document.getElementById('registerLoader');
             
             let isValid = true;
             
@@ -745,6 +740,7 @@
             const email = document.getElementById('forgotEmail').value.trim();
             const phone = document.getElementById('forgotPhone').value.trim();
             const forgotIdMessage = document.getElementById('forgotIdMessage');
+            const forgotIdLoader = document.getElementById('forgotIdLoader');
             
             let isValid = true;
             
@@ -839,13 +835,17 @@
 
         function showError(elementId, message) {
             const element = document.getElementById(elementId);
-            element.textContent = message;
-            element.style.display = 'block';
+            if (element) {
+                element.textContent = message;
+                element.style.display = 'block';
+            }
         }
 
         function hideError(elementId) {
             const element = document.getElementById(elementId);
-            element.style.display = 'none';
+            if (element) {
+                element.style.display = 'none';
+            }
         }
 
         function generateEmaId() {
