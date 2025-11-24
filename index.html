@@ -4,196 +4,329 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EMA - Elephant Monitoring App</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Mona Sans Font -->
+    <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/mona-sans" crossorigin="anonymous">
+    
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    
     <style>
         :root {
-            --primary-color: #2E7D32;
-            --primary-light: #60AD5E;
-            --primary-dark: #005005;
-            --secondary-color: #81C784;
-            --mint-color: #A5D6A7;
-            --parakeet-color: #8BC34A;
-            --nature-green: #4CAF50;
-            --background-color: #F5F7F5;
-            --surface-color: #FFFFFF;
-            --error-color: #D32F2F;
-            --text-primary: #212121;
-            --text-secondary: #757575;
-            --border-radius: 8px;
-            --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            --transition: all 0.2s ease;
+            --green: #42a75a;
+            --green-strong: #2f8a45;
+            --muted: #7a7a7a;
+            --card-radius: 20px;
+            --max-width: 420px;
+            --glass: rgba(255,255,255,0.92);
+            --background-light: #f5f7f5;
         }
 
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
-            font-family: 'Roboto', 'Helvetica Sans', sans-serif;
             user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
         }
-
+        
+        html, body {
+            height: 100%;
+        }
+        
         body {
-            background-color: var(--background-color);
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-        }
-
-        .app-container {
-            width: 100%;
-            max-width: 450px;
-            margin: 0 auto;
-            padding: 20px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .logo {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 20px;
-            display: block;
-            border-radius: 50%;
-            box-shadow: var(--shadow);
-        }
-
-        .title {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 8px;
-            letter-spacing: 1px;
-        }
-
-        .subtitle {
-            font-size: 18px;
-            color: var(--text-secondary);
-            font-weight: 400;
-        }
-
-        .content {
-            width: 100%;
-            background-color: var(--surface-color);
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: var(--shadow);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--primary-dark);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1px solid #E0E0E0;
-            border-radius: var(--border-radius);
-            font-size: 16px;
-            transition: var(--transition);
-            background-color: var(--surface-color);
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 14px 24px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: var(--border-radius);
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-            text-align: center;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .btn:hover {
-            background-color: var(--primary-dark);
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            color: var(--primary-color);
-            border: 1px solid var(--primary-color);
-        }
-
-        .btn-secondary:hover {
-            background-color: rgba(46, 125, 50, 0.05);
-        }
-
-        .btn:disabled {
-            background-color: #BDBDBD;
-            cursor: not-allowed;
-        }
-
-        .divider {
+            margin: 0;
+            font-family: "Mona Sans", "Inter", "Helvetica Neue", Arial, sans-serif;
+            background: var(--background-light);
             display: flex;
             align-items: center;
-            margin: 24px 0;
+            justify-content: center;
+            padding: 28px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        .divider::before, .divider::after {
-            content: '';
+        /* Card / container */
+        .card {
+            width: 100%;
+            max-width: var(--max-width);
+            background: var(--glass);
+            border-radius: var(--card-radius);
+            box-shadow: 0 10px 30px rgba(35,35,35,0.12);
+            padding: 22px;
+            backdrop-filter: blur(6px) saturate(110%);
+            border: 1px solid rgba(18,18,18,0.04);
+        }
+
+        /* top decorative icon */
+        .badge {
+            width: 78px;
+            height: 78px;
+            border-radius: 50%;
+            margin: 6px auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, #ffffff 0%, #f3fff5 100%);
+            box-shadow: 0 8px 20px rgba(66,167,90,0.15);
+            border: 1px solid rgba(66,167,90,0.12);
+            overflow: hidden;
+        }
+
+        .badge img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        h1 {
+            font-size: 20px;
+            margin: 14px 0 6px;
+            text-align: center;
+            color: #111;
+        }
+        
+        p.lead {
+            text-align: center;
+            font-size: 13px;
+            color: var(--muted);
+            margin: 0 0 18px;
+            line-height: 1.4;
+        }
+
+        form {
+            margin-top: 6px;
+        }
+        
+        .field {
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid #e6e6e6;
+            background: #fff;
+            font-size: 15px;
+            outline: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input input {
+            border: 0;
+            outline: 0;
+            font-size: 15px;
             flex: 1;
-            height: 1px;
-            background-color: #E0E0E0;
+            background: transparent;
         }
 
-        .divider span {
-            padding: 0 16px;
-            color: var(--text-secondary);
+        .input select {
+            border: 0;
+            outline: 0;
+            font-size: 15px;
+            flex: 1;
+            background: transparent;
+            appearance: none;
         }
 
-        .message {
-            padding: 16px;
-            border-radius: var(--border-radius);
+        .input .material-symbols-outlined {
+            font-size: 18px;
+            color: var(--muted);
+        }
+
+        /* Profile picture upload */
+        .profile-upload-container {
+            text-align: center;
             margin-bottom: 20px;
+        }
+
+        .profile-upload-label {
+            display: inline-block;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: rgba(66, 167, 90, 0.05);
+            border: 3px dashed var(--green);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .profile-upload-label:hover {
+            background-color: rgba(66, 167, 90, 0.1);
+        }
+
+        .profile-upload-label .material-symbols-outlined {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 36px;
+            color: var(--green);
+        }
+
+        .profile-upload-input {
             display: none;
         }
 
+        .preview-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        /* primary button */
+        .btn {
+            display: inline-block;
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: var(--green);
+            color: white;
+            border: none;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 8px;
+            box-shadow: 0 6px 18px rgba(66,167,90,0.16);
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: var(--green-strong);
+        }
+
+        .btn:disabled {
+            background: #BDBDBD;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--green);
+            border: 1px solid var(--green);
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(66, 167, 90, 0.05);
+        }
+
+        .link {
+            display: block;
+            text-align: center;
+            margin-top: 12px;
+            font-size: 13px;
+            color: var(--green-strong);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .muted {
+            text-align: center;
+            font-size: 13px;
+            color: #777;
+            margin-top: 10px;
+        }
+
+        /* success / info icon */
+        .big-illustration {
+            width: 110px;
+            height: 110px;
+            margin: 6px auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 18px;
+            background: linear-gradient(180deg, #ffffff, #f8fff8);
+            border: 1px solid rgba(66,167,90,0.08);
+        }
+        
+        .big-illustration .material-symbols-outlined {
+            font-size: 48px;
+            color: var(--green);
+        }
+
+        /* EMA ID display */
+        .ema-id {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--green);
+            text-align: center;
+            margin: 20px 0;
+            padding: 16px;
+            background-color: rgba(66, 167, 90, 0.05);
+            border-radius: 12px;
+        }
+
+        /* small note */
+        .note {
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+            margin-top: 12px;
+            line-height: 1.3;
+        }
+
+        /* subtle footer */
+        .footer {
+            margin-top: 12px;
+            text-align: center;
+            font-size: 12px;
+            color: #9b9b9b;
+        }
+
+        /* message display */
+        .message {
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            display: none;
+            font-size: 13px;
+        }
+
         .message.error {
-            background-color: #FFEBEE;
+            background-color: rgba(211, 47, 47, 0.1);
             color: var(--error-color);
-            border: 1px solid #FFCDD2;
+            border: 1px solid rgba(211, 47, 47, 0.2);
         }
 
         .message.success {
-            background-color: #E8F5E9;
-            color: var(--primary-dark);
-            border: 1px solid #C8E6C9;
+            background-color: rgba(66, 167, 90, 0.1);
+            color: var(--green);
+            border: 1px solid rgba(66, 167, 90, 0.2);
         }
 
+        /* error text */
+        .error-text {
+            color: #D32F2F;
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        /* loader */
         .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary-color);
+            border: 4px solid rgba(66, 167, 90, 0.1);
+            border-top: 4px solid var(--green);
             border-radius: 50%;
             width: 40px;
             height: 40px;
@@ -207,188 +340,104 @@
             100% { transform: rotate(360deg); }
         }
 
-        .view {
-            display: none;
-        }
-
-        .view.active {
-            display: block;
-        }
-
-        .ema-id {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--primary-color);
-            text-align: center;
-            margin: 20px 0;
-            padding: 16px;
-            background-color: rgba(46, 125, 50, 0.05);
-            border-radius: var(--border-radius);
-        }
-
-        .success-icon {
-            font-size: 64px;
-            color: var(--primary-color);
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .file-input-wrapper {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .file-input-wrapper input[type=file] {
-            position: absolute;
-            left: -9999px;
-        }
-
-        .file-input-label {
-            display: block;
-            padding: 12px 16px;
-            background-color: var(--surface-color);
-            border: 1px dashed var(--parakeet-color);
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: var(--transition);
-            text-align: center;
-        }
-
-        .file-input-label:hover {
-            background-color: rgba(139, 195, 74, 0.05);
-        }
-
-        .preview-image {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin: 0 auto 20px;
-            display: block;
-            box-shadow: var(--shadow);
-            border: 4px solid white;
-        }
-
-        .forgot-link {
-            text-align: center;
-            margin-top: 16px;
-            color: var(--primary-color);
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .forgot-link:hover {
-            text-decoration: underline;
-        }
-
-        .profile-upload-container {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .profile-upload-label {
-            display: inline-block;
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background-color: rgba(139, 195, 74, 0.05);
-            border: 3px dashed var(--parakeet-color);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: var(--transition);
-        }
-
-        .profile-upload-label:hover {
-            background-color: rgba(139, 195, 74, 0.1);
-        }
-
-        .profile-upload-label .material-icons {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 36px;
-            color: var(--parakeet-color);
-        }
-
-        .profile-upload-input {
-            display: none;
-        }
-
-        .error-text {
-            color: var(--error-color);
-            font-size: 14px;
-            margin-top: 5px;
-            display: none;
-        }
-
-        @media (max-width: 480px) {
-            .app-container {
-                padding: 15px;
+        /* responsive tweaks */
+        @media (max-width: 420px) {
+            body {
+                padding: 18px;
             }
             
-            .content {
-                padding: 20px;
+            .card {
+                padding: 18px;
+            }
+            
+            .badge {
+                width: 68px;
+                height: 68px;
+            }
+            
+            .big-illustration {
+                width: 98px;
+                height: 98px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <div class="header">
-            <img src="https://www.mediafire.com/convkey/9884/4tvqloa9af9utcazg.jpg?size_id=3" alt="EMA Logo" class="logo">
-            <h1 class="title">EMA</h1>
-            <p class="subtitle">Elephant Monitoring App</p>
-        </div>
-
-        <div class="content">
-            <div id="loginView" class="view active">
-                <div id="loginMessage" class="message"></div>
-                <div class="form-group">
-                    <label for="emaId">EMA ID</label>
-                    <input type="text" id="emaId" class="form-control" placeholder="Enter your EMA ID (e.g., 123456 or 123456-E)">
-                    <div id="emaIdError" class="error-text"></div>
-                </div>
-                <button id="loginBtn" class="btn">LOGIN</button>
-                <div class="divider">
-                    <span>OR</span>
-                </div>
-                <button id="registerBtn" class="btn btn-secondary">REGISTER</button>
-                <a id="forgotIdLink" class="forgot-link">Forgot EMA ID?</a>
-                <div id="loginLoader" class="loader"></div>
+    <!-- CARD -->
+    <div class="card" role="main" aria-labelledby="title">
+        <!-- LOGIN SCREEN -->
+        <section id="login-screen" class="screen" aria-hidden="false">
+            <div class="badge" aria-hidden="true">
+                <img src="https://www.mediafire.com/convkey/9884/4tvqloa9af9utcazg.jpg?size_id=3" alt="EMA Logo">
             </div>
 
-            <div id="registerView" class="view">
-                <div id="registerMessage" class="message"></div>
-                <form id="registerForm">
-                    <div class="profile-upload-container">
-                        <label for="profilePicture" class="profile-upload-label">
-                            <span class="material-icons" id="profileIcon">person</span>
-                            <img id="previewImage" class="preview-image" style="display: none;">
-                        </label>
-                        <input type="file" id="profilePicture" class="profile-upload-input" accept="image/*">
+            <h1 id="title">Login to EMA</h1>
+            <p class="lead">Enter your EMA ID to access the Elephant Monitoring App.</p>
+
+            <div id="loginMessage" class="message"></div>
+            
+            <form id="login-form" onsubmit="return false" autocomplete="on">
+                <div class="field">
+                    <label for="emaId">EMA ID</label>
+                    <div class="input">
+                        <span class="material-symbols-outlined" aria-hidden="true">badge</span>
+                        <input id="emaId" type="text" placeholder="Enter your EMA ID (e.g., 123456 or 123456-E)" required />
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="fullName">Full Name</label>
-                        <input type="text" id="fullName" class="form-control" required>
-                        <div id="fullNameError" class="error-text"></div>
+                    <div id="emaIdError" class="error-text"></div>
+                </div>
+
+                <button class="btn" id="loginBtn">LOGIN</button>
+            </form>
+
+            <a class="link" href="#" onclick="showScreen('register-screen');return false;">Create a new account</a>
+            <a class="link" href="#" onclick="showScreen('forgot-screen');return false;">Forgot EMA ID?</a>
+            
+            <div class="footer">Elephant Monitoring App - Protecting Wildlife Together</div>
+        </section>
+
+        <!-- REGISTER SCREEN -->
+        <section id="register-screen" class="screen" aria-hidden="true" style="display:none;">
+            <div class="badge" aria-hidden="true">
+                <img src="https://www.mediafire.com/convkey/9884/4tvqloa9af9utcazg.jpg?size_id=3" alt="EMA Logo">
+            </div>
+
+            <h1>Register for EMA</h1>
+            <p class="lead">Create your account to help monitor and protect elephants.</p>
+
+            <div id="registerMessage" class="message"></div>
+            
+            <form id="register-form" onsubmit="return false" autocomplete="on">
+                <div class="profile-upload-container">
+                    <label for="profilePicture" class="profile-upload-label">
+                        <span class="material-symbols-outlined" id="profileIcon">person</span>
+                        <img id="previewImage" class="preview-image">
+                    </label>
+                    <input type="file" id="profilePicture" class="profile-upload-input" accept="image/*">
+                </div>
+                
+                <div class="field">
+                    <label for="fullName">Full Name</label>
+                    <div class="input">
+                        <span class="material-symbols-outlined" aria-hidden="true">person</span>
+                        <input id="fullName" type="text" placeholder="Enter your full name" required />
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" class="form-control" placeholder="Enter 10-digit phone number" required>
-                        <div id="phoneError" class="error-text"></div>
+                    <div id="fullNameError" class="error-text"></div>
+                </div>
+                
+                <div class="field">
+                    <label for="phone">Phone Number</label>
+                    <div class="input">
+                        <span class="material-symbols-outlined" aria-hidden="true">phone</span>
+                        <input id="phone" type="tel" placeholder="Enter 10-digit phone number" required />
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="district">District</label>
-                        <select id="district" class="form-control" required>
+                    <div id="phoneError" class="error-text"></div>
+                </div>
+                
+                <div class="field">
+                    <label for="district">District</label>
+                    <div class="input">
+                        <span class="material-symbols-outlined" aria-hidden="true">location_on</span>
+                        <select id="district" required>
                             <option value="">Select District</option>
                             <option value="Ampara">Ampara</option>
                             <option value="Anuradhapura">Anuradhapura</option>
@@ -416,60 +465,85 @@
                             <option value="Trincomalee">Trincomalee</option>
                             <option value="Vavuniya">Vavuniya</option>
                         </select>
-                        <div id="districtError" class="error-text"></div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" class="form-control" required>
-                        <div id="emailError" class="error-text"></div>
-                    </div>
-                    
-                    <button type="submit" class="btn" id="submitBtn">REGISTER</button>
-                    <button type="button" id="backToLoginBtn" class="btn btn-secondary">BACK TO LOGIN</button>
-                </form>
-                <div id="registerLoader" class="loader"></div>
-            </div>
-
-            <div id="successView" class="view">
-                <div class="success-icon">
-                    <span class="material-icons">check_circle</span>
+                    <div id="districtError" class="error-text"></div>
                 </div>
-                <h2 style="text-align: center; margin-bottom: 10px;">Registration Successful!</h2>
-                <p style="text-align: center; color: var(--text-secondary); margin-bottom: 20px;">Your EMA ID has been generated. Please save it for future logins.</p>
-                <div id="generatedEmaId" class="ema-id"></div>
-                <button id="goToLoginBtn" class="btn">GO TO LOGIN</button>
+                
+                <div class="field">
+                    <label for="email">Email</label>
+                    <div class="input">
+                        <span class="material-symbols-outlined" aria-hidden="true">mail</span>
+                        <input id="email" type="email" placeholder="Enter your email address" required />
+                    </div>
+                    <div id="emailError" class="error-text"></div>
+                </div>
+
+                <button class="btn" id="registerBtn">CREATE ACCOUNT</button>
+                <button type="button" class="btn btn-secondary" id="backToLoginBtn">BACK TO LOGIN</button>
+            </form>
+
+            <div class="footer">By creating an account you agree to our Terms & Privacy.</div>
+        </section>
+
+        <!-- SUCCESS SCREEN -->
+        <section id="success-screen" class="screen" aria-hidden="true" style="display:none;">
+            <div class="big-illustration">
+                <span class="material-symbols-outlined">task_alt</span>
             </div>
 
-            <div id="forgotIdView" class="view">
-                <div id="forgotIdMessage" class="message"></div>
-                <h2 style="text-align: center; margin-bottom: 20px;">Find Your EMA ID</h2>
-                <form id="forgotIdForm">
-                    <div class="form-group">
-                        <label for="forgotEmail">Email</label>
-                        <input type="email" id="forgotEmail" class="form-control" required>
-                        <div id="forgotEmailError" class="error-text"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="forgotPhone">Phone Number</label>
-                        <input type="tel" id="forgotPhone" class="form-control" required>
-                        <div id="forgotPhoneError" class="error-text"></div>
-                    </div>
-                    <button type="submit" class="btn">FIND MY ID</button>
-                    <button type="button" id="backToLoginFromForgotBtn" class="btn btn-secondary">BACK TO LOGIN</button>
-                </form>
-                <div id="forgotIdLoader" class="loader"></div>
+            <h1>Registration Successful!</h1>
+            <p class="lead">Your EMA ID has been generated. Please save it for future logins.</p>
+            
+            <div id="generatedEmaId" class="ema-id"></div>
+            
+            <button class="btn" id="goToLoginBtn">GO TO LOGIN</button>
+        </section>
+
+        <!-- FORGOT ID SCREEN -->
+        <section id="forgot-screen" class="screen" aria-hidden="true" style="display:none;">
+            <div class="big-illustration">
+                <span class="material-symbols-outlined">badge</span>
             </div>
-        </div>
+
+            <h1>Find Your EMA ID</h1>
+            <p class="lead">Enter your email and phone number to retrieve your EMA ID.</p>
+
+            <div id="forgotIdMessage" class="message"></div>
+            
+            <form id="forgot-form" onsubmit="return false" autocomplete="on">
+                <div class="field">
+                    <label for="forgotEmail">Email Address</label>
+                    <div class="input">
+                        <span class="material-symbols-outlined" aria-hidden="true">mail</span>
+                        <input id="forgotEmail" type="email" placeholder="Enter your email address" required />
+                    </div>
+                    <div id="forgotEmailError" class="error-text"></div>
+                </div>
+                
+                <div class="field">
+                    <label for="forgotPhone">Phone Number</label>
+                    <div class="input">
+                        <span class="material-symbols-outlined" aria-hidden="true">phone</span>
+                        <input id="forgotPhone" type="tel" placeholder="Enter your phone number" required />
+                    </div>
+                    <div id="forgotPhoneError" class="error-text"></div>
+                </div>
+
+                <button class="btn" id="findIdBtn">FIND MY ID</button>
+                <button type="button" class="btn btn-secondary" id="backToLoginFromForgotBtn">BACK TO LOGIN</button>
+            </form>
+
+            <div class="footer">Don't remember your details? Contact us at support@ema.app</div>
+        </section>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <script>
+        // Prevent right-click, copy, and text selection
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('selectstart', event => event.preventDefault());
         document.addEventListener('dragstart', event => event.preventDefault());
 
+        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCtIvVHA0Q_iuTIFNanoU8RhV4oC60L_YM",
             authDomain: "emausers-9837a.firebaseapp.com",
@@ -481,346 +555,348 @@
             databaseURL: "https://emausers-9837a-default-rtdb.asia-southeast1.firebasedatabase.app/"
         };
 
+        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
+        // DOM elements
+        const loginScreen = document.getElementById('login-screen');
+        const registerScreen = document.getElementById('register-screen');
+        const successScreen = document.getElementById('success-screen');
+        const forgotScreen = document.getElementById('forgot-screen');
+
+        const loginBtn = document.getElementById('loginBtn');
+        const registerBtn = document.getElementById('registerBtn');
+        const backToLoginBtn = document.getElementById('backToLoginBtn');
+        const goToLoginBtn = document.getElementById('goToLoginBtn');
+        const findIdBtn = document.getElementById('findIdBtn');
+        const backToLoginFromForgotBtn = document.getElementById('backToLoginFromForgotBtn');
+
+        const registerForm = document.getElementById('register-form');
+        const forgotForm = document.getElementById('forgot-form');
+        const profilePictureInput = document.getElementById('profilePicture');
+        const previewImage = document.getElementById('previewImage');
+        const profileIcon = document.getElementById('profileIcon');
+
+        const loginLoader = document.getElementById('loginLoader');
+        const registerLoader = document.getElementById('registerLoader');
+        const forgotIdLoader = document.getElementById('forgotIdLoader');
+
+        // Event listeners
+        registerBtn.addEventListener('click', handleRegister);
+        backToLoginBtn.addEventListener('click', () => showScreen('login-screen'));
+        goToLoginBtn.addEventListener('click', () => showScreen('login-screen'));
+        findIdBtn.addEventListener('click', handleForgotId);
+        backToLoginFromForgotBtn.addEventListener('click', () => showScreen('login-screen'));
+
+        profilePictureInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    previewImage.src = event.target.result;
+                    previewImage.style.display = 'block';
+                    profileIcon.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        loginBtn.addEventListener('click', function() {
+            const emaIdInput = document.getElementById('emaId').value.trim();
+            const loginMessage = document.getElementById('loginMessage');
+            const emaIdError = document.getElementById('emaIdError');
+            
+            if (!emaIdInput) {
+                showError('emaIdError', 'Please enter your EMA ID');
+                return;
+            }
+
+            hideError('emaIdError');
+
+            let emaIdToCheck = emaIdInput;
+            if (!emaIdInput.includes('-E')) {
+                emaIdToCheck = emaIdInput + '-E';
+            }
+
+            loginLoader.style.display = 'block';
+            loginBtn.disabled = true;
+
+            database.ref('users/' + emaIdToCheck).once('value')
+                .then((snapshot) => {
+                    loginLoader.style.display = 'none';
+                    loginBtn.disabled = false;
+
+                    if (snapshot.exists()) {
+                        localStorage.setItem('emaId', emaIdToCheck);
+                        showMessage(loginMessage, 'Login successful! Redirecting...', 'success');
+                        setTimeout(() => {
+                            window.location.href = 'home.html';
+                        }, 1500);
+                    } else {
+                        showError('emaIdError', 'Invalid EMA ID. Please try again.');
+                    }
+                })
+                .catch((error) => {
+                    loginLoader.style.display = 'none';
+                    loginBtn.disabled = false;
+                    showError('emaIdError', 'Error: ' + error.message);
+                });
+        });
+
+        // Handle registration
+        function handleRegister() {
+            const fullName = document.getElementById('fullName').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const district = document.getElementById('district').value;
+            const email = document.getElementById('email').value.trim();
+            const profilePicture = document.getElementById('profilePicture').files[0];
+            const registerMessage = document.getElementById('registerMessage');
+            
+            let isValid = true;
+            
+            if (!fullName) {
+                showError('fullNameError', 'Please enter your full name');
+                isValid = false;
+            } else {
+                hideError('fullNameError');
+            }
+            
+            if (!phone) {
+                showError('phoneError', 'Please enter your phone number');
+                isValid = false;
+            } else if (!/^[0-9]{10}$/.test(phone)) {
+                showError('phoneError', 'Please enter a valid 10-digit phone number');
+                isValid = false;
+            } else {
+                hideError('phoneError');
+            }
+            
+            if (!district) {
+                showError('districtError', 'Please select your district');
+                isValid = false;
+            } else {
+                hideError('districtError');
+            }
+            
+            if (!email) {
+                showError('emailError', 'Please enter your email');
+                isValid = false;
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showError('emailError', 'Please enter a valid email address');
+                isValid = false;
+            } else {
+                hideError('emailError');
+            }
+            
+            if (!isValid) return;
+
+            registerLoader.style.display = 'block';
+            registerBtn.disabled = true;
+
+            const emaId = generateEmaId();
+
+            const processRegistration = (profilePictureBase64) => {
+                const userData = {
+                    fullName,
+                    phone,
+                    district,
+                    email,
+                    profilePicture: profilePictureBase64,
+                    registrationDate: new Date().toISOString()
+                };
+
+                database.ref('users/' + emaId).set(userData)
+                    .then(() => {
+                        registerLoader.style.display = 'none';
+                        registerBtn.disabled = false;
+                        
+                        document.getElementById('generatedEmaId').textContent = emaId;
+                        showScreen('success-screen');
+                    })
+                    .catch((error) => {
+                        registerLoader.style.display = 'none';
+                        registerBtn.disabled = false;
+                        showMessage(registerMessage, 'Error: ' + error.message, 'error');
+                    });
+            };
+
+            if (profilePicture) {
+                compressImage(profilePicture, 0.2)
+                    .then(compressedImage => {
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            processRegistration(event.target.result);
+                        };
+                        reader.readAsDataURL(compressedImage);
+                    })
+                    .catch(error => {
+                        registerLoader.style.display = 'none';
+                        registerBtn.disabled = false;
+                        showMessage(registerMessage, 'Error processing image: ' + error.message, 'error');
+                    });
+            } else {
+                processRegistration(null);
+            }
+        }
+
+        // Handle forgot ID
+        function handleForgotId() {
+            const email = document.getElementById('forgotEmail').value.trim();
+            const phone = document.getElementById('forgotPhone').value.trim();
+            const forgotIdMessage = document.getElementById('forgotIdMessage');
+            
+            let isValid = true;
+            
+            if (!email) {
+                showError('forgotEmailError', 'Please enter your email');
+                isValid = false;
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showError('forgotEmailError', 'Please enter a valid email address');
+                isValid = false;
+            } else {
+                hideError('forgotEmailError');
+            }
+            
+            if (!phone) {
+                showError('forgotPhoneError', 'Please enter your phone number');
+                isValid = false;
+            } else if (!/^[0-9]{10}$/.test(phone)) {
+                showError('forgotPhoneError', 'Please enter a valid 10-digit phone number');
+                isValid = false;
+            } else {
+                hideError('forgotPhoneError');
+            }
+            
+            if (!isValid) return;
+
+            forgotIdLoader.style.display = 'block';
+            findIdBtn.disabled = true;
+
+            database.ref('users').orderByChild('email').equalTo(email).once('value')
+                .then((snapshot) => {
+                    forgotIdLoader.style.display = 'none';
+                    findIdBtn.disabled = false;
+                    
+                    if (snapshot.exists()) {
+                        let found = false;
+                        let foundEmaId = '';
+                        
+                        snapshot.forEach((childSnapshot) => {
+                            const userData = childSnapshot.val();
+                            if (userData.phone === phone) {
+                                found = true;
+                                foundEmaId = childSnapshot.key;
+                            }
+                        });
+                        
+                        if (found) {
+                            showMessage(forgotIdMessage, `Your EMA ID is: ${foundEmaId}`, 'success');
+                        } else {
+                            showError('forgotPhoneError', 'No account found with the provided email and phone number');
+                        }
+                    } else {
+                        showError('forgotEmailError', 'No account found with the provided email');
+                    }
+                })
+                .catch((error) => {
+                    forgotIdLoader.style.display = 'none';
+                    findIdBtn.disabled = false;
+                    showMessage(forgotIdMessage, 'Error: ' + error.message, 'error');
+                });
+        }
+
+        // Screen toggling
+        function showScreen(id) {
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(s => {
+                if (s.id === id) {
+                    s.style.display = '';
+                    s.setAttribute('aria-hidden', 'false');
+                } else {
+                    s.style.display = 'none';
+                    s.setAttribute('aria-hidden', 'true');
+                }
+            });
+            
+            // Set focus to first input of screen
+            setTimeout(() => {
+                const firstInput = document.querySelector('#' + id + ' input');
+                if (firstInput) firstInput.focus();
+            }, 80);
+        }
+
+        // Helper functions
+        function showMessage(element, message, type) {
+            element.textContent = message;
+            element.className = 'message ' + type;
+            element.style.display = 'block';
+            
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 5000);
+        }
+
+        function showError(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.style.display = 'block';
+        }
+
+        function hideError(elementId) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'none';
+        }
+
+        function generateEmaId() {
+            const randomNum = Math.floor(100000 + Math.random() * 900000);
+            return randomNum + '-E';
+        }
+
+        function compressImage(file, quality) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        let width = img.width;
+                        let height = img.height;
+                        
+                        if (width > height) {
+                            if (width > 400) {
+                                height *= 400 / width;
+                                width = 400;
+                            }
+                        } else {
+                            if (height > 400) {
+                                width *= 400 / height;
+                                height = 400;
+                            }
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        canvas.toBlob(function(blob) {
+                            resolve(blob);
+                        }, 'image/jpeg', quality);
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Check if user is already logged in
         document.addEventListener('DOMContentLoaded', function() {
             const emaId = localStorage.getItem('emaId');
             if (emaId) {
                 window.location.href = 'home.html';
-            }
-
-            const loginView = document.getElementById('loginView');
-            const registerView = document.getElementById('registerView');
-            const successView = document.getElementById('successView');
-            const forgotIdView = document.getElementById('forgotIdView');
-
-            const loginBtn = document.getElementById('loginBtn');
-            const registerBtn = document.getElementById('registerBtn');
-            const backToLoginBtn = document.getElementById('backToLoginBtn');
-            const goToLoginBtn = document.getElementById('goToLoginBtn');
-            const forgotIdLink = document.getElementById('forgotIdLink');
-            const backToLoginFromForgotBtn = document.getElementById('backToLoginFromForgotBtn');
-
-            const registerForm = document.getElementById('registerForm');
-            const forgotIdForm = document.getElementById('forgotIdForm');
-            const profilePictureInput = document.getElementById('profilePicture');
-            const previewImage = document.getElementById('previewImage');
-            const profileIcon = document.getElementById('profileIcon');
-
-            const loginLoader = document.getElementById('loginLoader');
-            const registerLoader = document.getElementById('registerLoader');
-            const forgotIdLoader = document.getElementById('forgotIdLoader');
-
-            const submitBtn = document.getElementById('submitBtn');
-
-            registerBtn.addEventListener('click', function() {
-                showView(registerView);
-            });
-
-            backToLoginBtn.addEventListener('click', function() {
-                showView(loginView);
-            });
-
-            goToLoginBtn.addEventListener('click', function() {
-                showView(loginView);
-            });
-
-            forgotIdLink.addEventListener('click', function() {
-                showView(forgotIdView);
-            });
-
-            backToLoginFromForgotBtn.addEventListener('click', function() {
-                showView(loginView);
-            });
-
-            profilePictureInput.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        previewImage.src = event.target.result;
-                        previewImage.style.display = 'block';
-                        profileIcon.style.display = 'none';
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-
-            loginBtn.addEventListener('click', function() {
-                const emaIdInput = document.getElementById('emaId').value.trim();
-                const loginMessage = document.getElementById('loginMessage');
-                const emaIdError = document.getElementById('emaIdError');
-                
-                if (!emaIdInput) {
-                    showError('emaIdError', 'Please enter your EMA ID');
-                    return;
-                }
-
-                hideError('emaIdError');
-
-                let emaIdToCheck = emaIdInput;
-                if (!emaIdInput.includes('-E')) {
-                    emaIdToCheck = emaIdInput + '-E';
-                }
-
-                loginLoader.style.display = 'block';
-                loginBtn.disabled = true;
-
-                database.ref('users/' + emaIdToCheck).once('value')
-                    .then((snapshot) => {
-                        loginLoader.style.display = 'none';
-                        loginBtn.disabled = false;
-
-                        if (snapshot.exists()) {
-                            localStorage.setItem('emaId', emaIdToCheck);
-                            showMessage(loginMessage, 'Login successful! Redirecting...', 'success');
-                            setTimeout(() => {
-                                window.location.href = 'home.html';
-                            }, 1500);
-                        } else {
-                            showError('emaIdError', 'Invalid EMA ID. Please try again.');
-                        }
-                    })
-                    .catch((error) => {
-                        loginLoader.style.display = 'none';
-                        loginBtn.disabled = false;
-                        showError('emaIdError', 'Error: ' + error.message);
-                    });
-            });
-
-            registerForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const fullName = document.getElementById('fullName').value.trim();
-                const phone = document.getElementById('phone').value.trim();
-                const district = document.getElementById('district').value;
-                const email = document.getElementById('email').value.trim();
-                const profilePicture = document.getElementById('profilePicture').files[0];
-                const registerMessage = document.getElementById('registerMessage');
-                
-                let isValid = true;
-                
-                if (!fullName) {
-                    showError('fullNameError', 'Please enter your full name');
-                    isValid = false;
-                } else {
-                    hideError('fullNameError');
-                }
-                
-                if (!phone) {
-                    showError('phoneError', 'Please enter your phone number');
-                    isValid = false;
-                } else if (!/^[0-9]{10}$/.test(phone)) {
-                    showError('phoneError', 'Please enter a valid 10-digit phone number');
-                    isValid = false;
-                } else {
-                    hideError('phoneError');
-                }
-                
-                if (!district) {
-                    showError('districtError', 'Please select your district');
-                    isValid = false;
-                } else {
-                    hideError('districtError');
-                }
-                
-                if (!email) {
-                    showError('emailError', 'Please enter your email');
-                    isValid = false;
-                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                    showError('emailError', 'Please enter a valid email address');
-                    isValid = false;
-                } else {
-                    hideError('emailError');
-                }
-                
-                if (!isValid) return;
-
-                registerLoader.style.display = 'block';
-                submitBtn.disabled = true;
-
-                const emaId = generateEmaId();
-
-                const processRegistration = (profilePictureBase64) => {
-                    const userData = {
-                        fullName,
-                        phone,
-                        district,
-                        email,
-                        profilePicture: profilePictureBase64,
-                        registrationDate: new Date().toISOString()
-                    };
-
-                    database.ref('users/' + emaId).set(userData)
-                        .then(() => {
-                            registerLoader.style.display = 'none';
-                            submitBtn.disabled = false;
-                            
-                            document.getElementById('generatedEmaId').textContent = emaId;
-                            showView(successView);
-                        })
-                        .catch((error) => {
-                            registerLoader.style.display = 'none';
-                            submitBtn.disabled = false;
-                            showMessage(registerMessage, 'Error: ' + error.message, 'error');
-                        });
-                };
-
-                if (profilePicture) {
-                    compressImage(profilePicture, 0.2)
-                        .then(compressedImage => {
-                            const reader = new FileReader();
-                            reader.onload = function(event) {
-                                processRegistration(event.target.result);
-                            };
-                            reader.readAsDataURL(compressedImage);
-                        })
-                        .catch(error => {
-                            registerLoader.style.display = 'none';
-                            submitBtn.disabled = false;
-                            showMessage(registerMessage, 'Error processing image: ' + error.message, 'error');
-                        });
-                } else {
-                    processRegistration(null);
-                }
-            });
-
-            forgotIdForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const email = document.getElementById('forgotEmail').value.trim();
-                const phone = document.getElementById('forgotPhone').value.trim();
-                const forgotIdMessage = document.getElementById('forgotIdMessage');
-                
-                let isValid = true;
-                
-                if (!email) {
-                    showError('forgotEmailError', 'Please enter your email');
-                    isValid = false;
-                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                    showError('forgotEmailError', 'Please enter a valid email address');
-                    isValid = false;
-                } else {
-                    hideError('forgotEmailError');
-                }
-                
-                if (!phone) {
-                    showError('forgotPhoneError', 'Please enter your phone number');
-                    isValid = false;
-                } else if (!/^[0-9]{10}$/.test(phone)) {
-                    showError('forgotPhoneError', 'Please enter a valid 10-digit phone number');
-                    isValid = false;
-                } else {
-                    hideError('forgotPhoneError');
-                }
-                
-                if (!isValid) return;
-
-                forgotIdLoader.style.display = 'block';
-                forgotIdForm.querySelector('button[type="submit"]').disabled = true;
-
-                database.ref('users').orderByChild('email').equalTo(email).once('value')
-                    .then((snapshot) => {
-                        forgotIdLoader.style.display = 'none';
-                        forgotIdForm.querySelector('button[type="submit"]').disabled = false;
-                        
-                        if (snapshot.exists()) {
-                            let found = false;
-                            let foundEmaId = '';
-                            
-                            snapshot.forEach((childSnapshot) => {
-                                const userData = childSnapshot.val();
-                                if (userData.phone === phone) {
-                                    found = true;
-                                    foundEmaId = childSnapshot.key;
-                                }
-                            });
-                            
-                            if (found) {
-                                showMessage(forgotIdMessage, `Your EMA ID is: ${foundEmaId}`, 'success');
-                            } else {
-                                showError('forgotPhoneError', 'No account found with the provided email and phone number');
-                            }
-                        } else {
-                            showError('forgotEmailError', 'No account found with the provided email');
-                        }
-                    })
-                    .catch((error) => {
-                        forgotIdLoader.style.display = 'none';
-                        forgotIdForm.querySelector('button[type="submit"]').disabled = false;
-                        showMessage(forgotIdMessage, 'Error: ' + error.message, 'error');
-                    });
-            });
-
-            function showView(view) {
-                document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-                view.classList.add('active');
-            }
-
-            function showMessage(element, message, type) {
-                element.textContent = message;
-                element.className = 'message ' + type;
-                element.style.display = 'block';
-                
-                setTimeout(() => {
-                    element.style.display = 'none';
-                }, 5000);
-            }
-
-            function showError(elementId, message) {
-                const element = document.getElementById(elementId);
-                element.textContent = message;
-                element.style.display = 'block';
-            }
-
-            function hideError(elementId) {
-                const element = document.getElementById(elementId);
-                element.style.display = 'none';
-            }
-
-            function generateEmaId() {
-                const randomNum = Math.floor(100000 + Math.random() * 900000);
-                return randomNum + '-E';
-            }
-
-            function compressImage(file, quality) {
-                return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        const img = new Image();
-                        img.onload = function() {
-                            const canvas = document.createElement('canvas');
-                            const ctx = canvas.getContext('2d');
-                            
-                            let width = img.width;
-                            let height = img.height;
-                            
-                            if (width > height) {
-                                if (width > 400) {
-                                    height *= 400 / width;
-                                    width = 400;
-                                }
-                            } else {
-                                if (height > 400) {
-                                    width *= 400 / height;
-                                    height = 400;
-                                }
-                            }
-                            
-                            canvas.width = width;
-                            canvas.height = height;
-                            
-                            ctx.drawImage(img, 0, 0, width, height);
-                            
-                            canvas.toBlob(function(blob) {
-                                resolve(blob);
-                            }, 'image/jpeg', quality);
-                        };
-                        img.src = event.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                });
             }
         });
     </script>
