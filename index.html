@@ -4,14 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EMA - Elephant Monitoring App</title>
-    
-    <!-- Mona Sans Font -->
-    <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/mona-sans" crossorigin="anonymous">
-    
-    <!-- Material Symbols -->
+     <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/mona-sans" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    
-    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     
@@ -50,7 +44,6 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Card / container */
         .card {
             width: 100%;
             max-width: var(--max-width);
@@ -62,7 +55,6 @@
             border: 1px solid rgba(18,18,18,0.04);
         }
 
-        /* top decorative icon */
         .badge {
             width: 78px;
             height: 78px;
@@ -150,7 +142,6 @@
             color: var(--muted);
         }
 
-        /* Profile picture upload */
         .profile-upload-container {
             text-align: center;
             margin-bottom: 20px;
@@ -193,7 +184,6 @@
             display: none;
         }
 
-        /* primary button */
         .btn {
             display: inline-block;
             width: 100%;
@@ -247,7 +237,6 @@
             margin-top: 10px;
         }
 
-        /* success / info icon */
         .big-illustration {
             width: 110px;
             height: 110px;
@@ -265,7 +254,6 @@
             color: var(--green);
         }
 
-        /* EMA ID display */
         .ema-id {
             font-size: 24px;
             font-weight: 700;
@@ -277,7 +265,6 @@
             border-radius: 12px;
         }
 
-        /* small note */
         .note {
             font-size: 13px;
             color: #666;
@@ -286,7 +273,6 @@
             line-height: 1.3;
         }
 
-        /* subtle footer */
         .footer {
             margin-top: 12px;
             text-align: center;
@@ -294,7 +280,6 @@
             color: #9b9b9b;
         }
 
-        /* message display */
         .message {
             padding: 12px;
             border-radius: 12px;
@@ -315,7 +300,6 @@
             border: 1px solid rgba(66, 167, 90, 0.2);
         }
 
-        /* error text */
         .error-text {
             color: #D32F2F;
             font-size: 12px;
@@ -323,7 +307,6 @@
             display: none;
         }
 
-        /* loader */
         .loader {
             border: 4px solid rgba(66, 167, 90, 0.1);
             border-top: 4px solid var(--green);
@@ -340,7 +323,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* responsive tweaks */
         @media (max-width: 420px) {
             body {
                 padding: 18px;
@@ -363,16 +345,14 @@
     </style>
 </head>
 <body>
-    <!-- CARD -->
     <div class="card" role="main" aria-labelledby="title">
-        <!-- LOGIN SCREEN -->
         <section id="login-screen" class="screen" aria-hidden="false">
             <div class="badge" aria-hidden="true">
                 <img src="https://www.mediafire.com/convkey/9884/4tvqloa9af9utcazg.jpg?size_id=3" alt="EMA Logo">
             </div>
 
             <h1 id="title">Login to EMA</h1>
-            <p class="lead">Enter your EMA ID to access the Elephant Monitoring App.</p>
+            <p class="lead">Enter your EMA ID | ඔබගේ EMA කේතය ඇතුළත් කරන්න</p>
 
             <div id="loginMessage" class="message"></div>
             
@@ -392,17 +372,16 @@
             <a class="link" href="#" onclick="showScreen('register-screen');return false;">Create a new account</a>
             <a class="link" href="#" onclick="showScreen('forgot-screen');return false;">Forgot EMA ID?</a>
             
-            <div class="footer">Elephant Monitoring App - Protecting Wildlife Together</div>
+            <div class="footer">Project EMA by Aveesha Ninsara Pelawaththa @2025</div>
         </section>
-
-        <!-- REGISTER SCREEN -->
+        
         <section id="register-screen" class="screen" aria-hidden="true" style="display:none;">
             <div class="badge" aria-hidden="true">
                 <img src="https://www.mediafire.com/convkey/9884/4tvqloa9af9utcazg.jpg?size_id=3" alt="EMA Logo">
             </div>
 
             <h1>Register for EMA</h1>
-            <p class="lead">Create your account to help monitor and protect elephants.</p>
+            <p class="lead">Create your account to continue | ඉදිරියට යාමට ඔබගේ ගිණුම සාදන්න</p>
 
             <div id="registerMessage" class="message"></div>
             <div id="registerLoader" class="loader"></div>
@@ -493,7 +472,7 @@
             </div>
 
             <h1>Registration Successful!</h1>
-            <p class="lead">Your EMA ID has been generated. Please save it for future logins.</p>
+            <p class="lead">Your EMA ID has been generated. Please save it for future logins. | ඔබගේ EMA කේතය නිර්මාණය කර ඇති අතර ඔබට එය පහතින් දැකිය හැක. කරුණාකර අනාගතයේදී මෙම දුරකථනයෙන් හෝ වෙනත් දුරකථනයකින් පිවිසුම් සඳහා එය සුරකින්න.</p>
             
             <div id="generatedEmaId" class="ema-id"></div>
             
@@ -535,17 +514,15 @@
                 <button type="button" class="btn btn-secondary" id="backToLoginFromForgotBtn">BACK TO LOGIN</button>
             </form>
 
-            <div class="footer">Don't remember your details? Contact us at support@ema.app</div>
+            <div class="footer">Don't remember your details? Contact us at projectemalk@gmail.com</div>
         </section>
     </div>
 
     <script>
-        // Prevent right-click, copy, and text selection
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('selectstart', event => event.preventDefault());
         document.addEventListener('dragstart', event => event.preventDefault());
 
-        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCtIvVHA0Q_iuTIFNanoU8RhV4oC60L_YM",
             authDomain: "emausers-9837a.firebaseapp.com",
@@ -556,12 +533,9 @@
             measurementId: "G-TRDREJFMQ9",
             databaseURL: "https://emausers-9837a-default-rtdb.asia-southeast1.firebasedatabase.app/"
         };
-
-        // Initialize Firebase
+        
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-
-        // DOM elements
         const loginBtn = document.getElementById('loginBtn');
         const registerBtn = document.getElementById('registerBtn');
         const backToLoginBtn = document.getElementById('backToLoginBtn');
@@ -575,7 +549,6 @@
         const previewImage = document.getElementById('previewImage');
         const profileIcon = document.getElementById('profileIcon');
 
-        // Event listeners
         registerBtn.addEventListener('click', handleRegister);
         backToLoginBtn.addEventListener('click', () => showScreen('login-screen'));
         goToLoginBtn.addEventListener('click', () => showScreen('login-screen'));
@@ -638,7 +611,6 @@
                 });
         });
 
-        // Handle registration
         function handleRegister() {
             const fullName = document.getElementById('fullName').value.trim();
             const phone = document.getElementById('phone').value.trim();
@@ -735,7 +707,6 @@
             }
         }
 
-        // Handle forgot ID
         function handleForgotId() {
             const email = document.getElementById('forgotEmail').value.trim();
             const phone = document.getElementById('forgotPhone').value.trim();
@@ -789,10 +760,10 @@
                         if (found) {
                             showMessage(forgotIdMessage, `Your EMA ID is: ${foundEmaId}`, 'success');
                         } else {
-                            showError('forgotPhoneError', 'No account found with the provided email and phone number');
+                            showError('forgotPhoneError', 'සපයා ඇති විද්‍යුත් තැපෑල සහ දුරකථන අංකය සහිත ගිණුමක් හමු නොවීය.');
                         }
                     } else {
-                        showError('forgotEmailError', 'No account found with the provided email');
+                        showError('forgotEmailError', 'ලබා දී ඇති විද්‍යුත් තැපෑල සමඟ කිසිදු ගිණුමක් හමු නොවීය.'');
                     }
                 })
                 .catch((error) => {
@@ -801,8 +772,7 @@
                     showMessage(forgotIdMessage, 'Error: ' + error.message, 'error');
                 });
         }
-
-        // Screen toggling
+        
         function showScreen(id) {
             const screens = document.querySelectorAll('.screen');
             screens.forEach(s => {
@@ -815,14 +785,12 @@
                 }
             });
             
-            // Set focus to first input of screen
             setTimeout(() => {
                 const firstInput = document.querySelector('#' + id + ' input');
                 if (firstInput) firstInput.focus();
             }, 80);
         }
 
-        // Helper functions
         function showMessage(element, message, type) {
             element.textContent = message;
             element.className = 'message ' + type;
@@ -892,7 +860,6 @@
             });
         }
 
-        // Check if user is already logged in
         document.addEventListener('DOMContentLoaded', function() {
             const emaId = localStorage.getItem('emaId');
             if (emaId) {
