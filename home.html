@@ -443,6 +443,7 @@
             font-size: 15px;
             flex: 1;
             background: transparent;
+            font-family: "Mona Sans", "Inter", "Helvetica Neue", Arial, sans-serif;
         }
 
         .input select {
@@ -457,6 +458,7 @@
             background-repeat: no-repeat;
             background-size: 1.5em 1.5em;
             padding-right: 2.5rem;
+            font-family: "Mona Sans", "Inter", "Helvetica Neue", Arial, sans-serif;
         }
 
         .input .material-symbols-outlined {
@@ -851,7 +853,7 @@
             font-size: 16px;
             resize: none;
             outline: none;
-            font-family: inherit;
+            font-family: "Mona Sans", "Inter", "Helvetica Neue", Arial, sans-serif;
         }
 
         .text-area:focus {
@@ -2324,7 +2326,6 @@
         function loadUserData() {
             loader.style.display = 'flex';
 
-            // Simplified approach: Try direct lookup first, then fallback
             database.ref('users/' + emaId).once('value')
                 .then((snapshot) => {
                     if (snapshot.exists()) {
@@ -2339,11 +2340,9 @@
                             userAvatar.src = 'https://picsum.photos/seed/emauser/100/100.jpg';
                         }
 
-                        // Hide loader before initializing map
                         loader.style.display = 'none';
                         initializeMap();
                     } else {
-                        // If direct lookup fails, try searching by emaId field
                         database.ref('users').orderByChild('emaId').equalTo(emaId).once('value')
                             .then((querySnapshot) => {
                                 if (querySnapshot.exists()) {
@@ -2351,7 +2350,6 @@
                                         userData = childSnapshot.val();
                                         const firebaseKey = childSnapshot.key;
                                         
-                                        // Update localStorage with correct key
                                         localStorage.setItem('emaId', firebaseKey);
                                         emaId = firebaseKey;
                                         
@@ -2364,7 +2362,6 @@
                                             userAvatar.src = 'https://picsum.photos/seed/emauser/100/100.jpg';
                                         }
 
-                                        // Hide loader before initializing map
                                         loader.style.display = 'none';
                                         initializeMap();
                                     });
