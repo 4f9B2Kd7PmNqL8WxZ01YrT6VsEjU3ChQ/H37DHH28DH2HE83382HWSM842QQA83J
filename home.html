@@ -166,6 +166,31 @@
             font-size: 20px;
         }
 
+        .status-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--glass);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--blue);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            backdrop-filter: blur(6px) saturate(110%);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .status-icon:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+
+        .status-icon .material-symbols-outlined {
+            font-size: 20px;
+        }
+
         .map-toggle {
             position: absolute;
             top: 20px;
@@ -496,6 +521,14 @@
         .btn:disabled {
             background: #BDBDBD;
             cursor: not-allowed;
+        }
+
+        .btn-danger {
+            background: var(--red);
+        }
+
+        .btn-danger:hover {
+            background: #c5221f;
         }
 
         .loader-container {
@@ -1289,7 +1322,264 @@
             margin-bottom: 40px;
         }
 
-        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 5000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            max-width: 350px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .notification.success .notification-icon {
+            background: rgba(66, 167, 90, 0.1);
+            color: var(--green);
+        }
+
+        .notification.error .notification-icon {
+            background: rgba(234, 67, 53, 0.1);
+            color: var(--red);
+        }
+
+        .notification.info .notification-icon {
+            background: rgba(66, 133, 244, 0.1);
+            color: var(--blue);
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .notification-message {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.4;
+        }
+
+        .notification-close {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--muted);
+            transition: all 0.2s ease;
+        }
+
+        .notification-close:hover {
+            background: rgba(0,0,0,0.05);
+        }
+
+        .account-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .account-modal.active {
+            display: flex;
+        }
+
+        .account-modal-card {
+            background: white;
+            border-radius: var(--card-radius);
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: slideUp 0.4s ease;
+        }
+
+        .account-modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .account-modal-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .account-modal-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .account-modal-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .user-reports-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            flex-direction: column;
+            z-index: 4000;
+        }
+
+        .user-reports-modal.active {
+            display: flex;
+        }
+
+        .user-reports-content {
+            background: white;
+            border-radius: var(--card-radius) var(--card-radius) 0 0;
+            padding: 20px;
+            width: 100%;
+            max-width: 100%;
+            flex: 1;
+            overflow-y: auto;
+            animation: slideUp 0.4s ease;
+        }
+
+        .user-reports-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e6e6e6;
+        }
+
+        .user-reports-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .user-reports-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .user-reports-close:hover {
+            background: #e0e0e0;
+        }
+
+        .reports-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .report-item {
+            background: #f9f9f9;
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .report-item:hover {
+            background: #f0f0f0;
+        }
+
+        .report-item-info {
+            flex: 1;
+        }
+
+        .report-item-type {
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .report-item-date {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .report-item-delete {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .report-item-delete:hover {
+            background: #c5221f;
+        }
+
+        .report-item-delete .material-symbols-outlined {
+            color: white;
+            font-size: 18px;
+        }
+
+        .no-reports {
+            text-align: center;
+            padding: 40px;
+            color: var(--muted);
+            font-size: 16px;
+        }
+
         @media (max-width: 768px) {
             .report-options {
                 flex-direction: column;
@@ -1332,6 +1622,9 @@
         </div>
         <div class="edit-icon" id="editProfileBtn">
             <span class="material-symbols-outlined">edit</span>
+        </div>
+        <div class="status-icon" id="statusBtn">
+            <span class="material-symbols-outlined">account_circle</span>
         </div>
     </div>
 
@@ -1438,6 +1731,31 @@
                 <button type="button" class="btn" id="agentStatusBtn">Agent Status</button>
                 <button type="submit" class="btn" id="saveProfileBtn">Save Changes</button>
             </form>
+        </div>
+    </div>
+
+    <div class="account-modal" id="accountModal">
+        <div class="account-modal-card">
+            <h3 class="account-modal-title">Account Options</h3>
+            <p class="account-modal-subtitle" id="accountModalSubtitle"></p>
+            <div class="account-modal-buttons">
+                <button class="account-modal-btn btn-danger" id="logOutBtn">Log Out</button>
+                <button class="account-modal-btn btn-danger" id="deleteAccountBtn">Delete Account</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="user-reports-modal" id="userReportsModal">
+        <div class="user-reports-content">
+            <div class="user-reports-header">
+                <h3 class="user-reports-title">My Reports</h3>
+                <div class="user-reports-close" id="userReportsClose">
+                    <span class="material-symbols-outlined">close</span>
+                </div>
+            </div>
+            <div class="reports-list" id="reportsList">
+                <div class="no-reports">Loading your reports...</div>
+            </div>
         </div>
     </div>
 
@@ -1810,6 +2128,14 @@
         const notificationTitle = document.getElementById('notificationTitle');
         const notificationMessage = document.getElementById('notificationMessage');
         const notificationClose = document.getElementById('notificationClose');
+        const statusBtn = document.getElementById('statusBtn');
+        const accountModal = document.getElementById('accountModal');
+        const accountModalSubtitle = document.getElementById('accountModalSubtitle');
+        const logOutBtn = document.getElementById('logOutBtn');
+        const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+        const userReportsModal = document.getElementById('userReportsModal');
+        const userReportsClose = document.getElementById('userReportsClose');
+        const reportsList = document.getElementById('reportsList');
 
         let map;
         let userLocationMarker;
@@ -1820,6 +2146,7 @@
         let reportLocationMarker = null;
         let reportLocation = null;
         let reportPopup = null;
+        let locationWatchId = null;
 
         let userData = null;
         let emaId = null;
@@ -1890,6 +2217,11 @@
             openEditProfileModal();
         });
 
+        statusBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            openAccountModal();
+        });
+
         closeModalBtn.addEventListener('click', function(e) {
             e.stopPropagation();
             editProfileModal.classList.remove('active');
@@ -1938,6 +2270,10 @@
             reportDetailsModal.classList.remove('active');
         });
 
+        userReportsClose.addEventListener('click', function() {
+            userReportsModal.classList.remove('active');
+        });
+
         retryLocationBtn.addEventListener('click', function() {
             locationErrorModal.classList.remove('active');
             window.location.reload();
@@ -1950,6 +2286,17 @@
                 window.location.href = 'app-settings:root=LOCATION_SERVICES';
             } else {
                 window.open('https://support.google.com/?p=android_location_settings');
+            }
+        });
+
+        logOutBtn.addEventListener('click', function() {
+            localStorage.clear();
+            window.location.href = 'index.html';
+        });
+
+        deleteAccountBtn.addEventListener('click', function() {
+            if (confirm('Are you sure you want to delete your account? This action cannot be undone and will permanently delete all your data including reports.')) {
+                deleteAccount();
             }
         });
 
@@ -2276,29 +2623,20 @@
                                     });
                                 } else {
                                     loader.style.display = 'none';
-                                    showNotification('error', 'Error', 'User data not found. Please login again.');
-                                    setTimeout(() => {
-                                        window.location.href = 'index.html';
-                                    }, 3000);
+                                    window.location.href = 'index.html';
                                 }
                             })
                             .catch((error) => {
                                 console.error('Error querying user data:', error);
                                 loader.style.display = 'none';
-                                showNotification('error', 'Error', 'Error loading user data. Please try again.');
-                                setTimeout(() => {
-                                    window.location.href = 'index.html';
-                                }, 3000);
+                                window.location.href = 'index.html';
                             });
                     }
                 })
                 .catch((error) => {
                     console.error('Error loading user data:', error);
                     loader.style.display = 'none';
-                    showNotification('error', 'Error', 'Error loading user data. Please try again.');
-                    setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 3000);
+                    window.location.href = 'index.html';
                 });
         }
 
@@ -2368,7 +2706,12 @@
                     })
                 }).addTo(map);
 
-                navigator.geolocation.watchPosition(
+                // Start real-time location tracking
+                if (locationWatchId) {
+                    navigator.geolocation.clearWatch(locationWatchId);
+                }
+
+                locationWatchId = navigator.geolocation.watchPosition(
                     (newPosition) => {
                         const newLat = newPosition.coords.latitude;
                         const newLng = newPosition.coords.longitude;
@@ -2380,7 +2723,11 @@
                     (error) => {
                         console.error('Error watching position:', error);
                     },
-                    { enableHighAccuracy: true }
+                    { 
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 5000 // Accept 5 second old positions
+                    }
                 );
             }
 
@@ -2596,6 +2943,13 @@
             editProfileModal.classList.add('active');
         }
 
+        function openAccountModal() {
+            if (!userData) return;
+
+            accountModalSubtitle.textContent = `Name: ${userData.fullName}\nEMA ID: ${emaId}`;
+            accountModal.classList.add('active');
+        }
+
         function saveProfileChanges() {
             const fullName = document.getElementById('editFullName').value.trim();
             const phone = document.getElementById('editPhone').value.trim();
@@ -2662,6 +3016,43 @@
                     showNotification('error', 'Error', 'Error updating profile. Please try again.');
                     saveBtn.disabled = false;
                     saveBtn.textContent = 'Save Changes';
+                });
+        }
+
+        function deleteAccount() {
+            loader.style.display = 'flex';
+
+            // First, get all user reports
+            database.ref('users/' + emaId + '/reports').once('value')
+                .then((reportsSnapshot) => {
+                    const userReports = reportsSnapshot.val() || {};
+                    const reportIds = Object.keys(userReports);
+
+                    // Delete all reports from the reports collection
+                    const deletePromises = reportIds.map(reportId => {
+                        return database.ref('reports/' + reportId).remove();
+                    });
+
+                    Promise.all(deletePromises)
+                        .then(() => {
+                            // After deleting reports, delete the user account
+                            return database.ref('users/' + emaId).remove();
+                        })
+                        .then(() => {
+                            loader.style.display = 'none';
+                            localStorage.clear();
+                            window.location.href = 'index.html';
+                        })
+                        .catch((error) => {
+                            console.error('Error deleting account:', error);
+                            loader.style.display = 'none';
+                            showNotification('error', 'Error', 'Error deleting account. Please try again.');
+                        });
+                })
+                .catch((error) => {
+                    console.error('Error getting user reports:', error);
+                    loader.style.display = 'none';
+                    showNotification('error', 'Error', 'Error deleting account. Please try again.');
                 });
         }
 
