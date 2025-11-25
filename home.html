@@ -1287,6 +1287,85 @@
             margin-bottom: 40px;
         }
 
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 5000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            max-width: 350px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .notification.success .notification-icon {
+            background: rgba(66, 167, 90, 0.1);
+            color: var(--green);
+        }
+
+        .notification.error .notification-icon {
+            background: rgba(234, 67, 53, 0.1);
+            color: var(--red);
+        }
+
+        .notification.info .notification-icon {
+            background: rgba(66, 133, 244, 0.1);
+            color: var(--blue);
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .notification-message {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.4;
+        }
+
+        .notification-close {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--muted);
+            transition: all 0.2s ease;
+        }
+
+        .notification-close:hover {
+            background: rgba(0,0,0,0.05);
+        }
+
         @media (max-width: 768px) {
             .report-options {
                 flex-direction: column;
@@ -1300,6 +1379,12 @@
 
             .report-images {
                 grid-template-columns: 1fr;
+            }
+
+            .notification {
+                right: 10px;
+                left: 10px;
+                max-width: none;
             }
         }
     </style>
@@ -1746,6 +1831,19 @@
         <div class="loader-text">Loading your data...</div>
     </div>
 
+    <div class="notification" id="notification">
+        <div class="notification-icon">
+            <span class="material-symbols-outlined" id="notificationIcon">check_circle</span>
+        </div>
+        <div class="notification-content">
+            <div class="notification-title" id="notificationTitle">Success</div>
+            <div class="notification-message" id="notificationMessage">Operation completed successfully</div>
+        </div>
+        <div class="notification-close" id="notificationClose">
+            <span class="material-symbols-outlined">close</span>
+        </div>
+    </div>
+
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
@@ -1796,6 +1894,11 @@
         const locationErrorModal = document.getElementById('locationErrorModal');
         const retryLocationBtn = document.getElementById('retryLocationBtn');
         const openSettingsBtn = document.getElementById('openSettingsBtn');
+        const notification = document.getElementById('notification');
+        const notificationIcon = document.getElementById('notificationIcon');
+        const notificationTitle = document.getElementById('notificationTitle');
+        const notificationMessage = document.getElementById('notificationMessage');
+        const notificationClose = document.getElementById('notificationClose');
 
         let map;
         let userLocationMarker;
@@ -1839,6 +1942,31 @@
             }
 
             loadUserData();
+        });
+
+        function showNotification(type, title, message) {
+            notification.className = `notification ${type}`;
+            
+            if (type === 'success') {
+                notificationIcon.textContent = 'check_circle';
+            } else if (type === 'error') {
+                notificationIcon.textContent = 'error';
+            } else if (type === 'info') {
+                notificationIcon.textContent = 'info';
+            }
+            
+            notificationTitle.textContent = title;
+            notificationMessage.textContent = message;
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+
+        notificationClose.addEventListener('click', function() {
+            notification.classList.remove('show');
         });
 
         getStartedBtn.addEventListener('click', function() {
@@ -1901,12 +2029,10 @@
 
         retryLocationBtn.addEventListener('click', function() {
             locationErrorModal.classList.remove('active');
-            // Force page reload to reinitialize location
             window.location.reload();
         });
 
         openSettingsBtn.addEventListener('click', function() {
-
             if (navigator.userAgent.includes('Android')) {
                 window.location.href = 'app-settings:location';
             } else if (navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad')) {
@@ -1937,17 +2063,17 @@
                             database.ref('users/' + emaId).update({
                                 profilePicture: base64
                             }).then(() => {
-                                alert('Profile picture updated successfully!');
+                                showNotification('success', 'Success', 'Profile picture updated successfully!');
                             }).catch((error) => {
                                 console.error('Error updating profile picture:', error);
-                                alert('Error updating profile picture. Please try again.');
+                                showNotification('error', 'Error', 'Error updating profile picture. Please try again.');
                             });
                         };
                         reader.readAsDataURL(compressedImage);
                     })
                     .catch(error => {
                         console.error('Error compressing image:', error);
-                        alert('Error processing image. Please try again.');
+                        showNotification('error', 'Error', 'Error processing image. Please try again.');
                     });
             }
         });
@@ -2002,16 +2128,13 @@
                 const countDisplay = document.getElementById('countDisplay');
 
                 if (value === '#') {
-
                     const currentCount = countDisplay.textContent;
                     if (currentCount.length > 0) {
                         countDisplay.textContent = currentCount.slice(0, -1);
                     }
                 } else if (value === '*') {
-
                     countDisplay.textContent = '0';
                 } else {
-
                     const currentCount = countDisplay.textContent;
                     if (currentCount === '0') {
                         countDisplay.textContent = value;
@@ -2089,7 +2212,7 @@
                         })
                         .catch(error => {
                             console.error('Error compressing image:', error);
-                            alert('Error processing image. Please try again.');
+                            showNotification('error', 'Error', 'Error processing image. Please try again.');
                         });
                 }
             });
@@ -2163,27 +2286,23 @@
 
             database.ref('reports/' + reportId).set(reportData)
                 .then(() => {
-
                     database.ref('users/' + emaId + '/reports/' + reportId).set({
                         reportId: reportId,
                         timestamp: reportData.timestamp
                     }).then(() => {
-
                         loader.style.display = 'none';
-
                         successModal.classList.add('active');
-
                         closeReportForm();
                     }).catch((error) => {
                         console.error('Error saving report to user:', error);
                         loader.style.display = 'none';
-                        alert('Error submitting report. Please try again.');
+                        showNotification('error', 'Error', 'Error submitting report. Please try again.');
                     });
                 })
                 .catch((error) => {
                     console.error('Error saving report:', error);
                     loader.style.display = 'none';
-                    alert('Error submitting report. Please try again.');
+                    showNotification('error', 'Error', 'Error submitting report. Please try again.');
                 });
         });
 
@@ -2205,71 +2324,104 @@
         function loadUserData() {
             loader.style.display = 'flex';
 
-            database.ref('users/' + emaId).once('value')
+            // First check if user exists in Firebase
+            database.ref('users').orderByChild('emaId').equalTo(emaId).once('value')
                 .then((snapshot) => {
                     if (snapshot.exists()) {
-                        userData = snapshot.val();
+                        // Get the user data
+                        snapshot.forEach((childSnapshot) => {
+                            userData = childSnapshot.val();
+                            const firebaseKey = childSnapshot.key;
+                            
+                            // Update localStorage with the correct key
+                            localStorage.setItem('emaId', firebaseKey);
+                            emaId = firebaseKey;
+                            
+                            userName.textContent = userData.fullName;
+                            userEmaId.textContent = emaId;
 
-                        userName.textContent = userData.fullName;
-                        userEmaId.textContent = emaId;
+                            if (userData.profilePicture) {
+                                userAvatar.src = userData.profilePicture;
+                            } else {
+                                userAvatar.src = 'https://picsum.photos/seed/emauser/100/100.jpg';
+                            }
 
-                        if (userData.profilePicture) {
-                            userAvatar.src = userData.profilePicture;
-                        } else {
-                            userAvatar.src = 'https://picsum.photos/seed/emauser/100/100.jpg';
-                        }
-
-                        initializeMap();
+                            initializeMap();
+                        });
                     } else {
-                        alert('User data not found. Please login again.');
-                        window.location.href = 'index.html';
+                        // User not found, try direct lookup
+                        database.ref('users/' + emaId).once('value')
+                            .then((directSnapshot) => {
+                                if (directSnapshot.exists()) {
+                                    userData = directSnapshot.val();
+                                    
+                                    userName.textContent = userData.fullName;
+                                    userEmaId.textContent = emaId;
+
+                                    if (userData.profilePicture) {
+                                        userAvatar.src = userData.profilePicture;
+                                    } else {
+                                        userAvatar.src = 'https://picsum.photos/seed/emauser/100/100.jpg';
+                                    }
+
+                                    initializeMap();
+                                } else {
+                                    loader.style.display = 'none';
+                                    showNotification('error', 'Error', 'User data not found. Please login again.');
+                                    setTimeout(() => {
+                                        window.location.href = 'index.html';
+                                    }, 3000);
+                                }
+                            })
+                            .catch((error) => {
+                                console.error('Error loading user data:', error);
+                                loader.style.display = 'none';
+                                showNotification('error', 'Error', 'Error loading user data. Please try again.');
+                                setTimeout(() => {
+                                    window.location.href = 'index.html';
+                                }, 3000);
+                            });
                     }
                 })
                 .catch((error) => {
-                    console.error('Error loading user data:', error);
-                    alert('Error loading user data. Please try again.');
-                    window.location.href = 'index.html';
-                })
-                .finally(() => {
+                    console.error('Error querying user data:', error);
                     loader.style.display = 'none';
+                    showNotification('error', 'Error', 'Error loading user data. Please try again.');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 3000);
                 });
         }
 
         function initializeMap() {
-
             if (!navigator.geolocation) {
                 showLocationError();
                 return;
             }
 
-            // Check if location is enabled and get position
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    // Location is available
                     setupMap(position);
                 },
                 (error) => {
-                    // Location is not available or permission denied
                     console.error('Geolocation error:', error);
                     showLocationError();
                 },
                 {
                     enableHighAccuracy: true,
                     timeout: 10000,
-                    maximumAge: 0 // Don't use cached position
+                    maximumAge: 0
                 }
             );
         }
 
         function setupMap(position) {
-
             map = L.map('map', {
                 center: position ? [position.coords.latitude, position.coords.longitude] : [7.8731, 80.7718], 
                 zoom: 8,
                 zoomControl: false 
             });
 
-            // Preload tiles for better performance
             osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '',
                 maxZoom: 19,
@@ -2284,13 +2436,10 @@
                 updateWhenZooming: false
             });
 
-            // Preload tiles around current view
             preloadMapTiles();
 
             map.on('dblclick', function(e) {
-
                 reportLocation = e.latlng;
-
                 openReportForm();
             });
 
@@ -2333,7 +2482,6 @@
             const bounds = map.getBounds();
             const zoom = map.getZoom();
             
-            // Preload tiles for current and adjacent zoom levels
             for (let z = Math.max(1, zoom - 1); z <= Math.min(19, zoom + 1); z++) {
                 const min = bounds.getNorthWest();
                 const max = bounds.getSouthEast();
@@ -2342,7 +2490,6 @@
                     for (let y = Math.floor((1 - Math.log(Math.tan(min.lat * Math.PI / 180) + 1 / Math.cos(min.lat * Math.PI / 180)) / Math.PI / 2) * Math.pow(2, z)); 
                          y <= Math.floor((1 - Math.log(Math.tan(max.lat * Math.PI / 180) + 1 / Math.cos(max.lat * Math.PI / 180)) / Math.PI / 2) * Math.pow(2, z)); y++) {
                         
-                        // Create image elements to preload tiles
                         const img = new Image();
                         img.src = `https://tile.openstreetmap.org/${z}/${x}/${y}.png`;
                     }
@@ -2413,7 +2560,6 @@
         }
 
         function showReportDetails(reportId, report) {
-
             document.getElementById('reportTypeValue').textContent = report.type === 'sighting' ? 'Elephant Sighting' : 'Elephant Accident';
             document.getElementById('reportDateTimeValue').textContent = new Date(report.timestamp).toLocaleString();
             document.getElementById('reportLocationValue').textContent = `Lat: ${report.location.lat.toFixed(6)}, Lng: ${report.location.lng.toFixed(6)}`;
@@ -2496,7 +2642,6 @@
 
                         map.setView([lat, lng], 14);
                         
-                        // Update or create user location marker
                         if (userLocationMarker) {
                             userLocationMarker.setLatLng([lat, lng]);
                         } else {
@@ -2597,27 +2742,21 @@
 
             database.ref('users/' + emaId).set(userData)
                 .then(() => {
-
                     userName.textContent = fullName;
-
                     editProfileModal.classList.remove('active');
-
                     saveBtn.disabled = false;
                     saveBtn.textContent = 'Save Changes';
-
-                    alert('Profile updated successfully!');
+                    showNotification('success', 'Success', 'Profile updated successfully!');
                 })
                 .catch((error) => {
                     console.error('Error updating profile:', error);
-                    alert('Error updating profile. Please try again.');
-
+                    showNotification('error', 'Error', 'Error updating profile. Please try again.');
                     saveBtn.disabled = false;
                     saveBtn.textContent = 'Save Changes';
                 });
         }
 
         function openReportForm() {
-
             reportData = {
                 type: '',
                 elephantType: '',
@@ -2653,11 +2792,9 @@
 
         function closeReportForm() {
             reportFormContainer.classList.remove('active');
-
         }
 
         function showSlide(slideId) {
-
             document.querySelectorAll('.report-slide').forEach(slide => {
                 slide.classList.remove('active');
             });
