@@ -1322,85 +1322,6 @@
             margin-bottom: 40px;
         }
 
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: white;
-            border-radius: 12px;
-            padding: 16px 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            z-index: 5000;
-            transform: translateX(400px);
-            transition: transform 0.3s ease;
-            max-width: 350px;
-        }
-
-        .notification.show {
-            transform: translateX(0);
-        }
-
-        .notification-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .notification.success .notification-icon {
-            background: rgba(66, 167, 90, 0.1);
-            color: var(--green);
-        }
-
-        .notification.error .notification-icon {
-            background: rgba(234, 67, 53, 0.1);
-            color: var(--red);
-        }
-
-        .notification.info .notification-icon {
-            background: rgba(66, 133, 244, 0.1);
-            color: var(--blue);
-        }
-
-        .notification-content {
-            flex: 1;
-        }
-
-        .notification-title {
-            font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 2px;
-        }
-
-        .notification-message {
-            font-size: 13px;
-            color: var(--muted);
-            line-height: 1.4;
-        }
-
-        .notification-close {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: var(--muted);
-            transition: all 0.2s ease;
-        }
-
-        .notification-close:hover {
-            background: rgba(0,0,0,0.05);
-        }
-
         .account-modal {
             position: fixed;
             top: 0;
@@ -1441,6 +1362,7 @@
             color: #666;
             margin-bottom: 20px;
             line-height: 1.5;
+            white-space: pre-line;
         }
 
         .account-modal-buttons {
@@ -1593,12 +1515,6 @@
 
             .report-images {
                 grid-template-columns: 1fr;
-            }
-
-            .notification {
-                right: 10px;
-                left: 10px;
-                max-width: none;
             }
         }
     </style>
@@ -2076,827 +1992,966 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
-
-        document.addEventListener('contextmenu', event => event.preventDefault());
-        document.addEventListener('selectstart', event => event.preventDefault());
-        document.addEventListener('dragstart', event => event.preventDefault());
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCtIvVHA0Q_iuTIFNanoU8RhV4oC60L_YM",
-            authDomain: "emausers-9837a.firebaseapp.com",
-            projectId: "emausers-9837a",
-            storageBucket: "emausers-9837a.firebasestorage.app",
-            messagingSenderId: "418180372006",
-            appId: "1:418180372006:web:5534a07888222cdb0a78e7",
-            measurementId: "G-TRDREJFMQ9",
-            databaseURL: "https://emausers-9837a-default-rtdb.asia-southeast1.firebasedatabase.app/"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
-        const welcomeBanner = document.getElementById('welcomeBanner');
-        const getStartedBtn = document.getElementById('getStartedBtn');
-        const loader = document.getElementById('loader');
-        const userPill = document.getElementById('userPill');
-        const userAvatar = document.getElementById('userAvatar');
-        const userName = document.getElementById('userName');
-        const userEmaId = document.getElementById('userEmaId');
-        const editProfileBtn = document.getElementById('editProfileBtn');
-        const editProfileModal = document.getElementById('editProfileModal');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        const editProfileForm = document.getElementById('editProfileForm');
-        const mapToggleBtn = document.getElementById('mapToggleBtn');
-        const userLocationBtn = document.getElementById('userLocationBtn');
-        const infoBtn = document.getElementById('infoBtn');
-        const reportFormContainer = document.getElementById('reportFormContainer');
-        const reportFormClose = document.getElementById('reportFormClose');
-        const successModal = document.getElementById('successModal');
-        const successCloseBtn = document.getElementById('successCloseBtn');
-        const reportDetailsModal = document.getElementById('reportDetailsModal');
-        const reportDetailsClose = document.getElementById('reportDetailsClose');
-        const infoModal = document.getElementById('infoModal');
-        const infoCloseBtn = document.getElementById('infoCloseBtn');
-        const profilePictureInput = document.getElementById('profilePictureInput');
-        const agentStatusBtn = document.getElementById('agentStatusBtn');
-        const otherBtn = document.getElementById('otherBtn');
-        const locationErrorModal = document.getElementById('locationErrorModal');
-        const retryLocationBtn = document.getElementById('retryLocationBtn');
-        const openSettingsBtn = document.getElementById('openSettingsBtn');
-        const notification = document.getElementById('notification');
-        const notificationIcon = document.getElementById('notificationIcon');
-        const notificationTitle = document.getElementById('notificationTitle');
-        const notificationMessage = document.getElementById('notificationMessage');
-        const notificationClose = document.getElementById('notificationClose');
-        const statusBtn = document.getElementById('statusBtn');
-        const accountModal = document.getElementById('accountModal');
-        const accountModalSubtitle = document.getElementById('accountModalSubtitle');
-        const logOutBtn = document.getElementById('logOutBtn');
-        const deleteAccountBtn = document.getElementById('deleteAccountBtn');
-        const userReportsModal = document.getElementById('userReportsModal');
-        const userReportsClose = document.getElementById('userReportsClose');
-        const reportsList = document.getElementById('reportsList');
-
-        let map;
-        let userLocationMarker;
-        let currentMapLayer = 'osm'; 
-        let osmLayer;
-        let esriLayer;
-        let reportMarkers = [];
-        let reportLocationMarker = null;
-        let reportLocation = null;
-        let reportPopup = null;
-        let locationWatchId = null;
-
-        let userData = null;
-        let emaId = null;
-
-        let reportData = {
-            type: '',
-            elephantType: '',
-            count: 0,
-            images: [],
-            description: '',
-            injuries: [],
-            medicalHelpNeeded: false,
-            location: null,
-            timestamp: null,
-            reporterId: emaId
-        };
-
+        // Wait for DOM to be fully loaded
         document.addEventListener('DOMContentLoaded', function() {
+            // Safely get all elements
+            const elements = {
+                welcomeBanner: document.getElementById('welcomeBanner'),
+                getStartedBtn: document.getElementById('getStartedBtn'),
+                loader: document.getElementById('loader'),
+                userPill: document.getElementById('userPill'),
+                userAvatar: document.getElementById('userAvatar'),
+                userName: document.getElementById('userName'),
+                userEmaId: document.getElementById('userEmaId'),
+                editProfileBtn: document.getElementById('editProfileBtn'),
+                editProfileModal: document.getElementById('editProfileModal'),
+                closeModalBtn: document.getElementById('closeModalBtn'),
+                editProfileForm: document.getElementById('editProfileForm'),
+                mapToggleBtn: document.getElementById('mapToggleBtn'),
+                userLocationBtn: document.getElementById('userLocationBtn'),
+                infoBtn: document.getElementById('infoBtn'),
+                reportFormContainer: document.getElementById('reportFormContainer'),
+                reportFormClose: document.getElementById('reportFormClose'),
+                successModal: document.getElementById('successModal'),
+                successCloseBtn: document.getElementById('successCloseBtn'),
+                reportDetailsModal: document.getElementById('reportDetailsModal'),
+                reportDetailsClose: document.getElementById('reportDetailsClose'),
+                infoModal: document.getElementById('infoModal'),
+                infoCloseBtn: document.getElementById('infoCloseBtn'),
+                profilePictureInput: document.getElementById('profilePictureInput'),
+                agentStatusBtn: document.getElementById('agentStatusBtn'),
+                otherBtn: document.getElementById('otherBtn'),
+                locationErrorModal: document.getElementById('locationErrorModal'),
+                retryLocationBtn: document.getElementById('retryLocationBtn'),
+                openSettingsBtn: document.getElementById('openSettingsBtn'),
+                statusBtn: document.getElementById('statusBtn'),
+                accountModal: document.getElementById('accountModal'),
+                accountModalSubtitle: document.getElementById('accountModalSubtitle'),
+                logOutBtn: document.getElementById('logOutBtn'),
+                deleteAccountBtn: document.getElementById('deleteAccountBtn'),
+                userReportsModal: document.getElementById('userReportsModal'),
+                userReportsClose: document.getElementById('userReportsClose'),
+                reportsList: document.getElementById('reportsList')
+            };
 
-            emaId = localStorage.getItem('emaId');
-            if (!emaId) {
-                window.location.href = 'index.html';
+            // Check if all critical elements exist
+            if (!elements.welcomeBanner || !elements.getStartedBtn || !elements.loader) {
+                console.error('Critical DOM elements missing');
                 return;
             }
 
-            const hasVisited = localStorage.getItem('emaHasVisited');
-            if (!hasVisited) {
-                welcomeBanner.style.display = 'flex';
-            } else {
-                welcomeBanner.style.display = 'none';
+            // Firebase configuration
+            const firebaseConfig = {
+                apiKey: "AIzaSyCtIvVHA0Q_iuTIFNanoU8RhV4oC60L_YM",
+                authDomain: "emausers-9837a.firebaseapp.com",
+                projectId: "emausers-9837a",
+                storageBucket: "emausers-9837a.firebasestorage.app",
+                messagingSenderId: "418180372006",
+                appId: "1:418180372006:web:5534a07888222cdb0a78e7",
+                measurementId: "G-TRDREJFMQ9",
+                databaseURL: "https://emausers-9837a-default-rtdb.asia-southeast1.firebasedatabase.app/"
+            };
+
+            firebase.initializeApp(firebaseConfig);
+            const database = firebase.database();
+
+            let map;
+            let userLocationMarker;
+            let currentMapLayer = 'osm'; 
+            let osmLayer;
+            let esriLayer;
+            let reportMarkers = [];
+            let reportLocationMarker = null;
+            let reportLocation = null;
+            let reportPopup = null;
+            let locationWatchId = null;
+
+            let userData = null;
+            let emaId = null;
+
+            let reportData = {
+                type: '',
+                elephantType: '',
+                count: 0,
+                images: [],
+                description: '',
+                injuries: [],
+                medicalHelpNeeded: false,
+                location: null,
+                timestamp: null,
+                reporterId: emaId
+            };
+
+            // Initialize app
+            function initApp() {
+                emaId = localStorage.getItem('emaId');
+                if (!emaId) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                const hasVisited = localStorage.getItem('emaHasVisited');
+                if (!hasVisited) {
+                    elements.welcomeBanner.style.display = 'flex';
+                } else {
+                    elements.welcomeBanner.style.display = 'none';
+                }
+
+                loadUserData();
             }
 
-            loadUserData();
-        });
-
-        function showNotification(type, title, message) {
-            notification.className = `notification ${type}`;
-            
-            if (type === 'success') {
-                notificationIcon.textContent = 'check_circle';
-            } else if (type === 'error') {
-                notificationIcon.textContent = 'error';
-            } else if (type === 'info') {
-                notificationIcon.textContent = 'info';
+            // Notification function
+            function showNotification(type, title, message) {
+                if (!elements.notification) return;
+                
+                elements.notification.className = `notification ${type}`;
+                
+                if (type === 'success') {
+                    elements.notificationIcon.textContent = 'check_circle';
+                } else if (type === 'error') {
+                    elements.notificationIcon.textContent = 'error';
+                } else if (type === 'info') {
+                    elements.notificationIcon.textContent = 'info';
+                }
+                
+                elements.notificationTitle.textContent = title;
+                elements.notificationMessage.textContent = message;
+                
+                elements.notification.classList.add('show');
+                
+                setTimeout(() => {
+                    elements.notification.classList.remove('show');
+                }, 5000);
             }
-            
-            notificationTitle.textContent = title;
-            notificationMessage.textContent = message;
-            
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 5000);
-        }
 
-        notificationClose.addEventListener('click', function() {
-            notification.classList.remove('show');
-        });
-
-        getStartedBtn.addEventListener('click', function() {
-            localStorage.setItem('emaHasVisited', 'true');
-            welcomeBanner.style.display = 'none';
-        });
-
-        editProfileBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            openEditProfileModal();
-        });
-
-        statusBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            openAccountModal();
-        });
-
-        closeModalBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            editProfileModal.classList.remove('active');
-        });
-
-        editProfileForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            saveProfileChanges();
-        });
-
-        agentStatusBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            window.location.href = 'agent.html';
-        });
-
-        mapToggleBtn.addEventListener('click', function() {
-            toggleMapLayer();
-        });
-
-        userLocationBtn.addEventListener('click', function() {
-            centerMapOnUser();
-        });
-
-        infoBtn.addEventListener('click', function() {
-            infoModal.classList.add('active');
-        });
-
-        infoCloseBtn.addEventListener('click', function() {
-            infoModal.classList.remove('active');
-        });
-
-        otherBtn.addEventListener('click', function() {
-            window.location.href = 'other.html';
-        });
-
-        reportFormClose.addEventListener('click', function() {
-            closeReportForm();
-        });
-
-        successCloseBtn.addEventListener('click', function() {
-            successModal.classList.remove('active');
-            location.reload();
-        });
-
-        reportDetailsClose.addEventListener('click', function() {
-            reportDetailsModal.classList.remove('active');
-        });
-
-        userReportsClose.addEventListener('click', function() {
-            userReportsModal.classList.remove('active');
-        });
-
-        retryLocationBtn.addEventListener('click', function() {
-            locationErrorModal.classList.remove('active');
-            window.location.reload();
-        });
-
-        openSettingsBtn.addEventListener('click', function() {
-            if (navigator.userAgent.includes('Android')) {
-                window.location.href = 'app-settings:location';
-            } else if (navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad')) {
-                window.location.href = 'app-settings:root=LOCATION_SERVICES';
-            } else {
-                window.open('https://support.google.com/?p=android_location_settings');
+            // Event listeners with null checks
+            if (elements.getStartedBtn) {
+                elements.getStartedBtn.addEventListener('click', function() {
+                    localStorage.setItem('emaHasVisited', 'true');
+                    elements.welcomeBanner.style.display = 'none';
+                });
             }
-        });
 
-        logOutBtn.addEventListener('click', function() {
-            localStorage.clear();
-            window.location.href = 'index.html';
-        });
-
-        deleteAccountBtn.addEventListener('click', function() {
-            if (confirm('Are you sure you want to delete your account? This action cannot be undone and will permanently delete all your data including reports.')) {
-                deleteAccount();
+            if (elements.editProfileBtn) {
+                elements.editProfileBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    openEditProfileModal();
+                });
             }
-        });
 
-        userAvatar.addEventListener('click', function(e) {
-            e.stopPropagation();
-            profilePictureInput.click();
-        });
+            if (elements.statusBtn) {
+                elements.statusBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    openAccountModal();
+                });
+            }
 
-        profilePictureInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                compressImage(file, 0.2)
-                    .then(compressedImage => {
-                        const reader = new FileReader();
-                        reader.onload = function(event) {
-                            const base64 = event.target.result;
+            if (elements.closeModalBtn) {
+                elements.closeModalBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (elements.editProfileModal) {
+                        elements.editProfileModal.classList.remove('active');
+                    }
+                });
+            }
 
-                            userAvatar.src = base64;
+            if (elements.editProfileForm) {
+                elements.editProfileForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    saveProfileChanges();
+                });
+            }
 
-                            userData.profilePicture = base64;
+            if (elements.agentStatusBtn) {
+                elements.agentStatusBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    window.location.href = 'agent.html';
+                });
+            }
 
-                            database.ref('users/' + emaId).update({
-                                profilePicture: base64
-                            }).then(() => {
-                                showNotification('success', 'Success', 'Profile picture updated successfully!');
-                            }).catch((error) => {
-                                console.error('Error updating profile picture:', error);
-                                showNotification('error', 'Error', 'Error updating profile picture. Please try again.');
+            if (elements.mapToggleBtn) {
+                elements.mapToggleBtn.addEventListener('click', function() {
+                    toggleMapLayer();
+                });
+            }
+
+            if (elements.userLocationBtn) {
+                elements.userLocationBtn.addEventListener('click', function() {
+                    centerMapOnUser();
+                });
+            }
+
+            if (elements.infoBtn) {
+                elements.infoBtn.addEventListener('click', function() {
+                    if (elements.infoModal) {
+                        elements.infoModal.classList.add('active');
+                    }
+                });
+            }
+
+            if (elements.infoCloseBtn) {
+                elements.infoCloseBtn.addEventListener('click', function() {
+                    if (elements.infoModal) {
+                        elements.infoModal.classList.remove('active');
+                    }
+                });
+            }
+
+            if (elements.otherBtn) {
+                elements.otherBtn.addEventListener('click', function() {
+                    window.location.href = 'other.html';
+                });
+            }
+
+            if (elements.reportFormClose) {
+                elements.reportFormClose.addEventListener('click', function() {
+                    closeReportForm();
+                });
+            }
+
+            if (elements.successCloseBtn) {
+                elements.successCloseBtn.addEventListener('click', function() {
+                    if (elements.successModal) {
+                        elements.successModal.classList.remove('active');
+                    }
+                    location.reload();
+                });
+            }
+
+            if (elements.reportDetailsClose) {
+                elements.reportDetailsClose.addEventListener('click', function() {
+                    if (elements.reportDetailsModal) {
+                        elements.reportDetailsModal.classList.remove('active');
+                    }
+                });
+            }
+
+            if (elements.userReportsClose) {
+                elements.userReportsClose.addEventListener('click', function() {
+                    if (elements.userReportsModal) {
+                        elements.userReportsModal.classList.remove('active');
+                    }
+                });
+            }
+
+            if (elements.retryLocationBtn) {
+                elements.retryLocationBtn.addEventListener('click', function() {
+                    if (elements.locationErrorModal) {
+                        elements.locationErrorModal.classList.remove('active');
+                    }
+                    window.location.reload();
+                });
+            }
+
+            if (elements.openSettingsBtn) {
+                elements.openSettingsBtn.addEventListener('click', function() {
+                    if (navigator.userAgent.includes('Android')) {
+                        window.location.href = 'app-settings:location';
+                    } else if (navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad')) {
+                        window.location.href = 'app-settings:root=LOCATION_SERVICES';
+                    } else {
+                        window.open('https://support.google.com/?p=android_location_settings');
+                    }
+                });
+            }
+
+            if (elements.logOutBtn) {
+                elements.logOutBtn.addEventListener('click', function() {
+                    localStorage.clear();
+                    window.location.href = 'index.html';
+                });
+            }
+
+            if (elements.deleteAccountBtn) {
+                elements.deleteAccountBtn.addEventListener('click', function() {
+                    if (confirm('Are you sure you want to delete your account? This action cannot be undone and will permanently delete all your data including reports.')) {
+                        deleteAccount();
+                    }
+                });
+            }
+
+            if (elements.userAvatar) {
+                elements.userAvatar.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (elements.profilePictureInput) {
+                        elements.profilePictureInput.click();
+                    }
+                });
+            }
+
+            if (elements.profilePictureInput) {
+                elements.profilePictureInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        compressImage(file, 0.2)
+                            .then(compressedImage => {
+                                const reader = new FileReader();
+                                reader.onload = function(event) {
+                                    const base64 = event.target.result;
+
+                                    if (elements.userAvatar) {
+                                        elements.userAvatar.src = base64;
+                                    }
+
+                                    if (userData) {
+                                        userData.profilePicture = base64;
+
+                                        database.ref('users/' + emaId).update({
+                                            profilePicture: base64
+                                        }).then(() => {
+                                            showNotification('success', 'Success', 'Profile picture updated successfully!');
+                                        }).catch((error) => {
+                                            console.error('Error updating profile picture:', error);
+                                            showNotification('error', 'Error', 'Error updating profile picture. Please try again.');
+                                        });
+                                    }
+                                };
+                                reader.readAsDataURL(compressedImage);
+                            })
+                            .catch(error => {
+                                console.error('Error compressing image:', error);
+                                showNotification('error', 'Error', 'Error processing image. Please try again.');
                             });
-                        };
-                        reader.readAsDataURL(compressedImage);
-                    })
-                    .catch(error => {
-                        console.error('Error compressing image:', error);
-                        showNotification('error', 'Error', 'Error processing image. Please try again.');
-                    });
+                    }
+                });
             }
-        });
 
-        document.getElementById('sightingOption').addEventListener('click', function() {
-            reportData.type = 'sighting';
-            showSlide('elephantTypeSlide');
-        });
+            // Report form event listeners
+            if (elements.sightingOption) {
+                elements.sightingOption.addEventListener('click', function() {
+                    reportData.type = 'sighting';
+                    showSlide('elephantTypeSlide');
+                });
+            }
 
-        document.getElementById('accidentOption').addEventListener('click', function() {
-            reportData.type = 'accident';
-            showSlide('elephantTypeSlide');
-        });
+            if (elements.accidentOption) {
+                elements.accidentOption.addEventListener('click', function() {
+                    reportData.type = 'accident';
+                    showSlide('elephantTypeSlide');
+                });
+            }
 
-        document.getElementById('elephantOption').addEventListener('click', function() {
-            reportData.elephantType = 'elephant';
+            if (elements.elephantOption) {
+                elements.elephantOption.addEventListener('click', function() {
+                    reportData.elephantType = 'elephant';
 
-            document.querySelectorAll('.radio-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            this.classList.add('selected');
+                    document.querySelectorAll('.radio-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
 
-            setTimeout(() => {
-                if (reportData.type === 'accident') {
-                    showSlide('injurySlide');
-                } else {
-                    showSlide('countSlide');
+                    setTimeout(() => {
+                        if (reportData.type === 'accident') {
+                            showSlide('injurySlide');
+                        } else {
+                            showSlide('countSlide');
+                        }
+                    }, 300);
+                });
+            }
+
+            if (elements.tuskerOption) {
+                elements.tuskerOption.addEventListener('click', function() {
+                    reportData.elephantType = 'tusker';
+
+                    document.querySelectorAll('.radio-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+
+                    setTimeout(() => {
+                        if (reportData.type === 'accident') {
+                            showSlide('injurySlide');
+                        } else {
+                            showSlide('countSlide');
+                        }
+                    }, 300);
+                });
+            }
+
+            // Dial pad event listeners
+            document.querySelectorAll('.dial-button').forEach(button => {
+                if (button) {
+                    button.addEventListener('click', function() {
+                        const value = this.getAttribute('data-value');
+                        const countDisplay = document.getElementById('countDisplay');
+
+                        if (value === '#') {
+                            const currentCount = countDisplay.textContent;
+                            if (currentCount.length > 0) {
+                                countDisplay.textContent = currentCount.slice(0, -1);
+                            }
+                        } else if (value === '*') {
+                            countDisplay.textContent = '0';
+                        } else {
+                            const currentCount = countDisplay.textContent;
+                            if (currentCount === '0') {
+                                countDisplay.textContent = value;
+                            } else {
+                                countDisplay.textContent = currentCount + value;
+                            }
+                        }
+                    });
                 }
-            }, 300);
-        });
-
-        document.getElementById('tuskerOption').addEventListener('click', function() {
-            reportData.elephantType = 'tusker';
-
-            document.querySelectorAll('.radio-option').forEach(opt => {
-                opt.classList.remove('selected');
             });
-            this.classList.add('selected');
 
-            setTimeout(() => {
-                if (reportData.type === 'accident') {
-                    showSlide('injurySlide');
-                } else {
-                    showSlide('countSlide');
-                }
-            }, 300);
-        });
-
-        document.querySelectorAll('.dial-button').forEach(button => {
-            button.addEventListener('click', function() {
-                const value = this.getAttribute('data-value');
-                const countDisplay = document.getElementById('countDisplay');
-
-                if (value === '#') {
+            if (elements.countBackspace) {
+                elements.countBackspace.addEventListener('click', function() {
+                    const countDisplay = document.getElementById('countDisplay');
                     const currentCount = countDisplay.textContent;
                     if (currentCount.length > 0) {
                         countDisplay.textContent = currentCount.slice(0, -1);
                     }
-                } else if (value === '*') {
-                    countDisplay.textContent = '0';
-                } else {
-                    const currentCount = countDisplay.textContent;
-                    if (currentCount === '0') {
-                        countDisplay.textContent = value;
-                    } else {
-                        countDisplay.textContent = currentCount + value;
-                    }
-                }
-            });
-        });
-
-        document.getElementById('countBackspace').addEventListener('click', function() {
-            const countDisplay = document.getElementById('countDisplay');
-            const currentCount = countDisplay.textContent;
-            if (currentCount.length > 0) {
-                countDisplay.textContent = currentCount.slice(0, -1);
-            }
-        });
-
-        document.getElementById('countCorrect').addEventListener('click', function() {
-            const countDisplay = document.getElementById('countDisplay');
-            reportData.count = parseInt(countDisplay.textContent) || 0;
-
-            showSlide('imagesSlide');
-        });
-
-        document.getElementById('continueToDescription').addEventListener('click', function() {
-            showSlide('descriptionSlide');
-        });
-
-        for (let i = 1; i <= 4; i++) {
-            const uploadBox = document.getElementById(`imageUpload${i}`);
-            const input = document.getElementById(`reportImageInput${i}`);
-
-            uploadBox.addEventListener('click', function() {
-                input.click();
-            });
-
-            input.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    compressImage(file, 0.1) 
-                        .then(compressedImage => {
-                            const reader = new FileReader();
-                            reader.onload = function(event) {
-                                const base64 = event.target.result;
-
-                                uploadBox.classList.add('has-image');
-                                uploadBox.innerHTML = `
-                                    <img src="${base64}" class="image-preview" alt="Image ${i}">
-                                    <div class="image-remove" data-index="${i-1}">
-                                        <span class="material-symbols-outlined">close</span>
-                                    </div>
-                                `;
-
-                                reportData.images[i-1] = base64;
-
-                                uploadBox.querySelector('.image-remove').addEventListener('click', function(e) {
-                                    e.stopPropagation();
-                                    const index = parseInt(this.getAttribute('data-index'));
-
-                                    uploadBox.classList.remove('has-image');
-                                    uploadBox.innerHTML = `
-                                        <i class="fas fa-camera"></i>
-                                        <div>Image ${i}</div>
-                                    `;
-
-                                    reportData.images[index] = null;
-
-                                    uploadBox.addEventListener('click', function() {
-                                        input.click();
-                                    });
-                                });
-                            };
-                            reader.readAsDataURL(compressedImage);
-                        })
-                        .catch(error => {
-                            console.error('Error compressing image:', error);
-                            showNotification('error', 'Error', 'Error processing image. Please try again.');
-                        });
-                }
-            });
-        }
-
-        document.getElementById('injuredHumansOption').addEventListener('click', function() {
-            if (!reportData.injuries.includes('humans')) {
-                reportData.injuries.push('humans');
+                });
             }
 
-            document.querySelectorAll('#injurySlide .radio-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            this.classList.add('selected');
+            if (elements.countCorrect) {
+                elements.countCorrect.addEventListener('click', function() {
+                    const countDisplay = document.getElementById('countDisplay');
+                    reportData.count = parseInt(countDisplay.textContent) || 0;
 
-            setTimeout(() => {
-                showSlide('medicalHelpSlide');
-            }, 300);
-        });
-
-        document.getElementById('injuredElephantsOption').addEventListener('click', function() {
-            if (!reportData.injuries.includes('elephants')) {
-                reportData.injuries.push('elephants');
+                    showSlide('imagesSlide');
+                });
             }
 
-            document.querySelectorAll('#injurySlide .radio-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            this.classList.add('selected');
+            if (elements.continueToDescription) {
+                elements.continueToDescription.addEventListener('click', function() {
+                    showSlide('descriptionSlide');
+                });
+            }
 
-            setTimeout(() => {
-                showSlide('medicalHelpSlide');
-            }, 300);
-        });
+            // Image upload event listeners
+            for (let i = 1; i <= 4; i++) {
+                const uploadBox = document.getElementById(`imageUpload${i}`);
+                const input = document.getElementById(`reportImageInput${i}`);
 
-        document.getElementById('medicalYesOption').addEventListener('click', function() {
-            reportData.medicalHelpNeeded = true;
-
-            document.querySelectorAll('#medicalHelpSlide .radio-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            this.classList.add('selected');
-
-            setTimeout(() => {
-                showSlide('countSlide');
-            }, 300);
-        });
-
-        document.getElementById('medicalNoOption').addEventListener('click', function() {
-            reportData.medicalHelpNeeded = false;
-
-            document.querySelectorAll('#medicalHelpSlide .radio-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            this.classList.add('selected');
-
-            setTimeout(() => {
-                showSlide('countSlide');
-            }, 300);
-        });
-
-        document.getElementById('submitReportBtn').addEventListener('click', function() {
-            reportData.description = document.getElementById('reportDescription').value;
-            reportData.location = reportLocation;
-            reportData.timestamp = new Date().toISOString();
-            reportData.reporterId = emaId;
-
-            loader.style.display = 'flex';
-
-            const reportId = generateReportId(reportData.type);
-
-            database.ref('reports/' + reportId).set(reportData)
-                .then(() => {
-                    database.ref('users/' + emaId + '/reports/' + reportId).set({
-                        reportId: reportId,
-                        timestamp: reportData.timestamp
-                    }).then(() => {
-                        loader.style.display = 'none';
-                        successModal.classList.add('active');
-                        closeReportForm();
-                    }).catch((error) => {
-                        console.error('Error saving report to user:', error);
-                        loader.style.display = 'none';
-                        showNotification('error', 'Error', 'Error submitting report. Please try again.');
+                if (uploadBox && input) {
+                    uploadBox.addEventListener('click', function() {
+                        input.click();
                     });
-                })
-                .catch((error) => {
-                    console.error('Error saving report:', error);
-                    loader.style.display = 'none';
-                    showNotification('error', 'Error', 'Error submitting report. Please try again.');
-                });
-        });
 
-        document.getElementById('callReporterBtn').addEventListener('click', function() {
-            const phoneNumber = document.getElementById('reporterPhoneValue').textContent;
-            window.location.href = `tel:${phoneNumber}`;
-        });
+                    input.addEventListener('change', function(e) {
+                        const file = e.target.files[0];
+                        if (file) {
+                            compressImage(file, 0.1) 
+                                .then(compressedImage => {
+                                    const reader = new FileReader();
+                                    reader.onload = function(event) {
+                                        const base64 = event.target.result;
 
-        document.getElementById('downloadImagesBtn').addEventListener('click', function() {
-            const images = document.querySelectorAll('#reportImagesContainer .report-image');
-            images.forEach((img, index) => {
-                const link = document.createElement('a');
-                link.href = img.src;
-                link.download = `report_image_${index + 1}.jpg`;
-                link.click();
-            });
-        });
+                                        uploadBox.classList.add('has-image');
+                                        uploadBox.innerHTML = `
+                                            <img src="${base64}" class="image-preview" alt="Image ${i}">
+                                            <div class="image-remove" data-index="${i-1}">
+                                                <span class="material-symbols-outlined">close</span>
+                                            </div>
+                                        `;
 
-        function loadUserData() {
-            loader.style.display = 'flex';
+                                        reportData.images[i-1] = base64;
 
-            database.ref('users/' + emaId).once('value')
-                .then((snapshot) => {
-                    if (snapshot.exists()) {
-                        userData = snapshot.val();
-                        
-                        userName.textContent = userData.fullName;
-                        userEmaId.textContent = emaId;
+                                        const removeBtn = uploadBox.querySelector('.image-remove');
+                                        if (removeBtn) {
+                                            removeBtn.addEventListener('click', function(e) {
+                                                e.stopPropagation();
+                                                const index = parseInt(this.getAttribute('data-index'));
 
-                        if (userData.profilePicture) {
-                            userAvatar.src = userData.profilePicture;
-                        } else {
-                            userAvatar.src = 'https://picsum.photos/seed/emauser/100/100.jpg';
-                        }
+                                                uploadBox.classList.remove('has-image');
+                                                uploadBox.innerHTML = `
+                                                    <i class="fas fa-camera"></i>
+                                                    <div>Image ${i}</div>
+                                                `;
 
-                        loader.style.display = 'none';
-                        initializeMap();
-                    } else {
-                        database.ref('users').orderByChild('emaId').equalTo(emaId).once('value')
-                            .then((querySnapshot) => {
-                                if (querySnapshot.exists()) {
-                                    querySnapshot.forEach((childSnapshot) => {
-                                        userData = childSnapshot.val();
-                                        const firebaseKey = childSnapshot.key;
-                                        
-                                        localStorage.setItem('emaId', firebaseKey);
-                                        emaId = firebaseKey;
-                                        
-                                        userName.textContent = userData.fullName;
-                                        userEmaId.textContent = emaId;
+                                                reportData.images[index] = null;
 
-                                        if (userData.profilePicture) {
-                                            userAvatar.src = userData.profilePicture;
-                                        } else {
-                                            userAvatar.src = 'https://picsum.photos/seed/emauser/100/100.jpg';
+                                                uploadBox.addEventListener('click', function() {
+                                                    input.click();
+                                                });
+                                            });
                                         }
-
-                                        loader.style.display = 'none';
-                                        initializeMap();
-                                    });
-                                } else {
-                                    loader.style.display = 'none';
-                                    window.location.href = 'index.html';
-                                }
-                            })
-                            .catch((error) => {
-                                console.error('Error querying user data:', error);
-                                loader.style.display = 'none';
-                                window.location.href = 'index.html';
-                            });
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error loading user data:', error);
-                    loader.style.display = 'none';
-                    window.location.href = 'index.html';
-                });
-        }
-
-        function initializeMap() {
-            if (!navigator.geolocation) {
-                showLocationError();
-                return;
+                                    };
+                                    reader.readAsDataURL(compressedImage);
+                                })
+                                .catch(error => {
+                                    console.error('Error compressing image:', error);
+                                    showNotification('error', 'Error', 'Error processing image. Please try again.');
+                                });
+                        }
+                    });
+                }
             }
 
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    setupMap(position);
-                },
-                (error) => {
-                    console.error('Geolocation error:', error);
+            // Injury slide event listeners
+            if (elements.injuredHumansOption) {
+                elements.injuredHumansOption.addEventListener('click', function() {
+                    if (!reportData.injuries.includes('humans')) {
+                        reportData.injuries.push('humans');
+                    }
+
+                    document.querySelectorAll('#injurySlide .radio-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+
+                    setTimeout(() => {
+                        showSlide('medicalHelpSlide');
+                    }, 300);
+                });
+            }
+
+            if (elements.injuredElephantsOption) {
+                elements.injuredElephantsOption.addEventListener('click', function() {
+                    if (!reportData.injuries.includes('elephants')) {
+                        reportData.injuries.push('elephants');
+                    }
+
+                    document.querySelectorAll('#injurySlide .radio-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+
+                    setTimeout(() => {
+                        showSlide('medicalHelpSlide');
+                    }, 300);
+                });
+            }
+
+            // Medical help slide event listeners
+            if (elements.medicalYesOption) {
+                elements.medicalYesOption.addEventListener('click', function() {
+                    reportData.medicalHelpNeeded = true;
+
+                    document.querySelectorAll('#medicalHelpSlide .radio-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+
+                    setTimeout(() => {
+                        showSlide('countSlide');
+                    }, 300);
+                });
+            }
+
+            if (elements.medicalNoOption) {
+                elements.medicalNoOption.addEventListener('click', function() {
+                    reportData.medicalHelpNeeded = false;
+
+                    document.querySelectorAll('#medicalHelpSlide .radio-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+
+                    setTimeout(() => {
+                        showSlide('countSlide');
+                    }, 300);
+                });
+            }
+
+            if (elements.submitReportBtn) {
+                elements.submitReportBtn.addEventListener('click', function() {
+                    reportData.description = document.getElementById('reportDescription').value;
+                    reportData.location = reportLocation;
+                    reportData.timestamp = new Date().toISOString();
+                    reportData.reporterId = emaId;
+
+                    elements.loader.style.display = 'flex';
+
+                    const reportId = generateReportId(reportData.type);
+
+                    database.ref('reports/' + reportId).set(reportData)
+                        .then(() => {
+                            database.ref('users/' + emaId + '/reports/' + reportId).set({
+                                reportId: reportId,
+                                timestamp: reportData.timestamp
+                            }).then(() => {
+                                elements.loader.style.display = 'none';
+                                if (elements.successModal) {
+                                    elements.successModal.classList.add('active');
+                                }
+                                closeReportForm();
+                            }).catch((error) => {
+                                console.error('Error saving report to user:', error);
+                                elements.loader.style.display = 'none';
+                                showNotification('error', 'Error', 'Error submitting report. Please try again.');
+                            });
+                        })
+                        .catch((error) => {
+                            console.error('Error saving report:', error);
+                            elements.loader.style.display = 'none';
+                            showNotification('error', 'Error', 'Error submitting report. Please try again.');
+                        });
+                });
+            }
+
+            if (elements.callReporterBtn) {
+                elements.callReporterBtn.addEventListener('click', function() {
+                    const phoneNumber = document.getElementById('reporterPhoneValue').textContent;
+                    window.location.href = `tel:${phoneNumber}`;
+                });
+            }
+
+            if (elements.downloadImagesBtn) {
+                elements.downloadImagesBtn.addEventListener('click', function() {
+                    const images = document.querySelectorAll('#reportImagesContainer .report-image');
+                    images.forEach((img, index) => {
+                        const link = document.createElement('a');
+                        link.href = img.src;
+                        link.download = `report_image_${index + 1}.jpg`;
+                        link.click();
+                    });
+                });
+            }
+
+            // Core functions
+            function loadUserData() {
+                elements.loader.style.display = 'flex';
+
+                database.ref('users/' + emaId).once('value')
+                    .then((snapshot) => {
+                        if (snapshot.exists()) {
+                            userData = snapshot.val();
+                            
+                            if (elements.userName) {
+                                elements.userName.textContent = userData.fullName;
+                            }
+                            if (elements.userEmaId) {
+                                elements.userEmaId.textContent = emaId;
+                            }
+
+                            if (elements.userAvatar) {
+                                if (userData.profilePicture) {
+                                    elements.userAvatar.src = userData.profilePicture;
+                                } else {
+                                    elements.userAvatar.src = 'https://picsum.photos/seed/emauser/100/100.jpg';
+                                }
+                            }
+
+                            elements.loader.style.display = 'none';
+                            initializeMap();
+                        } else {
+                            database.ref('users').orderByChild('emaId').equalTo(emaId).once('value')
+                                .then((querySnapshot) => {
+                                    if (querySnapshot.exists()) {
+                                        querySnapshot.forEach((childSnapshot) => {
+                                            userData = childSnapshot.val();
+                                            const firebaseKey = childSnapshot.key;
+                                            
+                                            localStorage.setItem('emaId', firebaseKey);
+                                            emaId = firebaseKey;
+                                            
+                                            if (elements.userName) {
+                                                elements.userName.textContent = userData.fullName;
+                                            }
+                                            if (elements.userEmaId) {
+                                                elements.userEmaId.textContent = emaId;
+                                            }
+
+                                            if (elements.userAvatar) {
+                                                if (userData.profilePicture) {
+                                                                    elements.userAvatar.src = userData.profilePicture;
+                                                                } else {
+                                                                    elements.userAvatar.src = 'https://picsum.photos/seed/emauser/100/100.jpg';
+                                                                }
+                                            }
+
+                                            elements.loader.style.display = 'none';
+                                            initializeMap();
+                                        });
+                                    } else {
+                                        elements.loader.style.display = 'none';
+                                        window.location.href = 'index.html';
+                                    }
+                                })
+                                .catch((error) => {
+                                    console.error('Error querying user data:', error);
+                                    elements.loader.style.display = 'none';
+                                    window.location.href = 'index.html';
+                                });
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error loading user data:', error);
+                        elements.loader.style.display = 'none';
+                        window.location.href = 'index.html';
+                    });
+            }
+
+            function initializeMap() {
+                if (!navigator.geolocation) {
                     showLocationError();
-                },
-                {
-                    enableHighAccuracy: true,
-                    timeout: 10000,
-                    maximumAge: 0
-                }
-            );
-        }
-
-        function setupMap(position) {
-            map = L.map('map', {
-                center: position ? [position.coords.latitude, position.coords.longitude] : [7.8731, 80.7718], 
-                zoom: 8,
-                zoomControl: false 
-            });
-
-            osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '',
-                maxZoom: 19,
-                updateWhenIdle: false,
-                updateWhenZooming: false
-            }).addTo(map);
-
-            esriLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                attribution: '',
-                maxZoom: 19,
-                updateWhenIdle: false,
-                updateWhenZooming: false
-            });
-
-            preloadMapTiles();
-
-            map.on('dblclick', function(e) {
-                reportLocation = e.latlng;
-                openReportForm();
-            });
-
-            if (position) {
-                const lat = position.coords.latitude;
-                const lng = position.coords.longitude;
-
-                if (userLocationMarker) {
-                    map.removeLayer(userLocationMarker);
+                    return;
                 }
 
-                userLocationMarker = L.marker([lat, lng], {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        setupMap(position);
+                    },
+                    (error) => {
+                        console.error('Geolocation error:', error);
+                        showLocationError();
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            }
+
+            function setupMap(position) {
+                map = L.map('map', {
+                    center: position ? [position.coords.latitude, position.coords.longitude] : [7.8731, 80.7718], 
+                    zoom: 8,
+                    zoomControl: false 
+                });
+
+                osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '',
+                    maxZoom: 19,
+                    updateWhenIdle: false,
+                    updateWhenZooming: false
+                }).addTo(map);
+
+                esriLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: '',
+                    maxZoom: 19,
+                    updateWhenIdle: false,
+                    updateWhenZooming: false
+                });
+
+                preloadMapTiles();
+
+                if (map) {
+                    map.on('dblclick', function(e) {
+                        reportLocation = e.latlng;
+                        openReportForm();
+                    });
+                }
+
+                if (position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+
+                    if (userLocationMarker) {
+                        map.removeLayer(userLocationMarker);
+                    }
+
+                    userLocationMarker = L.marker([lat, lng], {
+                        icon: L.divIcon({
+                            className: 'user-location-marker',
+                            iconSize: [20, 20],
+                            iconAnchor: [10, 10]
+                        })
+                    }).addTo(map);
+
+                    // Start real-time location tracking
+                    if (locationWatchId) {
+                        navigator.geolocation.clearWatch(locationWatchId);
+                    }
+
+                    locationWatchId = navigator.geolocation.watchPosition(
+                        (newPosition) => {
+                            const newLat = newPosition.coords.latitude;
+                            const newLng = newPosition.coords.longitude;
+
+                            if (userLocationMarker) {
+                                userLocationMarker.setLatLng([newLat, newLng]);
+                            }
+                        },
+                        (error) => {
+                            console.error('Error watching position:', error);
+                        },
+                        { 
+                            enableHighAccuracy: true,
+                            timeout: 10000,
+                            maximumAge: 5000 // Accept 5 second old positions
+                        }
+                    );
+                }
+
+                loadReports();
+            }
+
+            function preloadMapTiles() {
+                if (!map) return;
+                
+                const bounds = map.getBounds();
+                const zoom = map.getZoom();
+                
+                for (let z = Math.max(1, zoom - 1); z <= Math.min(19, zoom + 1); z++) {
+                    const min = bounds.getNorthWest();
+                    const max = bounds.getSouthEast();
+                    
+                    for (let x = Math.floor(min.lng / 360 * Math.pow(2, z)); x <= Math.floor(max.lng / 360 * Math.pow(2, z)); x++) {
+                        for (let y = Math.floor((1 - Math.log(Math.tan(min.lat * Math.PI / 180) + 1 / Math.cos(min.lat * Math.PI / 180)) / Math.PI / 2) * Math.pow(2, z)); 
+                                 y <= Math.floor((1 - Math.log(Math.tan(max.lat * Math.PI / 180) + 1 / Math.cos(max.lat * Math.PI / 180)) / Math.PI / 2) * Math.pow(2, z)); y++) {
+                            
+                            const img = new Image();
+                            img.src = `https://tile.openstreetmap.org/${z}/${x}/${y}.png`;
+                        }
+                    }
+                }
+            }
+
+            function showLocationError() {
+                if (elements.locationErrorModal) {
+                    elements.locationErrorModal.classList.add('active');
+                }
+            }
+
+            function loadReports() {
+                const twelveHoursAgo = new Date();
+                twelveHoursAgo.setHours(twelveHoursAgo.getHours() - 12);
+
+                database.ref('reports').orderByChild('timestamp').startAt(twelveHoursAgo.toISOString()).once('value')
+                    .then((snapshot) => {
+                        if (snapshot.exists()) {
+                            snapshot.forEach((childSnapshot) => {
+                                const report = childSnapshot.val();
+                                const reportId = childSnapshot.key;
+
+                                addReportMarker(reportId, report);
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error loading reports:', error);
+                    });
+            }
+
+            function addReportMarker(reportId, report) {
+                if (!report.location || !map) return;
+
+                let markerClass = 'report-marker';
+                let iconColor = '';
+
+                if (report.type === 'sighting') {
+                    markerClass += ' sighting-marker';
+                    iconColor = 'var(--green)';
+                } else if (report.type === 'accident') {
+                    if (report.medicalHelpNeeded) {
+                        markerClass += ' accident-medical-marker';
+                        iconColor = 'var(--yellow)';
+                    } else {
+                        markerClass += ' accident-marker';
+                        iconColor = 'var(--red)';
+                    }
+                }
+
+                const marker = L.marker([report.location.lat, report.location.lng], {
                     icon: L.divIcon({
-                        className: 'user-location-marker',
+                        className: markerClass,
                         iconSize: [20, 20],
                         iconAnchor: [10, 10]
                     })
                 }).addTo(map);
 
-                // Start real-time location tracking
-                if (locationWatchId) {
-                    navigator.geolocation.clearWatch(locationWatchId);
-                }
+                marker.on('click', function() {
+                    showReportDetails(reportId, report);
+                });
 
-                locationWatchId = navigator.geolocation.watchPosition(
-                    (newPosition) => {
-                        const newLat = newPosition.coords.latitude;
-                        const newLng = newPosition.coords.longitude;
+                reportMarkers.push({
+                    id: reportId,
+                    marker: marker,
+                    timestamp: new Date(report.timestamp)
+                });
+            }
 
-                        if (userLocationMarker) {
-                            userLocationMarker.setLatLng([newLat, newLng]);
+            function showReportDetails(reportId, report) {
+                if (!elements.reportDetailsModal) return;
+
+                document.getElementById('reportTypeValue').textContent = report.type === 'sighting' ? 'Elephant Sighting' : 'Elephant Accident';
+                document.getElementById('reportDateTimeValue').textContent = new Date(report.timestamp).toLocaleString();
+                document.getElementById('reportLocationValue').textContent = `Lat: ${report.location.lat.toFixed(6)}, Lng: ${report.location.lng.toFixed(6)}`;
+                document.getElementById('reportElephantTypeValue').textContent = report.elephantType === 'elephant' ? 'Elephant' : 'Tusker';
+                document.getElementById('reportCountValue').textContent = report.count;
+                document.getElementById('reportDescriptionValue').textContent = report.description || 'No description provided';
+
+                database.ref('users/' + report.reporterId).once('value')
+                    .then((snapshot) => {
+                        if (snapshot.exists()) {
+                            const reporter = snapshot.val();
+                            document.getElementById('reporterNameValue').textContent = reporter.fullName;
+                            document.getElementById('reporterPhoneValue').textContent = reporter.phone;
                         }
-                    },
-                    (error) => {
-                        console.error('Error watching position:', error);
-                    },
-                    { 
-                        enableHighAccuracy: true,
-                        timeout: 10000,
-                        maximumAge: 5000 // Accept 5 second old positions
-                    }
-                );
-            }
+                    })
+                    .catch((error) => {
+                        console.error('Error loading reporter info:', error);
+                    });
 
-            loadReports();
-        }
+                if (report.type === 'accident') {
+                    document.getElementById('accidentSpecificInfo').style.display = 'block';
 
-        function preloadMapTiles() {
-            const bounds = map.getBounds();
-            const zoom = map.getZoom();
-            
-            for (let z = Math.max(1, zoom - 1); z <= Math.min(19, zoom + 1); z++) {
-                const min = bounds.getNorthWest();
-                const max = bounds.getSouthEast();
-                
-                for (let x = Math.floor(min.lng / 360 * Math.pow(2, z)); x <= Math.floor(max.lng / 360 * Math.pow(2, z)); x++) {
-                    for (let y = Math.floor((1 - Math.log(Math.tan(min.lat * Math.PI / 180) + 1 / Math.cos(min.lat * Math.PI / 180)) / Math.PI / 2) * Math.pow(2, z)); 
-                         y <= Math.floor((1 - Math.log(Math.tan(max.lat * Math.PI / 180) + 1 / Math.cos(max.lat * Math.PI / 180)) / Math.PI / 2) * Math.pow(2, z)); y++) {
-                        
-                        const img = new Image();
-                        img.src = `https://tile.openstreetmap.org/${z}/${x}/${y}.png`;
+                    let injuriesText = '';
+                    if (report.injuries.includes('humans') && report.injuries.includes('elephants')) {
+                        injuriesText = 'Humans and Elephants';
+                    } else if (report.injuries.includes('humans')) {
+                        injuriesText = 'Humans';
+                    } else if (report.injuries.includes('elephants')) {
+                        injuriesText = 'Elephants';
+                    } else {
+                        injuriesText = 'None';
                     }
+
+                    document.getElementById('reportInjuriesValue').textContent = injuriesText;
+                    document.getElementById('reportMedicalHelpValue').textContent = report.medicalHelpNeeded ? 'Yes' : 'No';
+                } else {
+                    document.getElementById('accidentSpecificInfo').style.display = 'none';
                 }
-            }
-        }
 
-        function showLocationError() {
-            locationErrorModal.classList.add('active');
-        }
+                const imagesContainer = document.getElementById('reportImagesContainer');
+                if (imagesContainer) {
+                    imagesContainer.innerHTML = '';
 
-        function loadReports() {
-            const twelveHoursAgo = new Date();
-            twelveHoursAgo.setHours(twelveHoursAgo.getHours() - 12);
-
-            database.ref('reports').orderByChild('timestamp').startAt(twelveHoursAgo.toISOString()).once('value')
-                .then((snapshot) => {
-                    if (snapshot.exists()) {
-                        snapshot.forEach((childSnapshot) => {
-                            const report = childSnapshot.val();
-                            const reportId = childSnapshot.key;
-
-                            addReportMarker(reportId, report);
+                    if (report.images && report.images.length > 0) {
+                        report.images.forEach((imageBase64, index) => {
+                            if (imageBase64) {
+                                const img = document.createElement('img');
+                                img.src = imageBase64;
+                                img.className = 'report-image';
+                                img.alt = `Report image ${index + 1}`;
+                                imagesContainer.appendChild(img);
+                            }
                         });
+                    } else {
+                        imagesContainer.style.display = 'none';
                     }
-                })
-                .catch((error) => {
-                    console.error('Error loading reports:', error);
-                });
-        }
+                }
 
-        function addReportMarker(reportId, report) {
-            if (!report.location) return;
-
-            let markerClass = 'report-marker';
-            let iconColor = '';
-
-            if (report.type === 'sighting') {
-                markerClass += ' sighting-marker';
-                iconColor = 'var(--green)';
-            } else if (report.type === 'accident') {
-                if (report.medicalHelpNeeded) {
-                    markerClass += ' accident-medical-marker';
-                    iconColor = 'var(--yellow)';
-                } else {
-                    markerClass += ' accident-marker';
-                    iconColor = 'var(--red)';
+                if (elements.reportDetailsModal) {
+                    elements.reportDetailsModal.classList.add('active');
                 }
             }
 
-            const marker = L.marker([report.location.lat, report.location.lng], {
-                icon: L.divIcon({
-                    className: markerClass,
-                    iconSize: [20, 20],
-                    iconAnchor: [10, 10]
-                })
-            }).addTo(map);
-
-            marker.on('click', function() {
-                showReportDetails(reportId, report);
-            });
-
-            reportMarkers.push({
-                id: reportId,
-                marker: marker,
-                timestamp: new Date(report.timestamp)
-            });
-        }
-
-        function showReportDetails(reportId, report) {
-            document.getElementById('reportTypeValue').textContent = report.type === 'sighting' ? 'Elephant Sighting' : 'Elephant Accident';
-            document.getElementById('reportDateTimeValue').textContent = new Date(report.timestamp).toLocaleString();
-            document.getElementById('reportLocationValue').textContent = `Lat: ${report.location.lat.toFixed(6)}, Lng: ${report.location.lng.toFixed(6)}`;
-            document.getElementById('reportElephantTypeValue').textContent = report.elephantType === 'elephant' ? 'Elephant' : 'Tusker';
-            document.getElementById('reportCountValue').textContent = report.count;
-            document.getElementById('reportDescriptionValue').textContent = report.description || 'No description provided';
-
-            database.ref('users/' + report.reporterId).once('value')
-                .then((snapshot) => {
-                    if (snapshot.exists()) {
-                        const reporter = snapshot.val();
-                        document.getElementById('reporterNameValue').textContent = reporter.fullName;
-                        document.getElementById('reporterPhoneValue').textContent = reporter.phone;
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error loading reporter info:', error);
-                });
-
-            if (report.type === 'accident') {
-                document.getElementById('accidentSpecificInfo').style.display = 'block';
-
-                let injuriesText = '';
-                if (report.injuries.includes('humans') && report.injuries.includes('elephants')) {
-                    injuriesText = 'Humans and Elephants';
-                } else if (report.injuries.includes('humans')) {
-                    injuriesText = 'Humans';
-                } else if (report.injuries.includes('elephants')) {
-                    injuriesText = 'Elephants';
+            function toggleMapLayer() {
+                if (!map || !osmLayer || !esriLayer) return;
+                
+                if (currentMapLayer === 'osm') {
+                    map.removeLayer(osmLayer);
+                    map.addLayer(esriLayer);
+                    currentMapLayer = 'esri';
                 } else {
-                    injuriesText = 'None';
+                    map.removeLayer(esriLayer);
+                    map.addLayer(osmLayer);
+                    currentMapLayer = 'osm';
+                }
+            }
+
+            function centerMapOnUser() {
+                if (!navigator.geolocation) {
+                    showLocationError();
+                    return;
                 }
 
-                document.getElementById('reportInjuriesValue').textContent = injuriesText;
-                document.getElementById('reportMedicalHelpValue').textContent = report.medicalHelpNeeded ? 'Yes' : 'No';
-            } else {
-                document.getElementById('accidentSpecificInfo').style.display = 'none';
-            }
-
-            const imagesContainer = document.getElementById('reportImagesContainer');
-            imagesContainer.innerHTML = '';
-
-            if (report.images && report.images.length > 0) {
-                report.images.forEach((imageBase64, index) => {
-                    if (imageBase64) {
-                        const img = document.createElement('img');
-                        img.src = imageBase64;
-                        img.className = 'report-image';
-                        img.alt = `Report image ${index + 1}`;
-                        imagesContainer.appendChild(img);
-                    }
-                });
-            } else {
-                imagesContainer.style.display = 'none';
-            }
-
-            reportDetailsModal.classList.add('active');
-        }
-
-        function toggleMapLayer() {
-            if (currentMapLayer === 'osm') {
-                map.removeLayer(osmLayer);
-                map.addLayer(esriLayer);
-                currentMapLayer = 'esri';
-            } else {
-                map.removeLayer(esriLayer);
-                map.addLayer(osmLayer);
-                currentMapLayer = 'osm';
-            }
-        }
-
-        function centerMapOnUser() {
-            if (navigator.geolocation) {
-                loader.style.display = 'flex';
+                elements.loader.style.display = 'flex';
                 
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         const lat = position.coords.latitude;
                         const lng = position.coords.longitude;
 
-                        map.setView([lat, lng], 14);
+                        if (map) {
+                            map.setView([lat, lng], 14);
+                        }
                         
                         if (userLocationMarker) {
                             userLocationMarker.setLatLng([lat, lng]);
@@ -2910,11 +2965,11 @@
                             }).addTo(map);
                         }
                         
-                        loader.style.display = 'none';
+                        elements.loader.style.display = 'none';
                     },
                     (error) => {
                         console.error('Error getting location:', error);
-                        loader.style.display = 'none';
+                        elements.loader.style.display = 'none';
                         showLocationError();
                     },
                     {
@@ -2923,241 +2978,298 @@
                         maximumAge: 0
                     }
                 );
-            } else {
-                showLocationError();
-            }
-        }
-
-        function openEditProfileModal() {
-            if (!userData) return;
-
-            document.getElementById('editFullName').value = userData.fullName;
-            document.getElementById('editPhone').value = userData.phone;
-            document.getElementById('editDistrict').value = userData.district;
-            document.getElementById('editEmail').value = userData.email;
-
-            document.querySelectorAll('.error-text').forEach(el => {
-                el.style.display = 'none';
-            });
-
-            editProfileModal.classList.add('active');
-        }
-
-        function openAccountModal() {
-            if (!userData) return;
-
-            accountModalSubtitle.textContent = `Name: ${userData.fullName}\nEMA ID: ${emaId}`;
-            accountModal.classList.add('active');
-        }
-
-        function saveProfileChanges() {
-            const fullName = document.getElementById('editFullName').value.trim();
-            const phone = document.getElementById('editPhone').value.trim();
-            const district = document.getElementById('editDistrict').value;
-            const email = document.getElementById('editEmail').value.trim();
-
-            let isValid = true;
-
-            if (!fullName) {
-                showError('editFullNameError', 'Please enter your full name');
-                isValid = false;
-            } else {
-                hideError('editFullNameError');
             }
 
-            if (!phone) {
-                showError('editPhoneError', 'Please enter your phone number');
-                isValid = false;
-            } else if (!/^[0-9]{10}$/.test(phone)) {
-                showError('editPhoneError', 'Please enter a valid 10-digit phone number');
-                isValid = false;
-            } else {
-                hideError('editPhoneError');
-            }
+            function openEditProfileModal() {
+                if (!userData || !elements.editProfileModal) return;
 
-            if (!district) {
-                showError('editDistrictError', 'Please select your district');
-                isValid = false;
-            } else {
-                hideError('editDistrictError');
-            }
+                const editFullName = document.getElementById('editFullName');
+                const editPhone = document.getElementById('editPhone');
+                const editDistrict = document.getElementById('editDistrict');
+                const editEmail = document.getElementById('editEmail');
 
-            if (!email) {
-                showError('editEmailError', 'Please enter your email');
-                isValid = false;
-            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                showError('editEmailError', 'Please enter a valid email address');
-                isValid = false;
-            } else {
-                hideError('editEmailError');
-            }
+                if (editFullName && userData) {
+                    editFullName.value = userData.fullName;
+                }
+                if (editPhone && userData) {
+                    editPhone.value = userData.phone;
+                }
+                if (editDistrict && userData) {
+                    editDistrict.value = userData.district;
+                }
+                if (editEmail && userData) {
+                    editEmail.value = userData.email;
+                }
 
-            if (!isValid) return;
-
-            const saveBtn = document.getElementById('saveProfileBtn');
-            saveBtn.disabled = true;
-            saveBtn.textContent = 'Saving...';
-
-            userData.fullName = fullName;
-            userData.phone = phone;
-            userData.district = district;
-            userData.email = email;
-
-            database.ref('users/' + emaId).set(userData)
-                .then(() => {
-                    userName.textContent = fullName;
-                    editProfileModal.classList.remove('active');
-                    saveBtn.disabled = false;
-                    saveBtn.textContent = 'Save Changes';
-                    showNotification('success', 'Success', 'Profile updated successfully!');
-                })
-                .catch((error) => {
-                    console.error('Error updating profile:', error);
-                    showNotification('error', 'Error', 'Error updating profile. Please try again.');
-                    saveBtn.disabled = false;
-                    saveBtn.textContent = 'Save Changes';
+                document.querySelectorAll('.error-text').forEach(el => {
+                    el.style.display = 'none';
                 });
-        }
 
-        function deleteAccount() {
-            loader.style.display = 'flex';
+                elements.editProfileModal.classList.add('active');
+            }
 
-            // First, get all user reports
-            database.ref('users/' + emaId + '/reports').once('value')
-                .then((reportsSnapshot) => {
-                    const userReports = reportsSnapshot.val() || {};
-                    const reportIds = Object.keys(userReports);
+            function openAccountModal() {
+                if (!userData || !elements.accountModal || !elements.accountModalSubtitle) return;
 
-                    // Delete all reports from the reports collection
-                    const deletePromises = reportIds.map(reportId => {
-                        return database.ref('reports/' + reportId).remove();
-                    });
+                elements.accountModalSubtitle.textContent = `Name: ${userData.fullName}\nEMA ID: ${emaId}`;
+                elements.accountModal.classList.add('active');
+            }
 
-                    Promise.all(deletePromises)
+            function saveProfileChanges() {
+                const editFullName = document.getElementById('editFullName');
+                const editPhone = document.getElementById('editPhone');
+                const editDistrict = document.getElementById('editDistrict');
+                const editEmail = document.getElementById('editEmail');
+
+                if (!editFullName || !editPhone || !editDistrict || !editEmail) return;
+
+                const fullName = editFullName.value.trim();
+                const phone = editPhone.value.trim();
+                const district = editDistrict.value;
+                const email = editEmail.value.trim();
+
+                let isValid = true;
+
+                if (!fullName) {
+                    showError('editFullNameError', 'Please enter your full name');
+                    isValid = false;
+                } else {
+                    hideError('editFullNameError');
+                }
+
+                if (!phone) {
+                    showError('editPhoneError', 'Please enter your phone number');
+                    isValid = false;
+                } else if (!/^[0-9]{10}$/.test(phone)) {
+                    showError('editPhoneError', 'Please enter a valid 10-digit phone number');
+                    isValid = false;
+                } else {
+                    hideError('editPhoneError');
+                }
+
+                if (!district) {
+                    showError('editDistrictError', 'Please select your district');
+                    isValid = false;
+                } else {
+                    hideError('editDistrictError');
+                }
+
+                if (!email) {
+                    showError('editEmailError', 'Please enter your email');
+                    isValid = false;
+                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    showError('editEmailError', 'Please enter a valid email address');
+                    isValid = false;
+                } else {
+                    hideError('editEmailError');
+                }
+
+                if (!isValid) return;
+
+                const saveBtn = document.getElementById('saveProfileBtn');
+                if (saveBtn) {
+                    saveBtn.disabled = true;
+                    saveBtn.textContent = 'Saving...';
+
+                    userData.fullName = fullName;
+                    userData.phone = phone;
+                    userData.district = district;
+                    userData.email = email;
+
+                    database.ref('users/' + emaId).set(userData)
                         .then(() => {
-                            // After deleting reports, delete the user account
-                            return database.ref('users/' + emaId).remove();
-                        })
-                        .then(() => {
-                            loader.style.display = 'none';
-                            localStorage.clear();
-                            window.location.href = 'index.html';
+                            if (elements.userName) {
+                                elements.userName.textContent = fullName;
+                            }
+                            if (elements.editProfileModal) {
+                                elements.editProfileModal.classList.remove('active');
+                            }
+                            if (saveBtn) {
+                                saveBtn.disabled = false;
+                                saveBtn.textContent = 'Save Changes';
+                            }
+                            showNotification('success', 'Success', 'Profile updated successfully!');
                         })
                         .catch((error) => {
-                            console.error('Error deleting account:', error);
-                            loader.style.display = 'none';
-                            showNotification('error', 'Error', 'Error deleting account. Please try again.');
+                            console.error('Error updating profile:', error);
+                            showNotification('error', 'Error', 'Error updating profile. Please try again.');
+                            if (saveBtn) {
+                                saveBtn.disabled = false;
+                                saveBtn.textContent = 'Save Changes';
+                            }
                         });
-                })
-                .catch((error) => {
-                    console.error('Error getting user reports:', error);
-                    loader.style.display = 'none';
-                    showNotification('error', 'Error', 'Error deleting account. Please try again.');
-                });
-        }
-
-        function openReportForm() {
-            reportData = {
-                type: '',
-                elephantType: '',
-                count: 0,
-                images: [],
-                description: '',
-                injuries: [],
-                medicalHelpNeeded: false,
-                location: reportLocation,
-                timestamp: null,
-                reporterId: emaId
-            };
-
-            document.getElementById('countDisplay').textContent = '0';
-            document.getElementById('reportDescription').value = '';
-
-            for (let i = 1; i <= 4; i++) {
-                const uploadBox = document.getElementById(`imageUpload${i}`);
-                uploadBox.classList.remove('has-image');
-                uploadBox.innerHTML = `
-                    <i class="fas fa-camera"></i>
-                    <div>Image ${i}</div>
-                `;
+                }
             }
 
-            document.querySelectorAll('.radio-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
+            function deleteAccount() {
+                if (!elements.loader) return;
+                
+                elements.loader.style.display = 'flex';
 
-            reportFormContainer.classList.add('active');
-            showSlide('reportTypeSlide');
-        }
+                // First, get all user reports
+                database.ref('users/' + emaId + '/reports').once('value')
+                    .then((reportsSnapshot) => {
+                        const userReports = reportsSnapshot.val() || {};
+                        const reportIds = Object.keys(userReports);
 
-        function closeReportForm() {
-            reportFormContainer.classList.remove('active');
-        }
+                        // Delete all reports from the reports collection
+                        const deletePromises = reportIds.map(reportId => {
+                            return database.ref('reports/' + reportId).remove();
+                        });
 
-        function showSlide(slideId) {
-            document.querySelectorAll('.report-slide').forEach(slide => {
-                slide.classList.remove('active');
-            });
+                        Promise.all(deletePromises)
+                            .then(() => {
+                                // After deleting reports, delete the user account
+                                return database.ref('users/' + emaId).remove();
+                            })
+                            .then(() => {
+                                elements.loader.style.display = 'none';
+                                localStorage.clear();
+                                window.location.href = 'index.html';
+                            })
+                            .catch((error) => {
+                                console.error('Error deleting account:', error);
+                                elements.loader.style.display = 'none';
+                                showNotification('error', 'Error', 'Error deleting account. Please try again.');
+                            });
+                    })
+                    .catch((error) => {
+                        console.error('Error getting user reports:', error);
+                        elements.loader.style.display = 'none';
+                        showNotification('error', 'Error', 'Error deleting account. Please try again.');
+                    });
+            }
 
-            document.getElementById(slideId).classList.add('active');
-        }
-
-        function generateReportId(type) {
-            const prefix = type === 'sighting' ? 'S' : 'A';
-            const randomNum = Math.floor(100000000000 + Math.random() * 900000000);
-            return randomNum + '-' + prefix;
-        }
-
-        function compressImage(file, quality) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const img = new Image();
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d');
-
-                        let width = img.width;
-                        let height = img.height;
-
-                        const maxDimension = 800; 
-                        if (width > height) {
-                            if (width > maxDimension) {
-                                height *= maxDimension / width;
-                                width = maxDimension;
-                            }
-                        } else {
-                            if (height > maxDimension) {
-                                width *= maxDimension / height;
-                                height = maxDimension;
-                            }
-                        }
-
-                        canvas.width = width;
-                        canvas.height = height;
-
-                        ctx.drawImage(img, 0, 0, width, height);
-
-                        canvas.toBlob(function(blob) {
-                            resolve(blob);
-                        }, 'image/jpeg', quality);
-                    };
-                    img.src = event.target.result;
+            function openReportForm() {
+                reportData = {
+                    type: '',
+                    elephantType: '',
+                    count: 0,
+                    images: [],
+                    description: '',
+                    injuries: [],
+                    medicalHelpNeeded: false,
+                    location: reportLocation,
+                    timestamp: null,
+                    reporterId: emaId
                 };
-                reader.readAsDataURL(file);
-            });
-        }
 
-        function showError(elementId, message) {
-            const errorElement = document.getElementById(elementId);
-            errorElement.textContent = message;
-            errorElement.style.display = 'block';
-        }
+                const countDisplay = document.getElementById('countDisplay');
+                const reportDescription = document.getElementById('reportDescription');
+                
+                if (countDisplay) {
+                    countDisplay.textContent = '0';
+                }
+                if (reportDescription) {
+                    reportDescription.value = '';
+                }
 
-        function hideError(elementId) {
-            const errorElement = document.getElementById(elementId);
-            errorElement.style.display = 'none';
-        }
+                for (let i = 1; i <= 4; i++) {
+                    const uploadBox = document.getElementById(`imageUpload${i}`);
+                    if (uploadBox) {
+                        uploadBox.classList.remove('has-image');
+                        uploadBox.innerHTML = `
+                            <i class="fas fa-camera"></i>
+                            <div>Image ${i}</div>
+                        `;
+                    }
+                }
+
+                document.querySelectorAll('.radio-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+
+                if (elements.reportFormContainer) {
+                    elements.reportFormContainer.classList.add('active');
+                    showSlide('reportTypeSlide');
+                }
+            }
+
+            function closeReportForm() {
+                if (elements.reportFormContainer) {
+                    elements.reportFormContainer.classList.remove('active');
+                }
+            }
+
+            function showSlide(slideId) {
+                document.querySelectorAll('.report-slide').forEach(slide => {
+                    slide.classList.remove('active');
+                });
+
+                const slideElement = document.getElementById(slideId);
+                if (slideElement) {
+                    slideElement.classList.add('active');
+                }
+            }
+
+            function generateReportId(type) {
+                const prefix = type === 'sighting' ? 'S' : 'A';
+                const randomNum = Math.floor(100000000000 + Math.random() * 900000000);
+                return randomNum + '-' + prefix;
+            }
+
+            function compressImage(file, quality) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const img = new Image();
+                        img.onload = function() {
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+
+                            let width = img.width;
+                            let height = img.height;
+
+                            const maxDimension = 800; 
+                            if (width > height) {
+                                if (width > maxDimension) {
+                                    height *= maxDimension / width;
+                                    width = maxDimension;
+                                }
+                            } else {
+                                if (height > maxDimension) {
+                                    width *= maxDimension / height;
+                                    height = maxDimension;
+                                }
+                            }
+
+                            canvas.width = width;
+                            canvas.height = height;
+
+                            ctx.drawImage(img, 0, 0, width, height);
+
+                            canvas.toBlob(function(blob) {
+                                resolve(blob);
+                            }, 'image/jpeg', quality);
+                        };
+                        img.src = event.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            function showError(elementId, message) {
+                const errorElement = document.getElementById(elementId);
+                if (errorElement) {
+                    errorElement.textContent = message;
+                    errorElement.style.display = 'block';
+                }
+            }
+
+            function hideError(elementId) {
+                const errorElement = document.getElementById(elementId);
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                }
+            }
+
+            // Initialize the app
+            initApp();
+        });
+
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('selectstart', event => event.preventDefault());
+        document.addEventListener('dragstart', event => event.preventDefault());
     </script>
 </body>
 </html>
