@@ -1530,7 +1530,7 @@
             <div class="report-slide active" id="reportTypeSlide">
                 <div class="report-type-selection">
                     <h2 class="report-type-title">What would you like to report?</h2>
-                    <p class="report-type-subtitle">Select one of the options below to continue</p>
+                    <p class="report-type-subtitle">Select one of options below to continue</p>
                     <div class="report-options">
                         <div class="report-option sighting" id="sightingOption">
                             <i class="fas fa-eye"></i>
@@ -2324,47 +2324,50 @@
         function loadUserData() {
             loader.style.display = 'flex';
 
-            // First check if user exists in Firebase
-            database.ref('users').orderByChild('emaId').equalTo(emaId).once('value')
+            // Simplified approach: Try direct lookup first, then fallback
+            database.ref('users/' + emaId).once('value')
                 .then((snapshot) => {
                     if (snapshot.exists()) {
-                        // Get the user data
-                        snapshot.forEach((childSnapshot) => {
-                            userData = childSnapshot.val();
-                            const firebaseKey = childSnapshot.key;
-                            
-                            // Update localStorage with the correct key
-                            localStorage.setItem('emaId', firebaseKey);
-                            emaId = firebaseKey;
-                            
-                            userName.textContent = userData.fullName;
-                            userEmaId.textContent = emaId;
+                        userData = snapshot.val();
+                        
+                        userName.textContent = userData.fullName;
+                        userEmaId.textContent = emaId;
 
-                            if (userData.profilePicture) {
-                                userAvatar.src = userData.profilePicture;
-                            } else {
-                                userAvatar.src = 'https://picsum.photos/seed/emauser/100/100.jpg';
-                            }
+                        if (userData.profilePicture) {
+                            userAvatar.src = userData.profilePicture;
+                        } else {
+                            userAvatar.src = 'https://picsum.photos/seed/emauser/100/100.jpg';
+                        }
 
-                            initializeMap();
-                        });
+                        // Hide loader before initializing map
+                        loader.style.display = 'none';
+                        initializeMap();
                     } else {
-                        // User not found, try direct lookup
-                        database.ref('users/' + emaId).once('value')
-                            .then((directSnapshot) => {
-                                if (directSnapshot.exists()) {
-                                    userData = directSnapshot.val();
-                                    
-                                    userName.textContent = userData.fullName;
-                                    userEmaId.textContent = emaId;
+                        // If direct lookup fails, try searching by emaId field
+                        database.ref('users').orderByChild('emaId').equalTo(emaId).once('value')
+                            .then((querySnapshot) => {
+                                if (querySnapshot.exists()) {
+                                    querySnapshot.forEach((childSnapshot) => {
+                                        userData = childSnapshot.val();
+                                        const firebaseKey = childSnapshot.key;
+                                        
+                                        // Update localStorage with correct key
+                                        localStorage.setItem('emaId', firebaseKey);
+                                        emaId = firebaseKey;
+                                        
+                                        userName.textContent = userData.fullName;
+                                        userEmaId.textContent = emaId;
 
-                                    if (userData.profilePicture) {
-                                        userAvatar.src = userData.profilePicture;
-                                    } else {
-                                        userAvatar.src = 'https://picsum.photos/seed/emauser/100/100.jpg';
-                                    }
+                                        if (userData.profilePicture) {
+                                            userAvatar.src = userData.profilePicture;
+                                        } else {
+                                            userAvatar.src = 'https://picsum.photos/seed/emauser/100/100.jpg';
+                                        }
 
-                                    initializeMap();
+                                        // Hide loader before initializing map
+                                        loader.style.display = 'none';
+                                        initializeMap();
+                                    });
                                 } else {
                                     loader.style.display = 'none';
                                     showNotification('error', 'Error', 'User data not found. Please login again.');
@@ -2374,7 +2377,7 @@
                                 }
                             })
                             .catch((error) => {
-                                console.error('Error loading user data:', error);
+                                console.error('Error querying user data:', error);
                                 loader.style.display = 'none';
                                 showNotification('error', 'Error', 'Error loading user data. Please try again.');
                                 setTimeout(() => {
@@ -2384,7 +2387,7 @@
                     }
                 })
                 .catch((error) => {
-                    console.error('Error querying user data:', error);
+                    console.error('Error loading user data:', error);
                     loader.style.display = 'none';
                     showNotification('error', 'Error', 'Error loading user data. Please try again.');
                     setTimeout(() => {
