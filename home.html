@@ -60,10 +60,17 @@
             z-index: 1;
         }
 
-        .user-pill {
+        .user-pill-container {
             position: absolute;
             top: 20px;
             left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .user-pill {
             background: var(--glass);
             border-radius: 50px;
             padding: 8px;
@@ -73,7 +80,6 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             backdrop-filter: blur(6px) saturate(110%);
             border: 1px solid rgba(255,255,255,0.2);
-            z-index: 1000;
             cursor: pointer;
             transition: all 0.2s ease;
         }
@@ -135,8 +141,8 @@
         }
 
         .edit-icon {
-            width: 36px;
-            height: 36px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             background: var(--green);
             display: flex;
@@ -145,14 +151,19 @@
             color: white;
             cursor: pointer;
             transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            backdrop-filter: blur(6px) saturate(110%);
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
         .edit-icon:hover {
             background: var(--green-strong);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
         }
 
         .edit-icon .material-symbols-outlined {
-            font-size: 18px;
+            font-size: 20px;
         }
 
         .map-toggle {
@@ -638,6 +649,7 @@
             color: white;
             text-align: center;
             padding: 20px;
+            min-height: 150px;
         }
 
         .report-option.sighting {
@@ -681,6 +693,11 @@
             transition: all 0.2s ease;
             text-align: center;
             font-weight: 600;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .radio-option.selected {
@@ -689,8 +706,8 @@
         }
 
         .radio-option i {
-            font-size: 40px;
-            margin-bottom: 10px;
+            font-size: 50px;
+            margin-bottom: 15px;
             color: var(--muted);
         }
 
@@ -710,13 +727,14 @@
             border-radius: 15px;
             border: 1px solid #e6e6e6;
             background: white;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
+            min-height: 80px;
         }
 
         .dial-button:hover {
@@ -729,10 +747,10 @@
         }
 
         .dial-display {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 700;
             text-align: center;
-            padding: 15px;
+            padding: 20px;
             margin-bottom: 20px;
             border-radius: 15px;
             background: #f5f5f5;
@@ -745,12 +763,13 @@
 
         .dial-button-action {
             flex: 1;
-            padding: 15px;
+            padding: 18px;
             border-radius: 15px;
             border: none;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
+            font-size: 18px;
         }
 
         .dial-correct {
@@ -1070,14 +1089,37 @@
             width: 90%;
             margin: auto;
             animation: slideUp 0.4s ease;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .info-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
         }
 
         .info-title {
             font-size: 24px;
             font-weight: 700;
             color: #333;
-            margin-bottom: 20px;
-            text-align: center;
+        }
+
+        .info-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .info-close:hover {
+            background: #e0e0e0;
         }
 
         .info-section {
@@ -1266,16 +1308,18 @@
 
     <div id="map"></div>
 
-    <div class="user-pill" id="userPill">
-        <div class="user-avatar-container">
-            <img id="userAvatar" class="user-avatar" src="" alt="User Avatar">
-            <div class="user-avatar-overlay">
-                <span class="material-symbols-outlined">camera_alt</span>
+    <div class="user-pill-container">
+        <div class="user-pill" id="userPill">
+            <div class="user-avatar-container">
+                <img id="userAvatar" class="user-avatar" src="" alt="User Avatar">
+                <div class="user-avatar-overlay">
+                    <span class="material-symbols-outlined">camera_alt</span>
+                </div>
             </div>
-        </div>
-        <div class="user-info">
-            <p id="userName" class="user-name">Loading...</p>
-            <p id="userEmaId" class="user-ema-id">Loading...</p>
+            <div class="user-info">
+                <p id="userName" class="user-name">Loading...</p>
+                <p id="userEmaId" class="user-ema-id">Loading...</p>
+            </div>
         </div>
         <div class="edit-icon" id="editProfileBtn">
             <span class="material-symbols-outlined">edit</span>
@@ -1608,7 +1652,12 @@
 
     <div class="info-modal" id="infoModal">
         <div class="info-content">
-            <h2 class="info-title">EMA Information</h2>
+            <div class="info-header">
+                <h2 class="info-title">EMA Information</h2>
+                <div class="info-close" id="infoCloseBtn">
+                    <span class="material-symbols-outlined">close</span>
+                </div>
+            </div>
 
             <div class="info-section">
                 <h3 class="info-section-title">
@@ -1740,6 +1789,7 @@
         const reportDetailsModal = document.getElementById('reportDetailsModal');
         const reportDetailsClose = document.getElementById('reportDetailsClose');
         const infoModal = document.getElementById('infoModal');
+        const infoCloseBtn = document.getElementById('infoCloseBtn');
         const profilePictureInput = document.getElementById('profilePictureInput');
         const agentStatusBtn = document.getElementById('agentStatusBtn');
         const otherBtn = document.getElementById('otherBtn');
@@ -1828,6 +1878,10 @@
             infoModal.classList.add('active');
         });
 
+        infoCloseBtn.addEventListener('click', function() {
+            infoModal.classList.remove('active');
+        });
+
         otherBtn.addEventListener('click', function() {
             window.location.href = 'other.html';
         });
@@ -1847,7 +1901,8 @@
 
         retryLocationBtn.addEventListener('click', function() {
             locationErrorModal.classList.remove('active');
-            initializeMap();
+            // Force page reload to reinitialize location
+            window.location.reload();
         });
 
         openSettingsBtn.addEventListener('click', function() {
@@ -2187,23 +2242,21 @@
                 return;
             }
 
+            // Check if location is enabled and get position
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-
+                    // Location is available
                     setupMap(position);
                 },
                 (error) => {
-
-                    if (error.code === error.PERMISSION_DENIED) {
-                        showLocationError();
-                    } else {
-
-                        setupMap(null);
-                    }
+                    // Location is not available or permission denied
+                    console.error('Geolocation error:', error);
+                    showLocationError();
                 },
                 {
                     enableHighAccuracy: true,
-                    timeout: 10000
+                    timeout: 10000,
+                    maximumAge: 0 // Don't use cached position
                 }
             );
         }
@@ -2216,13 +2269,23 @@
                 zoomControl: false 
             });
 
+            // Preload tiles for better performance
             osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: ''
+                attribution: '',
+                maxZoom: 19,
+                updateWhenIdle: false,
+                updateWhenZooming: false
             }).addTo(map);
 
             esriLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                attribution: ''
+                attribution: '',
+                maxZoom: 19,
+                updateWhenIdle: false,
+                updateWhenZooming: false
             });
+
+            // Preload tiles around current view
+            preloadMapTiles();
 
             map.on('dblclick', function(e) {
 
@@ -2264,6 +2327,27 @@
             }
 
             loadReports();
+        }
+
+        function preloadMapTiles() {
+            const bounds = map.getBounds();
+            const zoom = map.getZoom();
+            
+            // Preload tiles for current and adjacent zoom levels
+            for (let z = Math.max(1, zoom - 1); z <= Math.min(19, zoom + 1); z++) {
+                const min = bounds.getNorthWest();
+                const max = bounds.getSouthEast();
+                
+                for (let x = Math.floor(min.lng / 360 * Math.pow(2, z)); x <= Math.floor(max.lng / 360 * Math.pow(2, z)); x++) {
+                    for (let y = Math.floor((1 - Math.log(Math.tan(min.lat * Math.PI / 180) + 1 / Math.cos(min.lat * Math.PI / 180)) / Math.PI / 2) * Math.pow(2, z)); 
+                         y <= Math.floor((1 - Math.log(Math.tan(max.lat * Math.PI / 180) + 1 / Math.cos(max.lat * Math.PI / 180)) / Math.PI / 2) * Math.pow(2, z)); y++) {
+                        
+                        // Create image elements to preload tiles
+                        const img = new Image();
+                        img.src = `https://tile.openstreetmap.org/${z}/${x}/${y}.png`;
+                    }
+                }
+            }
         }
 
         function showLocationError() {
@@ -2403,16 +2487,39 @@
 
         function centerMapOnUser() {
             if (navigator.geolocation) {
+                loader.style.display = 'flex';
+                
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         const lat = position.coords.latitude;
                         const lng = position.coords.longitude;
 
                         map.setView([lat, lng], 14);
+                        
+                        // Update or create user location marker
+                        if (userLocationMarker) {
+                            userLocationMarker.setLatLng([lat, lng]);
+                        } else {
+                            userLocationMarker = L.marker([lat, lng], {
+                                icon: L.divIcon({
+                                    className: 'user-location-marker',
+                                    iconSize: [20, 20],
+                                    iconAnchor: [10, 10]
+                                })
+                            }).addTo(map);
+                        }
+                        
+                        loader.style.display = 'none';
                     },
                     (error) => {
                         console.error('Error getting location:', error);
+                        loader.style.display = 'none';
                         showLocationError();
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
                     }
                 );
             } else {
@@ -2602,6 +2709,17 @@
                 };
                 reader.readAsDataURL(file);
             });
+        }
+
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+
+        function hideError(elementId) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.style.display = 'none';
         }
     </script>
 </body>
