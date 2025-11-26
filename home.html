@@ -204,52 +204,6 @@
             }
         }
         
-        /* Welcome Video Modal */
-        .welcome-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.9);
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .welcome-video {
-            max-width: 90%;
-            max-height: 70%;
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        
-        .continue-button {
-            margin-top: 30px;
-            padding: 15px 30px;
-            background-color: #ccc;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: not-allowed;
-            transition: all 0.3s ease;
-        }
-        
-        .continue-button.active {
-            background-color: #4CAF50;
-            cursor: pointer;
-        }
-        
-        .continue-button.active:hover {
-            background-color: #45a049;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
-        }
-        
         /* Fullscreen Modal */
         .fullscreen-modal {
             position: fixed;
@@ -1152,15 +1106,6 @@
         <span>Other</span>
     </a>
     
-    <!-- Welcome Video Modal -->
-    <div class="welcome-modal" id="welcomeModal">
-        <video class="welcome-video" id="welcomeVideo">
-            <source src="https://upload.wikimedia.org/wikipedia/commons/transcoded/a/a7/How_to_make_video.webm/How_to_make_video.webm.720p.vp9.webm" type="video/webm">
-            Your browser does not support the video tag.
-        </video>
-        <button class="continue-button" id="continueButton" disabled>Continue</button>
-    </div>
-    
     <!-- Profile Edit Modal -->
     <div class="fullscreen-modal" id="profileModal">
         <div class="modal-header">
@@ -1369,7 +1314,7 @@
             </div>
             <div class="form-group">
                 <label class="form-label">Brief description</label>
-                <textarea class="form-textarea" id="updateDescription" placeholder="Describe update..."></textarea>
+                <textarea class="form-textarea" id="updateDescription" placeholder="Describe the update..."></textarea>
             </div>
             <button class="action-button primary-button" id="submitUpdate">Update</button>
         </div>
@@ -1475,53 +1420,25 @@
                 );
             }
             
-            // Check if first message shown
-            const firstMessageShown = localStorage.getItem('firstmessageshown');
-            if (firstMessageShown !== 'true') {
-                // Show welcome video modal
-                document.getElementById('welcomeModal').style.display = 'flex';
-                const video = document.getElementById('welcomeVideo');
-                const continueButton = document.getElementById('continueButton');
-                
-                // Fix video playback issues
-                video.play().catch(error => {
-                    console.error('Video autoplay failed:', error);
-                });
-                
-                // Set up video event listeners
-                video.addEventListener('loadedmetadata', function() {
-                    console.log('Video metadata loaded');
-                });
-                
-                video.addEventListener('canplay', function() {
-                    console.log('Video can play');
-                });
-                
-                video.addEventListener('ended', function() {
-                    console.log('Video ended');
-                    continueButton.classList.add('active');
-                    continueButton.disabled = false;
-                });
-                
-                // Add click event to continue button
-                continueButton.addEventListener('click', function() {
-                    localStorage.setItem('firstmessageshown', 'true');
-                    document.getElementById('welcomeModal').style.display = 'none';
-                    initializeApp(emaId);
-                });
-            } else {
-                // Skip welcome video and initialize app
-                initializeApp(emaId);
-            }
+            // Initialize app directly
+            initializeApp(emaId);
         });
         
         // Initialize App
         function initializeApp(emaId) {
+            // Set a fallback timeout to hide the loader in case of issues
+            const loadingTimeout = setTimeout(() => {
+                console.warn("Loader fallback timeout reached. Hiding loader.");
+                hideLoading();
+            }, 10000); // 10 seconds
+
             // Initialize map
             initializeMap();
             
             // Load user data
-            loadUserData(emaId);
+            loadUserData(emaId).finally(() => {
+                clearTimeout(loadingTimeout);
+            });
             
             // Setup event listeners
             setupEventListeners();
@@ -1605,7 +1522,7 @@
         
         // Load User Data
         function loadUserData(emaId) {
-            database.ref('users/' + emaId).once('value')
+            return database.ref('users/' + emaId).once('value')
                 .then(snapshot => {
                     const userData = snapshot.val();
                     if (userData) {
@@ -1622,14 +1539,14 @@
                         window.currentUser = userData;
                         window.currentUser.emaId = emaId;
                     }
-                    
-                    // Hide loading overlay
-                    document.getElementById('loadingOverlay').style.display = 'none';
                 })
                 .catch(error => {
                     console.error('Error loading user data:', error);
                     showError('Failed to load user data. Please try again.');
-                    document.getElementById('loadingOverlay').style.display = 'none';
+                })
+                .finally(() => {
+                    // This will always run, success or fail
+                    hideLoading();
                 });
         }
         
@@ -1685,7 +1602,6 @@
             
             document.getElementById('confirmLogout').addEventListener('click', function() {
                 localStorage.removeItem('emaId');
-                localStorage.removeItem('firstmessageshown');
                 window.location.href = 'index.html';
             });
             
@@ -1836,7 +1752,7 @@
             
             document.getElementById('retryError').addEventListener('click', function() {
                 document.getElementById('errorModal').style.display = 'none';
-                // Retry logic would depend on the specific error
+                // Retry logic would depend on specific error
             });
         }
         
@@ -2507,7 +2423,7 @@
                         showError('Failed to update report. Please try again.');
                     });
             } else {
-                // Different user - create update record
+                // Different user - create an update record
                 const updateId = generateReportId();
                 const updateData = {
                     location: {
