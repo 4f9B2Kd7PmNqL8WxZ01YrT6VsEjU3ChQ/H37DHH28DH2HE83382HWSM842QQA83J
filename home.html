@@ -7,14 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EMA - Elephant Monitoring App</title>
     
-    <!-- External Libraries -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/mona-sans">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/esri-leaflet@3.0.10/dist/esri-leaflet.css" />
     
     <style>
-        /* Font Face for Mona Sans */
         @font-face {
             font-family: 'Mona Sans';
             font-style: normal;
@@ -22,7 +20,6 @@
             src: local('Mona Sans'), url(https://fonts.cdnfonts.com/s/19241/Mona-Sans.woff2) format('woff2');
         }
         
-        /* Global Styles */
         * {
             font-family: "Mona Sans", sans-serif;
             box-sizing: border-box;
@@ -37,7 +34,6 @@
             position: relative;
         }
         
-        /* Disable text selection and context menu */
         body {
             -webkit-user-select: none;
             -moz-user-select: none;
@@ -46,7 +42,6 @@
             -webkit-touch-callout: none;
         }
         
-        /* Fullscreen Map */
         #map {
             position: absolute;
             top: 0;
@@ -56,7 +51,6 @@
             z-index: 1;
         }
         
-        /* Hide Leaflet controls and attribution */
         .leaflet-control-zoom {
             display: none !important;
         }
@@ -65,7 +59,6 @@
             display: none !important;
         }
         
-        /* User Profile Pill */
         .profile-pill {
             position: absolute;
             top: 20px;
@@ -124,7 +117,6 @@
             margin-left: 10px;
         }
         
-        /* Map Layer Toggle */
         .map-layer-toggle {
             position: absolute;
             top: 20px;
@@ -141,7 +133,6 @@
             cursor: pointer;
         }
         
-        /* Other Button */
         .other-button {
             position: absolute;
             bottom: 20px;
@@ -162,7 +153,6 @@
             text-decoration: underline;
         }
         
-        /* User Location Marker */
         .user-location-marker {
             width: 20px;
             height: 20px;
@@ -188,7 +178,6 @@
             }
         }
         
-        /* Welcome Video Modal */
         .welcome-modal {
             position: fixed;
             top: 0;
@@ -226,7 +215,6 @@
             cursor: pointer;
         }
         
-        /* Fullscreen Modal */
         .fullscreen-modal {
             position: fixed;
             top: 0;
@@ -267,7 +255,6 @@
             padding: 20px;
         }
         
-        /* Form Styles */
         .form-group {
             margin-bottom: 20px;
         }
@@ -296,7 +283,6 @@
             resize: vertical;
         }
         
-        /* Profile Picture Upload */
         .profile-picture-container {
             display: flex;
             flex-direction: column;
@@ -325,7 +311,6 @@
             font-size: 14px;
         }
         
-        /* Modal Actions */
         .modal-actions {
             display: flex;
             gap: 10px;
@@ -357,7 +342,6 @@
             color: white;
         }
         
-        /* Confirmation Dialog */
         .confirmation-dialog {
             position: fixed;
             top: 0;
@@ -394,7 +378,6 @@
             gap: 10px;
         }
         
-        /* Report Wizard */
         .wizard-container {
             position: fixed;
             top: 0;
@@ -438,7 +421,6 @@
             margin-bottom: 20px;
         }
         
-        /* Type Selection */
         .type-selection {
             display: flex;
             gap: 20px;
@@ -466,7 +448,6 @@
             font-weight: 600;
         }
         
-        /* Number Input */
         .number-input-container {
             display: flex;
             flex-direction: column;
@@ -517,7 +498,6 @@
             color: white;
         }
         
-        /* Yes/No Selection */
         .yesno-selection {
             display: flex;
             gap: 20px;
@@ -539,7 +519,6 @@
             background-color: #f0f0f0;
         }
         
-        /* Image Upload */
         .image-upload-container {
             margin-top: 20px;
         }
@@ -587,7 +566,6 @@
             cursor: pointer;
         }
         
-        /* Success Modal */
         .success-modal {
             position: fixed;
             top: 0;
@@ -627,7 +605,6 @@
             cursor: pointer;
         }
         
-        /* Report Detail Modal */
         .report-detail-modal {
             position: fixed;
             top: 0;
@@ -736,7 +713,6 @@
             margin-top: 20px;
         }
         
-        /* Update Location Modal */
         .update-location-map {
             width: 100%;
             height: 300px;
@@ -749,7 +725,6 @@
             display: none;
         }
         
-        /* Loading Overlay */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -777,7 +752,6 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* Error Modal */
         .error-modal {
             position: fixed;
             top: 0;
@@ -815,7 +789,6 @@
             gap: 10px;
         }
         
-        /* Report Markers */
         .report-marker {
             width: 30px;
             height: 30px;
@@ -836,7 +809,6 @@
             background-color: #f44336;
         }
         
-        /* Updated Badge */
         .updated-badge {
             display: inline-block;
             padding: 4px 8px;
@@ -848,7 +820,6 @@
             margin-left: 10px;
         }
         
-        /* Responsive Design */
         @media (max-width: 768px) {
             .profile-pill {
                 max-width: 200px;
@@ -873,15 +844,12 @@
     </style>
 </head>
 <body>
-    <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
     </div>
     
-    <!-- Map Container -->
     <div id="map"></div>
     
-    <!-- User Profile Pill -->
     <div class="profile-pill" id="profilePill">
         <div class="profile-avatar" id="profileAvatar">
             <span class="material-icons">person</span>
@@ -895,17 +863,14 @@
         </div>
     </div>
     
-    <!-- Map Layer Toggle -->
     <div class="map-layer-toggle" id="mapLayerToggle">
         <span class="material-icons">layers</span>
     </div>
     
-    <!-- Other Button -->
     <a href="other.html" class="other-button">
         <span>Other</span>
     </a>
     
-    <!-- Welcome Video Modal -->
     <div class="welcome-modal" id="welcomeModal">
         <video class="welcome-video" id="welcomeVideo" controls>
             <source src="https://upload.wikimedia.org/wikipedia/commons/transcoded/a/a7/How_to_make_video.webm/How_to_make_video.webm.720p.vp9.webm" type="video/webm">
@@ -914,7 +879,6 @@
         <button class="continue-button" id="continueButton">Continue</button>
     </div>
     
-    <!-- Profile Edit Modal -->
     <div class="fullscreen-modal" id="profileModal">
         <div class="modal-header">
             <div class="modal-title">Edit Profile</div>
@@ -986,7 +950,6 @@
         </div>
     </div>
     
-    <!-- Report Wizard -->
     <div class="wizard-container" id="reportWizard">
         <div class="wizard-header">
             <div class="modal-title">New Report</div>
@@ -995,7 +958,6 @@
             </div>
         </div>
         <div class="wizard-content">
-            <!-- Slide 1: Type Selection -->
             <div class="wizard-slide active" id="slide1">
                 <div class="slide-title">What did you see?</div>
                 <div class="type-selection">
@@ -1010,7 +972,6 @@
                 </div>
             </div>
             
-            <!-- Slide 2: Number Input -->
             <div class="wizard-slide" id="slide2">
                 <div class="slide-title">How many did you see?</div>
                 <div class="number-input-container">
@@ -1034,7 +995,6 @@
                 </div>
             </div>
             
-            <!-- Slide 3: Injured -->
             <div class="wizard-slide" id="slide3">
                 <div class="slide-title">Is any of them injured?</div>
                 <div class="yesno-selection">
@@ -1043,7 +1003,6 @@
                 </div>
             </div>
             
-            <!-- Slide 4: Medical Help -->
             <div class="wizard-slide" id="slide4">
                 <div class="slide-title">Does it need medical help?</div>
                 <div class="yesno-selection">
@@ -1052,7 +1011,6 @@
                 </div>
             </div>
             
-            <!-- Slide 5: Images -->
             <div class="wizard-slide" id="slide5">
                 <div class="slide-title">Add images (up to 4)</div>
                 <div class="image-upload-container">
@@ -1066,7 +1024,6 @@
                 </div>
             </div>
             
-            <!-- Slide 6: Description -->
             <div class="wizard-slide" id="slide6">
                 <div class="slide-title">Brief description</div>
                 <textarea class="form-textarea" id="reportDescription" placeholder="Describe what you saw..."></textarea>
@@ -1075,14 +1032,12 @@
         </div>
     </div>
     
-    <!-- Success Modal -->
     <div class="success-modal" id="successModal">
         <img src="https://media.tenor.com/AWKzZ19awFYAAAAj/checkmark-transparent.gif" alt="Success" class="success-gif">
         <div class="success-message" id="successMessage">Report submitted successfully!</div>
         <button class="success-button" id="doneButton">Done</button>
     </div>
     
-    <!-- Report Detail Modal -->
     <div class="report-detail-modal" id="reportDetailModal">
         <div class="report-detail-header">
             <div class="modal-title">Report Details</div>
@@ -1091,11 +1046,9 @@
             </div>
         </div>
         <div class="report-detail-content" id="reportDetailContent">
-            <!-- Report details will be populated here -->
         </div>
     </div>
     
-    <!-- Update Location Modal -->
     <div class="fullscreen-modal" id="updateLocationModal">
         <div class="modal-header">
             <div class="modal-title">Update Location</div>
@@ -1123,7 +1076,6 @@
         </div>
     </div>
     
-    <!-- Confirmation Dialog -->
     <div class="confirmation-dialog" id="confirmationDialog" style="display: none;">
         <div class="dialog-content">
             <div class="dialog-title">Confirm Logout</div>
@@ -1135,7 +1087,6 @@
         </div>
     </div>
     
-    <!-- Error Modal -->
     <div class="error-modal" id="errorModal">
         <div class="error-content">
             <div class="error-title">Error</div>
@@ -1147,19 +1098,13 @@
         </div>
     </div>
     
-    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-    
-    <!-- Leaflet -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/esri-leaflet@3.0.10/dist/esri-leaflet.js"></script>
-    
-    <!-- JSZip for creating ZIP files -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     
     <script>
-        // Initialize Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyCtIvVHA0Q_iuTIFNanoU8RhV4oC60L_YM",
             authDomain: "emausers-9837a.firebaseapp.com",
@@ -1174,7 +1119,6 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         
-        // Global Variables
         let map;
         let currentLayer = 'satellite';
         let userLocationMarker;
@@ -1185,7 +1129,6 @@
         let updateLocationMarker;
         let originalReportLocation;
         
-        // Report Data
         let newReport = {
             type: '',
             count: 0,
@@ -1197,36 +1140,28 @@
             timestamp: null
         };
         
-        // Initialize App
         document.addEventListener('DOMContentLoaded', function() {
-            // Disable right-click, text selection, and dragging
             document.addEventListener('contextmenu', event => event.preventDefault());
             document.addEventListener('selectstart', event => event.preventDefault());
             document.addEventListener('dragstart', event => event.preventDefault());
             
-            // Check if user is logged in
-            const emaId = localStorage.getItem('emaid');
+            const emaId = localStorage.getItem('emaId');
             if (!emaId) {
                 window.location.href = 'index.html';
                 return;
             }
             
-            // Request location permission
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     position => {
-                        // Location permission granted
                     },
                     error => {
-                        // Location permission denied, but continue
                     }
                 );
             }
             
-            // Check if first message shown
             const firstMessageShown = localStorage.getItem('firstmessageshown');
             if (firstMessageShown !== 'true') {
-                // Show welcome video modal
                 document.getElementById('welcomeModal').style.display = 'flex';
                 const video = document.getElementById('welcomeVideo');
                 const continueButton = document.getElementById('continueButton');
@@ -1242,52 +1177,36 @@
                     initializeApp(emaId);
                 });
             } else {
-                // Skip welcome video and initialize app
                 initializeApp(emaId);
             }
         });
         
-        // Initialize App
         function initializeApp(emaId) {
-            // Initialize map
             initializeMap();
-            
-            // Load user data
             loadUserData(emaId);
-            
-            // Setup event listeners
             setupEventListeners();
-            
-            // Start listening for report updates
             listenForReports();
         }
         
-        // Initialize Map
         function initializeMap() {
-            // Create map
             map = L.map('map', {
                 zoomControl: false,
                 attributionControl: false
-            }).setView([7.8731, 80.7718], 8); // Sri Lanka center
+            }).setView([7.8731, 80.7718], 8);
             
-            // Add Esri Satellite layer (default)
             const satelliteLayer = L.esri.basemapLayer('Imagery');
             satelliteLayer.addTo(map);
             
-            // Add Esri Terrain layer
             const terrainLayer = L.esri.basemapLayer('Topographic');
             
-            // Track current layer
             map.currentLayer = satelliteLayer;
             
-            // Get user location
             if (navigator.geolocation) {
                 navigator.geolocation.watchPosition(
                     position => {
                         const lat = position.coords.latitude;
                         const lng = position.coords.longitude;
                         
-                        // Update or create user location marker
                         if (userLocationMarker) {
                             userLocationMarker.setLatLng([lat, lng]);
                         } else {
@@ -1300,7 +1219,6 @@
                             }).addTo(map);
                         }
                         
-                        // Center map on user location if not already centered
                         if (!map.initialCentered) {
                             map.setView([lat, lng], 13);
                             map.initialCentered = true;
@@ -1312,7 +1230,6 @@
                 );
             }
             
-            // Setup map layer toggle
             document.getElementById('mapLayerToggle').addEventListener('click', function() {
                 if (map.currentLayer === satelliteLayer) {
                     map.removeLayer(satelliteLayer);
@@ -1325,7 +1242,6 @@
                 }
             });
             
-            // Setup double-click for new report
             map.on('dblclick', function(e) {
                 newReport.location = {
                     lat: e.latlng.lat,
@@ -1335,27 +1251,22 @@
             });
         }
         
-        // Load User Data
         function loadUserData(emaId) {
             database.ref('users/' + emaId).once('value')
                 .then(snapshot => {
                     const userData = snapshot.val();
                     if (userData) {
-                        // Update profile pill
                         document.getElementById('profileName').textContent = userData.fullName || 'Unknown';
                         document.getElementById('profileEmail').textContent = userData.email || 'Unknown';
                         
-                        // Update profile avatar if available
                         if (userData.profilePicture) {
                             document.getElementById('profileAvatar').innerHTML = `<img src="${userData.profilePicture}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
                         }
                         
-                        // Store user data for later use
                         window.currentUser = userData;
                         window.currentUser.emaId = emaId;
                     }
                     
-                    // Hide loading overlay
                     document.getElementById('loadingOverlay').style.display = 'none';
                 })
                 .catch(error => {
@@ -1365,23 +1276,18 @@
                 });
         }
         
-        // Setup Event Listeners
         function setupEventListeners() {
-            // Profile pill click
             document.getElementById('profilePill').addEventListener('click', function() {
                 openProfileModal();
             });
             
-            // Edit profile button
             document.getElementById('editProfile').addEventListener('click', function(e) {
                 e.stopPropagation();
                 openProfileModal();
             });
             
-            // Close profile modal
             document.getElementById('closeProfileModal').addEventListener('click', closeProfileModal);
             
-            // Profile picture upload
             document.getElementById('uploadProfilePicture').addEventListener('click', function() {
                 document.getElementById('profilePictureInput').click();
             });
@@ -1397,34 +1303,28 @@
                 }
             });
             
-            // Save profile
             document.getElementById('saveProfile').addEventListener('click', saveProfile);
             
-            // Agent info button
             document.getElementById('agentInfo').addEventListener('click', function() {
                 window.location.href = 'agent.html';
             });
             
-            // Log out button
             document.getElementById('logOut').addEventListener('click', function() {
                 document.getElementById('confirmationDialog').style.display = 'flex';
             });
             
-            // Confirmation dialog buttons
             document.getElementById('cancelLogout').addEventListener('click', function() {
                 document.getElementById('confirmationDialog').style.display = 'none';
             });
             
             document.getElementById('confirmLogout').addEventListener('click', function() {
-                localStorage.removeItem('emaid');
+                localStorage.removeItem('emaId');
                 localStorage.removeItem('firstmessageshown');
                 window.location.href = 'index.html';
             });
             
-            // Report wizard close button
             document.getElementById('closeReportWizard').addEventListener('click', closeReportWizard);
             
-            // Type selection
             document.getElementById('elephantOption').addEventListener('click', function() {
                 newReport.type = 'elephant';
                 goToSlide(2);
@@ -1435,13 +1335,11 @@
                 goToSlide(2);
             });
             
-            // Number pad buttons
             document.querySelectorAll('.number-button[data-value]').forEach(button => {
                 button.addEventListener('click', function() {
                     const value = this.getAttribute('data-value');
                     const display = document.getElementById('numberDisplay');
                     
-                    // If display is '0', replace it with the new digit
                     if (display.textContent === '0') {
                         display.textContent = value;
                     } else {
@@ -1450,7 +1348,6 @@
                 });
             });
             
-            // Backspace button
             document.getElementById('backspaceButton').addEventListener('click', function() {
                 const display = document.getElementById('numberDisplay');
                 
@@ -1461,13 +1358,11 @@
                 }
             });
             
-            // Continue from number slide
             document.getElementById('continueFromNumber').addEventListener('click', function() {
                 newReport.count = parseInt(document.getElementById('numberDisplay').textContent);
                 goToSlide(3);
             });
             
-            // Injured selection
             document.getElementById('injuredYes').addEventListener('click', function() {
                 newReport.injured = true;
                 goToSlide(4);
@@ -1479,7 +1374,6 @@
                 goToSlide(5);
             });
             
-            // Medical help selection
             document.getElementById('medicalYes').addEventListener('click', function() {
                 newReport.medicalHelp = true;
                 goToSlide(5);
@@ -1490,7 +1384,6 @@
                 goToSlide(5);
             });
             
-            // Image upload
             document.getElementById('imageUploadArea').addEventListener('click', function() {
                 document.getElementById('imageInput').click();
             });
@@ -1499,31 +1392,25 @@
                 handleImageUpload(e.target.files, 'imagePreviewContainer', newReport.images, 4);
             });
             
-            // Continue from images slide
             document.getElementById('continueFromImages').addEventListener('click', function() {
                 goToSlide(6);
             });
             
-            // Submit report
             document.getElementById('submitReport').addEventListener('click', submitReport);
             
-            // Success modal done button
             document.getElementById('doneButton').addEventListener('click', function() {
                 document.getElementById('successModal').style.display = 'none';
                 location.reload();
             });
             
-            // Report detail close button
             document.getElementById('closeReportDetail').addEventListener('click', function() {
                 document.getElementById('reportDetailModal').style.display = 'none';
             });
             
-            // Update location modal
             document.getElementById('closeUpdateLocation').addEventListener('click', function() {
                 document.getElementById('updateLocationModal').style.display = 'none';
             });
             
-            // Update location image upload
             document.getElementById('updateImageUploadArea').addEventListener('click', function() {
                 document.getElementById('updateImageInput').click();
             });
@@ -1532,23 +1419,18 @@
                 handleImageUpload(e.target.files, 'updateImagePreviewContainer', [], 2);
             });
             
-            // Submit update
             document.getElementById('submitUpdate').addEventListener('click', submitUpdate);
             
-            // Error modal buttons
             document.getElementById('cancelError').addEventListener('click', function() {
                 document.getElementById('errorModal').style.display = 'none';
             });
             
             document.getElementById('retryError').addEventListener('click', function() {
                 document.getElementById('errorModal').style.display = 'none';
-                // Retry logic would depend on the specific error
             });
         }
         
-        // Open Profile Modal
         function openProfileModal() {
-            // Populate form with current user data
             if (window.currentUser) {
                 document.getElementById('fullNameInput').value = window.currentUser.fullName || '';
                 document.getElementById('phoneInput').value = window.currentUser.phone || '';
@@ -1563,12 +1445,10 @@
             document.getElementById('profileModal').style.display = 'block';
         }
         
-        // Close Profile Modal
         function closeProfileModal() {
             document.getElementById('profileModal').style.display = 'none';
         }
         
-        // Save Profile
         function saveProfile() {
             const fullName = document.getElementById('fullNameInput').value;
             const phone = document.getElementById('phoneInput').value;
@@ -1581,10 +1461,8 @@
                 profilePicture = profilePicturePreview.src;
             }
             
-            // Show loading
             showLoading();
             
-            // Update user data in Firebase
             const emaId = window.currentUser.emaId;
             const userData = {
                 fullName,
@@ -1596,10 +1474,8 @@
             
             database.ref('users/' + emaId).update(userData)
                 .then(() => {
-                    // Update local user data
                     window.currentUser = { ...window.currentUser, ...userData };
                     
-                    // Update profile pill
                     document.getElementById('profileName').textContent = fullName;
                     document.getElementById('profileEmail').textContent = email;
                     
@@ -1607,7 +1483,6 @@
                         document.getElementById('profileAvatar').innerHTML = `<img src="${profilePicture}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
                     }
                     
-                    // Close modal and reload page
                     closeProfileModal();
                     hideLoading();
                     location.reload();
@@ -1618,9 +1493,7 @@
                 });
         }
         
-        // Open Report Wizard
         function openReportWizard() {
-            // Reset report data
             newReport = {
                 type: '',
                 count: 0,
@@ -1632,57 +1505,40 @@
                 timestamp: null
             };
             
-            // Reset number display
             document.getElementById('numberDisplay').textContent = '0';
-            
-            // Clear image previews
             document.getElementById('imagePreviewContainer').innerHTML = '';
-            
-            // Clear description
             document.getElementById('reportDescription').value = '';
             
-            // Show wizard
             document.getElementById('reportWizard').style.display = 'flex';
-            
-            // Go to first slide
             goToSlide(1);
         }
         
-        // Close Report Wizard
         function closeReportWizard() {
             document.getElementById('reportWizard').style.display = 'none';
         }
         
-        // Go to Slide
         function goToSlide(slideNumber) {
-            // Hide all slides
             document.querySelectorAll('.wizard-slide').forEach(slide => {
                 slide.classList.remove('active');
             });
             
-            // Show the target slide
             document.getElementById('slide' + slideNumber).classList.add('active');
         }
         
-        // Handle Image Upload
         function handleImageUpload(files, containerId, imageArray, maxImages) {
             const container = document.getElementById(containerId);
             
-            // Check if adding these images would exceed the limit
             if (imageArray.length + files.length > maxImages) {
                 showError(`You can only upload up to ${maxImages} images.`);
                 return;
             }
             
-            // Process each file
             Array.from(files).forEach(file => {
-                // Check if file is an image
                 if (!file.type.startsWith('image/')) {
                     showError('Only image files are allowed.');
                     return;
                 }
                 
-                // Compress and convert to base64
                 compressImage(file, 0.7)
                     .then(compressedFile => {
                         const reader = new FileReader();
@@ -1690,7 +1546,6 @@
                             const base64 = event.target.result;
                             imageArray.push(base64);
                             
-                            // Create preview
                             const preview = document.createElement('div');
                             preview.className = 'image-preview';
                             preview.innerHTML = `
@@ -1700,7 +1555,6 @@
                                 </div>
                             `;
                             
-                            // Add remove functionality
                             preview.querySelector('.image-remove').addEventListener('click', function() {
                                 const index = imageArray.indexOf(base64);
                                 if (index > -1) {
@@ -1719,7 +1573,6 @@
             });
         }
         
-        // Compress Image
         function compressImage(file, quality) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -1729,7 +1582,6 @@
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
                         
-                        // Calculate new dimensions
                         let width = img.width;
                         let height = img.height;
                         const maxWidth = 1280;
@@ -1742,7 +1594,6 @@
                         canvas.width = width;
                         canvas.height = height;
                         
-                        // Draw and compress
                         ctx.drawImage(img, 0, 0, width, height);
                         canvas.toBlob(function(blob) {
                             resolve(blob);
@@ -1754,22 +1605,17 @@
             });
         }
         
-        // Submit Report
         function submitReport() {
-            // Get description
             newReport.description = document.getElementById('reportDescription').value;
             newReport.timestamp = new Date().toISOString();
             
-            // Generate report ID
             const reportId = generateReportId();
             
-            // Get user info
             const emaId = window.currentUser.emaId;
             const reporterName = window.currentUser.fullName;
             const reporterPhone = window.currentUser.phone;
             const reporterEmail = window.currentUser.email;
             
-            // Create report object
             const report = {
                 ...newReport,
                 reporterName,
@@ -1778,13 +1624,10 @@
                 reporterEmaId: emaId
             };
             
-            // Show loading
             showLoading();
             
-            // Save to Firebase
             database.ref('reports/' + reportId).set(report)
                 .then(() => {
-                    // Add to user's reports
                     return database.ref('users/' + emaId + '/reports/' + reportId).set(true);
                 })
                 .then(() => {
@@ -1798,20 +1641,17 @@
                 });
         }
         
-        // Generate Report ID
         function generateReportId() {
             const timestamp = Date.now().toString();
             const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
             return timestamp + random;
         }
         
-        // Show Success Modal
         function showSuccessModal(reportId) {
             document.getElementById('successMessage').textContent = `Report submitted successfully! Your report ID is ${reportId}. The report will be visible for 12 hours.`;
             document.getElementById('successModal').style.display = 'flex';
         }
         
-        // Listen for Reports
         function listenForReports() {
             const now = Date.now();
             const twelveHoursAgo = now - (12 * 60 * 60 * 1000);
@@ -1819,26 +1659,21 @@
             database.ref('reports').orderByChild('timestamp').startAt(twelveHoursAgo.toString()).on('value', snapshot => {
                 const reports = snapshot.val();
                 
-                // Clear existing markers
                 Object.values(reportMarkers).forEach(marker => {
                     map.removeLayer(marker);
                 });
                 reportMarkers = {};
                 reportData = {};
                 
-                // Add new markers
                 if (reports) {
                     Object.entries(reports).forEach(([id, report]) => {
-                        // Check if report is within the last 12 hours
                         const reportTime = new Date(report.timestamp).getTime();
                         if (reportTime >= twelveHoursAgo) {
-                            // Determine marker color
                             let markerClass = 'normal';
                             if (report.injured) {
                                 markerClass = report.medicalHelp ? 'medical' : 'injured';
                             }
                             
-                            // Create marker
                             const marker = L.marker([report.location.lat, report.location.lng], {
                                 icon: L.divIcon({
                                     className: `report-marker ${markerClass}`,
@@ -1847,12 +1682,10 @@
                                 })
                             }).addTo(map);
                             
-                            // Add click event
                             marker.on('click', function() {
                                 showReportDetail(id, report);
                             });
                             
-                            // Store marker and data
                             reportMarkers[id] = marker;
                             reportData[id] = report;
                         }
@@ -1861,11 +1694,9 @@
             });
         }
         
-        // Show Report Detail
         function showReportDetail(reportId, report) {
             currentReportId = reportId;
             
-            // Create HTML content
             let html = `
                 <div class="report-info">
                     <div class="report-info-row">
@@ -1916,7 +1747,6 @@
                 </div>
             `;
             
-            // Add images if available
             if (report.images && report.images.length > 0) {
                 html += `
                     <div class="report-images">
@@ -1954,7 +1784,6 @@
                 `;
             }
             
-            // Add action buttons
             html += `
                 <div class="report-actions">
                     <a href="tel:${report.reporterPhone}" class="action-button primary-button">
@@ -1969,33 +1798,25 @@
                 </div>
             `;
             
-            // Set content
             document.getElementById('reportDetailContent').innerHTML = html;
-            
-            // Show modal
             document.getElementById('reportDetailModal').style.display = 'flex';
             
-            // Setup carousel if images exist
             if (report.images && report.images.length > 0) {
                 setupImageCarousel(report.images.length);
             }
             
-            // Setup download images button
             document.getElementById('downloadImages').addEventListener('click', function() {
                 downloadImages(report.images);
             });
             
-            // Setup update location button
             document.getElementById('updateLocation').addEventListener('click', function() {
                 openUpdateLocationModal(reportId, report);
             });
         }
         
-        // Setup Image Carousel
         function setupImageCarousel(imageCount) {
             let currentIndex = 0;
             
-            // Previous image button
             document.getElementById('prevImage').addEventListener('click', function() {
                 document.querySelectorAll('.report-image')[currentIndex].classList.remove('active');
                 document.querySelectorAll('.carousel-indicator')[currentIndex].classList.remove('active');
@@ -2006,7 +1827,6 @@
                 document.querySelectorAll('.carousel-indicator')[currentIndex].classList.add('active');
             });
             
-            // Next image button
             document.getElementById('nextImage').addEventListener('click', function() {
                 document.querySelectorAll('.report-image')[currentIndex].classList.remove('active');
                 document.querySelectorAll('.carousel-indicator')[currentIndex].classList.remove('active');
@@ -2017,7 +1837,6 @@
                 document.querySelectorAll('.carousel-indicator')[currentIndex].classList.add('active');
             });
             
-            // Indicator clicks
             document.querySelectorAll('.carousel-indicator').forEach(indicator => {
                 indicator.addEventListener('click', function() {
                     document.querySelectorAll('.report-image')[currentIndex].classList.remove('active');
@@ -2031,10 +1850,8 @@
             });
         }
         
-        // Download Images
         function downloadImages(images) {
             if (images.length === 1) {
-                // Download single image
                 const link = document.createElement('a');
                 link.href = images[0];
                 link.download = 'ema-report-image.jpg';
@@ -2042,11 +1859,9 @@
                 link.click();
                 document.body.removeChild(link);
             } else if (images.length > 1) {
-                // Create ZIP and download multiple images
                 const zip = new JSZip();
                 
                 images.forEach((image, index) => {
-                    // Extract base64 data
                     const base64Data = image.split(',')[1];
                     zip.file(`ema-report-image-${index + 1}.jpg`, base64Data, { base64: true });
                 });
@@ -2063,7 +1878,6 @@
                     .catch(function(error) {
                         showError('Failed to create ZIP file. Please try downloading images individually.');
                         
-                        // Fallback: download each image separately
                         images.forEach((image, index) => {
                             setTimeout(() => {
                                 const link = document.createElement('a');
@@ -2072,45 +1886,34 @@
                                 document.body.appendChild(link);
                                 link.click();
                                 document.body.removeChild(link);
-                            }, index * 500); // Small delay between downloads
+                            }, index * 500);
                         });
                     });
             }
         }
         
-        // Open Update Location Modal
         function openUpdateLocationModal(reportId, report) {
-            // Store original location
             originalReportLocation = report.location;
             
-            // Close report detail modal
             document.getElementById('reportDetailModal').style.display = 'none';
             
-            // Clear previous images
             document.getElementById('updateImagePreviewContainer').innerHTML = '';
             document.getElementById('updateDescription').value = '';
             
-            // Create map
             if (!updateLocationMap) {
                 updateLocationMap = L.map('updateLocationMap').setView([report.location.lat, report.location.lng], 16);
                 
-                // Add Esri Satellite layer
                 L.esri.basemapLayer('Imagery').addTo(updateLocationMap);
                 
-                // Add original location marker
                 L.marker([report.location.lat, report.location.lng]).addTo(updateLocationMap);
                 
-                // Add click event for new location
                 updateLocationMap.on('click', function(e) {
-                    // Remove previous marker if exists
                     if (updateLocationMarker) {
                         updateLocationMap.removeLayer(updateLocationMarker);
                     }
                     
-                    // Add new marker
                     updateLocationMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(updateLocationMap);
                     
-                    // Check if within 1km
                     const distance = calculateDistance(
                         report.location.lat,
                         report.location.lng,
@@ -2127,27 +1930,22 @@
                     }
                 });
             } else {
-                // Reset map view
                 updateLocationMap.setView([report.location.lat, report.location.lng], 16);
                 
-                // Remove previous marker if exists
                 if (updateLocationMarker) {
                     updateLocationMap.removeLayer(updateLocationMarker);
                     updateLocationMarker = null;
                 }
                 
-                // Reset error message
                 document.getElementById('locationError').style.display = 'none';
                 document.getElementById('submitUpdate').disabled = false;
             }
             
-            // Show modal
             document.getElementById('updateLocationModal').style.display = 'block';
         }
         
-        // Calculate Distance Between Two Points
         function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371e3; // Earth's radius in meters
+            const R = 6371e3;
             const φ1 = lat1 * Math.PI / 180;
             const φ2 = lat2 * Math.PI / 180;
             const Δφ = (lat2 - lat1) * Math.PI / 180;
@@ -2159,10 +1957,9 @@
             
             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
             
-            return R * c; // Distance in meters
+            return R * c;
         }
         
-        // Submit Update
         function submitUpdate() {
             if (!updateLocationMarker) {
                 showError('Please select a new location on the map.');
@@ -2172,18 +1969,14 @@
             const newLocation = updateLocationMarker.getLatLng();
             const description = document.getElementById('updateDescription').value;
             
-            // Get update images
             const updateImages = [];
             document.querySelectorAll('#updateImagePreviewContainer img').forEach(img => {
                 updateImages.push(img.src);
             });
             
-            // Show loading
             showLoading();
             
-            // Check if updater is the same as reporter
             if (window.currentUser.emaId === reportData[currentReportId].reporterEmaId) {
-                // Same user - update the original report
                 const updateData = {
                     location: {
                         lat: newLocation.lat,
@@ -2206,7 +1999,6 @@
                         showError('Failed to update report. Please try again.');
                     });
             } else {
-                // Different user - create update record
                 const updateId = generateReportId();
                 const updateData = {
                     location: {
@@ -2224,7 +2016,6 @@
                 
                 database.ref('reports/' + currentReportId + '/updates/' + updateId).set(updateData)
                     .then(() => {
-                        // Mark report as updated
                         return database.ref('reports/' + currentReportId).update({
                             updated: true,
                             updateTimestamp: new Date().toISOString()
@@ -2242,17 +2033,14 @@
             }
         }
         
-        // Show Loading
         function showLoading() {
             document.getElementById('loadingOverlay').style.display = 'flex';
         }
         
-        // Hide Loading
         function hideLoading() {
             document.getElementById('loadingOverlay').style.display = 'none';
         }
         
-        // Show Error
         function showError(message) {
             document.getElementById('errorMessage').textContent = message;
             document.getElementById('errorModal').style.display = 'flex';
