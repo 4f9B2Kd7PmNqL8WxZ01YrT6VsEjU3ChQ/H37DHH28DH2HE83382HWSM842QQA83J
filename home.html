@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EMA - Elephant Monitoring App</title>
     <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/mona-sans" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
     
     <style>
         :root {
@@ -51,9 +52,31 @@
             z-index: 1;
         }
 
-        .profile-container {
+        .search-container {
             position: absolute;
             top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 50px;
+            border: none;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            font-family: "Mona Sans", sans-serif;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .profile-container {
+            position: absolute;
+            top: 80px;
             left: 20px;
             background: var(--glass);
             border-radius: 50px;
@@ -112,7 +135,7 @@
 
         .map-toggle {
             position: absolute;
-            top: 20px;
+            top: 80px;
             right: 20px;
             width: 60px;
             height: 60px;
@@ -133,7 +156,7 @@
             background: rgba(66, 167, 90, 0.1);
         }
 
-        .map-toggle i {
+        .map-toggle .material-icons {
             font-size: 28px;
         }
 
@@ -153,10 +176,34 @@
             z-index: 1000;
             box-shadow: 0 5px 15px rgba(35,35,35,0.1);
             transition: all 0.2s ease;
+            text-decoration: none;
         }
 
         .other-btn:hover {
             background: rgba(66, 167, 90, 0.05);
+        }
+
+        .info-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: white;
+            color: var(--green);
+            border: 1px solid rgba(18,18,18,0.04);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(35,35,35,0.1);
+            transition: all 0.2s ease;
+        }
+
+        .info-btn:hover {
+            background: rgba(66, 167, 90, 0.1);
         }
 
         .loader-overlay {
@@ -352,11 +399,9 @@
             appearance: none;
         }
 
-        .input .fa {
+        .input .material-icons {
             font-size: 18px;
             color: var(--muted);
-            width: 18px;
-            text-align: center;
         }
 
         .profile-upload-container {
@@ -381,7 +426,7 @@
             background-color: rgba(66, 167, 90, 0.1);
         }
 
-        .profile-upload-label .fa {
+        .profile-upload-label .material-icons {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -475,6 +520,7 @@
 
         .glowing-circle {
             animation: pulse 2s infinite;
+            box-shadow: 0 0 0 0 rgba(66, 167, 90, 0.7);
         }
 
         @keyframes pulse {
@@ -482,16 +528,346 @@
                 box-shadow: 0 0 0 0 rgba(66, 167, 90, 0.7);
             }
             70% {
-                box-shadow: 0 0 0 10px rgba(66, 167, 90, 0);
+                box-shadow: 0 0 0 15px rgba(66, 167, 90, 0);
             }
             100% {
                 box-shadow: 0 0 0 0 rgba(66, 167, 90, 0);
             }
         }
+
+        .report-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 10000;
+            display: none;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .report-overlay.active {
+            display: flex;
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .report-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #111;
+        }
+
+        .report-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--muted);
+            cursor: pointer;
+        }
+
+        .report-content {
+            flex: 1;
+            padding: 20px;
+            display: none;
+        }
+
+        .report-content.active {
+            display: block;
+        }
+
+        .report-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .report-option:hover {
+            background-color: rgba(66, 167, 90, 0.05);
+        }
+
+        .report-option img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .report-option-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #111;
+        }
+
+        .dial-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .dial-display {
+            width: 80%;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e6e6e6;
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .dial-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 80%;
+        }
+
+        .dial-button {
+            padding: 15px;
+            border-radius: 50%;
+            border: 1px solid #e6e6e6;
+            background: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .dial-button:hover {
+            background-color: rgba(66, 167, 90, 0.05);
+        }
+
+        .dial-button.action {
+            grid-column: span 2;
+            border-radius: 10px;
+        }
+
+        .image-upload-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .image-upload-box {
+            width: calc(50% - 5px);
+            height: 150px;
+            border: 2px dashed #e6e6e6;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .image-upload-box:hover {
+            background-color: rgba(66, 167, 90, 0.05);
+        }
+
+        .image-upload-box .material-icons {
+            font-size: 36px;
+            color: var(--muted);
+            margin-bottom: 10px;
+        }
+
+        .image-preview {
+            width: calc(50% - 5px);
+            height: 150px;
+            border-radius: 10px;
+            object-fit: cover;
+            position: relative;
+        }
+
+        .image-preview .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            color: #D32F2F;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .description-input {
+            width: 100%;
+            min-height: 100px;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e6e6e6;
+            font-size: 16px;
+            resize: none;
+            margin-bottom: 20px;
+        }
+
+        .success-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10001;
+        }
+
+        .success-overlay.active {
+            display: flex;
+        }
+
+        .success-gif {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .success-btn {
+            padding: 12px 24px;
+            border-radius: 50px;
+            background-color: var(--green);
+            color: white;
+            border: none;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .report-details-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 10000;
+            display: none;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .report-details-overlay.active {
+            display: flex;
+        }
+
+        .report-details-content {
+            padding: 20px;
+        }
+
+        .report-detail-item {
+            margin-bottom: 15px;
+        }
+
+        .report-detail-label {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .report-detail-value {
+            color: var(--muted);
+        }
+
+        .report-images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .report-image {
+            width: calc(50% - 5px);
+            height: 150px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .report-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .report-action-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .call-btn {
+            background-color: var(--green);
+            color: white;
+        }
+
+        .download-btn {
+            background-color: var(--muted);
+            color: white;
+        }
+
+        .leaflet-control-geocoder {
+            display: none;
+        }
+
+        .leaflet-control-container .leaflet-top.leaflet-left {
+            display: none;
+        }
+
+        .leaflet-control-container .leaflet-top.leaflet-right {
+            display: none;
+        }
+
+        .leaflet-control-container .leaflet-bottom.leaflet-left {
+            display: none;
+        }
+
+        .leaflet-control-container .leaflet-bottom.leaflet-right {
+            display: none;
+        }
     </style>
 </head>
 <body>
     <div id="map"></div>
+
+    <div class="search-container">
+        <input id="searchInput" class="search-input" type="text" placeholder="Search for a place...">
+    </div>
 
     <div class="profile-container">
         <img id="profilePic" class="profile-pic" src="" alt="Profile">
@@ -500,15 +876,19 @@
             <div id="profileId" class="profile-id"></div>
         </div>
         <button id="editBtn" class="edit-btn">
-            <i class="fa fa-pencil"></i>
+            <span class="material-icons">edit</span>
         </button>
     </div>
 
     <button id="mapToggle" class="map-toggle">
-        <i class="fa fa-globe"></i>
+        <span class="material-icons">satellite</span>
     </button>
 
     <a href="other.html" id="otherBtn" class="other-btn">Other</a>
+
+    <button id="infoBtn" class="info-btn">
+        <span class="material-icons">info</span>
+    </button>
 
     <div class="loader-overlay" id="loaderOverlay">
         <div class="loader-popup">
@@ -529,13 +909,13 @@
             <div class="modal-header">
                 <h2 class="modal-title">Edit Profile</h2>
                 <button class="close-btn" id="closeEditModal">
-                    <i class="fa fa-times"></i>
+                    <span class="material-icons">close</span>
                 </button>
             </div>
             <form id="edit-form">
                 <div class="profile-upload-container">
                     <label for="editProfilePicture" class="profile-upload-label">
-                        <i class="fa fa-user" id="editProfileIcon"></i>
+                        <span class="material-icons" id="editProfileIcon">person</span>
                         <img id="editPreviewImage" class="preview-image">
                     </label>
                     <input type="file" id="editProfilePicture" class="profile-upload-input" accept="image/*">
@@ -544,7 +924,7 @@
                 <div class="field">
                     <label for="editFullName">Full Name</label>
                     <div class="input">
-                        <i class="fa fa-user"></i>
+                        <span class="material-icons">person</span>
                         <input id="editFullName" type="text" required />
                     </div>
                 </div>
@@ -552,7 +932,7 @@
                 <div class="field">
                     <label for="editPhone">Phone Number</label>
                     <div class="input">
-                        <i class="fa fa-phone"></i>
+                        <span class="material-icons">phone</span>
                         <input id="editPhone" type="tel" required />
                     </div>
                 </div>
@@ -560,7 +940,7 @@
                 <div class="field">
                     <label for="editDistrict">District</label>
                     <div class="input">
-                        <i class="fa fa-map-marker-alt"></i>
+                        <span class="material-icons">location_on</span>
                         <select id="editDistrict" required>
                             <option value="">Select District</option>
                             <option value="Ampara">Ampara</option>
@@ -595,7 +975,7 @@
                 <div class="field">
                     <label for="editEmail">Email</label>
                     <div class="input">
-                        <i class="fa fa-envelope"></i>
+                        <span class="material-icons">email</span>
                         <input id="editEmail" type="email" required />
                     </div>
                 </div>
@@ -618,9 +998,110 @@
         </div>
     </div>
 
+    <div id="reportOverlay" class="report-overlay">
+        <div class="report-header">
+            <h2 class="report-title">New Report</h2>
+            <button class="report-close" id="reportClose">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+
+        <div id="reportStep1" class="report-content active">
+            <div class="report-option" id="elephantOption">
+                <img src="https://static.wixstatic.com/media/2fdcf0_799ec75bf4a0438f8f4ef8601a6ebf11~mv2.jpeg/v1/fill/w_568,h_378,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/2fdcf0_799ec75bf4a0438f8f4ef8601a6ebf11~mv2.jpeg" alt="Elephant">
+                <div class="report-option-label">Elephant</div>
+            </div>
+            <div class="report-option" id="tuskerOption">
+                <img src="https://mawratanews.lk/wp-content/uploads/2023/05/ELEPHANT-1-750x375.jpg" alt="Tusker">
+                <div class="report-option-label">Tusker</div>
+            </div>
+        </div>
+
+        <div id="reportStep2" class="report-content">
+            <div class="dial-container">
+                <div class="dial-display" id="countDisplay">0</div>
+                <div class="dial-buttons">
+                    <button class="dial-button" data-value="1">1</button>
+                    <button class="dial-button" data-value="2">2</button>
+                    <button class="dial-button" data-value="3">3</button>
+                    <button class="dial-button" data-value="4">4</button>
+                    <button class="dial-button" data-value="5">5</button>
+                    <button class="dial-button" data-value="6">6</button>
+                    <button class="dial-button" data-value="7">7</button>
+                    <button class="dial-button" data-value="8">8</button>
+                    <button class="dial-button" data-value="9">9</button>
+                    <button class="dial-button action" id="clearBtn">Clear</button>
+                    <button class="dial-button" data-value="0">0</button>
+                    <button class="dial-button action" id="continueBtn2">Continue</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="reportStep3" class="report-content">
+            <div class="report-option" id="injuredYes">
+                <span class="material-icons" style="font-size: 100px; color: #D32F2F;">warning</span>
+                <div class="report-option-label">Yes, there are injured elephants</div>
+            </div>
+            <div class="report-option" id="injuredNo">
+                <span class="material-icons" style="font-size: 100px; color: var(--green);">check_circle</span>
+                <div class="report-option-label">No, all elephants seem healthy</div>
+            </div>
+        </div>
+
+        <div id="reportStep4" class="report-content">
+            <div class="report-option" id="medicalYes">
+                <span class="material-icons" style="font-size: 100px; color: #D32F2F;">medical_services</span>
+                <div class="report-option-label">Yes, medical help is needed</div>
+            </div>
+            <div class="report-option" id="medicalNo">
+                <span class="material-icons" style="font-size: 100px; color: var(--green);">healing</span>
+                <div class="report-option-label">No, medical help is not needed</div>
+            </div>
+        </div>
+
+        <div id="reportStep5" class="report-content">
+            <div class="image-upload-container" id="imageUploadContainer">
+                <div class="image-upload-box" id="imageUploadBox">
+                    <span class="material-icons">add_photo_alternate</span>
+                    <div>Add Image</div>
+                </div>
+            </div>
+            <button class="btn" id="continueBtn5">Continue</button>
+        </div>
+
+        <div id="reportStep6" class="report-content">
+            <div class="field">
+                <label for="description">Brief Description</label>
+                <textarea id="description" class="description-input" placeholder="Provide a brief description of the sighting..."></textarea>
+            </div>
+            <button class="btn" id="submitBtn">Submit Report</button>
+        </div>
+    </div>
+
+    <div id="successOverlay" class="success-overlay">
+        <img src="https://media.tenor.com/AWKzZ19awFYAAAAj/checkmark-transparent.gif" alt="Success" class="success-gif">
+        <div class="success-message">Report submitted successfully!</div>
+        <button class="success-btn" id="doneBtn">Done</button>
+    </div>
+
+    <div id="reportDetailsOverlay" class="report-details-overlay">
+        <div class="report-header">
+            <h2 class="report-title">Report Details</h2>
+            <button class="report-close" id="detailsClose">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+        <div class="report-details-content" id="reportDetailsContent">
+            <!-- Report details will be populated here -->
+        </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
     <script>
         document.addEventListener('contextmenu', event => event.preventDefault());
@@ -646,6 +1127,10 @@
         let currentPosition;
         let mapLayer = 'satellite';
         let userData = {};
+        let reportData = {};
+        let reportImages = [];
+        let reportMarkers = [];
+        let geocoder;
 
         const loaderOverlay = document.getElementById('loaderOverlay');
         const welcomeOverlay = document.getElementById('welcomeOverlay');
@@ -657,6 +1142,7 @@
         const editBtn = document.getElementById('editBtn');
         const mapToggle = document.getElementById('mapToggle');
         const otherBtn = document.getElementById('otherBtn');
+        const infoBtn = document.getElementById('infoBtn');
         const editModal = document.getElementById('editModal');
         const closeEditModal = document.getElementById('closeEditModal');
         const editProfilePicture = document.getElementById('editProfilePicture');
@@ -668,6 +1154,13 @@
         const confirmDialog = document.getElementById('confirmDialog');
         const cancelLogout = document.getElementById('cancelLogout');
         const confirmLogout = document.getElementById('confirmLogout');
+        const reportOverlay = document.getElementById('reportOverlay');
+        const reportClose = document.getElementById('reportClose');
+        const successOverlay = document.getElementById('successOverlay');
+        const doneBtn = document.getElementById('doneBtn');
+        const reportDetailsOverlay = document.getElementById('reportDetailsOverlay');
+        const detailsClose = document.getElementById('detailsClose');
+        const searchInput = document.getElementById('searchInput');
 
         function showLoader() {
             loaderOverlay.classList.add('active');
@@ -693,6 +1186,42 @@
                 attribution: ''
             });
 
+            // Initialize geocoder
+            geocoder = L.Control.geocoder({
+                defaultMarkGeocode: false,
+                placeholder: 'Search for a place...',
+                errorMessage: 'Nothing found.',
+                showResultIcons: false,
+                suggestMinLength: 2,
+                suggestTimeout: 250,
+                queryMinLength: 1
+            }).on('markgeocode', function(e) {
+                const bbox = e.geocode.bbox;
+                const poly = L.polygon([
+                    bbox.getSouthEast(),
+                    bbox.getNorthEast(),
+                    bbox.getNorthWest(),
+                    bbox.getSouthWest()
+                ]);
+                map.fitBounds(poly.getBounds());
+            });
+
+            // Handle search input
+            searchInput.addEventListener('input', function() {
+                const query = this.value;
+                if (query.length > 2) {
+                    geocoder._geocode(query, function(results) {
+                        // Process search results if needed
+                    });
+                }
+            });
+
+            // Handle double click on map to open report
+            map.on('dblclick', function(e) {
+                reportData.location = e.latlng;
+                openReportOverlay();
+            });
+
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     position => {
@@ -700,7 +1229,7 @@
                         map.setView(currentPosition, 13);
                         
                         userMarker = L.circleMarker(currentPosition, {
-                            radius: 8,
+                            radius: 12,
                             fillColor: "#4285F4",
                             color: "#fff",
                             weight: 2,
@@ -728,16 +1257,149 @@
             mapToggle.addEventListener('click', () => {
                 if (mapLayer === 'satellite') {
                     mapLayer = 'osm';
-                    mapToggle.innerHTML = '<i class="fa fa-map"></i>';
+                    mapToggle.innerHTML = '<span class="material-icons">map</span>';
                     map.removeLayer(esriLayer);
                     map.addLayer(osmLayer);
                 } else {
                     mapLayer = 'satellite';
-                    mapToggle.innerHTML = '<i class="fa fa-globe"></i>';
+                    mapToggle.innerHTML = '<span class="material-icons">satellite</span>';
                     map.removeLayer(osmLayer);
                     map.addLayer(esriLayer);
                 }
             });
+
+            // Load existing reports
+            loadReports();
+        }
+
+        function loadReports() {
+            const twelveHoursAgo = new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString();
+            
+            database.ref('reports').orderByChild('timestamp').startAt(twelveHoursAgo).once('value')
+                .then((snapshot) => {
+                    if (snapshot.exists()) {
+                        snapshot.forEach((childSnapshot) => {
+                            const report = childSnapshot.val();
+                            addReportMarker(childSnapshot.key, report);
+                        });
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error loading reports:", error);
+                });
+        }
+
+        function addReportMarker(reportId, report) {
+            let iconColor = 'green'; // Default color for normal sightings
+            
+            if (report.injured && report.medicalHelp) {
+                iconColor = 'red'; // Red for injured elephants needing medical help
+            } else if (report.injured) {
+                iconColor = 'yellow'; // Yellow for injured elephants
+            }
+            
+            const icon = L.divIcon({
+                html: `<div style="background-color: ${iconColor}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white;"></div>`,
+                iconSize: [20, 20],
+                className: 'report-marker'
+            });
+            
+            const marker = L.marker([report.location.lat, report.location.lng], { icon: icon })
+                .addTo(map)
+                .on('click', () => {
+                    showReportDetails(reportId, report);
+                });
+                
+            reportMarkers.push(marker);
+        }
+
+        function showReportDetails(reportId, report) {
+            const reportDetailsContent = document.getElementById('reportDetailsContent');
+            
+            let reportType = report.type === 'tusker' ? 'Tusker' : 'Elephant';
+            let injuredStatus = report.injured ? 'Yes' : 'No';
+            let medicalStatus = report.medicalHelp ? 'Yes' : 'No';
+            
+            let imagesHtml = '';
+            if (report.images && report.images.length > 0) {
+                imagesHtml = '<div class="report-images">';
+                report.images.forEach(image => {
+                    imagesHtml += `<img src="${image}" alt="Report image" class="report-image">`;
+                });
+                imagesHtml += '</div>';
+            }
+            
+            reportDetailsContent.innerHTML = `
+                <div class="report-detail-item">
+                    <div class="report-detail-label">Report ID</div>
+                    <div class="report-detail-value">${reportId}</div>
+                </div>
+                <div class="report-detail-item">
+                    <div class="report-detail-label">Type</div>
+                    <div class="report-detail-value">${reportType}</div>
+                </div>
+                <div class="report-detail-item">
+                    <div class="report-detail-label">Count</div>
+                    <div class="report-detail-value">${report.count}</div>
+                </div>
+                <div class="report-detail-item">
+                    <div class="report-detail-label">Injured</div>
+                    <div class="report-detail-value">${injuredStatus}</div>
+                </div>
+                <div class="report-detail-item">
+                    <div class="report-detail-label">Medical Help Needed</div>
+                    <div class="report-detail-value">${medicalStatus}</div>
+                </div>
+                <div class="report-detail-item">
+                    <div class="report-detail-label">Description</div>
+                    <div class="report-detail-value">${report.description || 'No description provided'}</div>
+                </div>
+                <div class="report-detail-item">
+                    <div class="report-detail-label">Reported By</div>
+                    <div class="report-detail-value">${report.reporterName} (${report.reporterPhone})</div>
+                </div>
+                ${imagesHtml}
+                <div class="report-actions">
+                    <button class="report-action-btn call-btn" onclick="window.location.href='tel:${report.reporterPhone}'">
+                        <span class="material-icons">call</span>
+                        Call Reporter
+                    </button>
+                    <button class="report-action-btn download-btn" onclick="downloadReportImages('${reportId}', ${JSON.stringify(report.images || [])})">
+                        <span class="material-icons">download</span>
+                        Download Images
+                    </button>
+                </div>
+            `;
+            
+            reportDetailsOverlay.classList.add('active');
+        }
+
+        function downloadReportImages(reportId, images) {
+            if (images.length === 0) return;
+            
+            if (images.length === 1) {
+                // Single image, download directly
+                const link = document.createElement('a');
+                link.href = images[0];
+                link.download = `${reportId}_image.jpg`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                // Multiple images, create a zip
+                const zip = new JSZip();
+                
+                images.forEach((image, index) => {
+                    // Extract base64 data
+                    const base64Data = image.split(',')[1];
+                    zip.file(`${reportId}_image_${index + 1}.jpg`, base64Data, {base64: true});
+                });
+                
+                zip.generateAsync({type: "blob"})
+                    .then(function(content) {
+                        saveAs(content, `${reportId}_images.zip`);
+                    });
+            }
         }
 
         function loadUserData() {
@@ -833,6 +1495,56 @@
             });
         }
 
+        function openReportOverlay() {
+            reportData = {
+                type: '',
+                count: 0,
+                injured: false,
+                medicalHelp: false,
+                images: [],
+                description: '',
+                location: reportData.location || { lat: 0, lng: 0 },
+                timestamp: new Date().toISOString(),
+                reporterName: userData.fullName,
+                reporterPhone: userData.phone,
+                reporterId: localStorage.getItem('emaId')
+            };
+            
+            reportImages = [];
+            
+            // Reset all steps
+            document.querySelectorAll('.report-content').forEach(step => {
+                step.classList.remove('active');
+            });
+            
+            // Show first step
+            document.getElementById('reportStep1').classList.add('active');
+            
+            // Reset form elements
+            document.getElementById('countDisplay').textContent = '0';
+            document.getElementById('description').value = '';
+            
+            // Reset image upload
+            const imageUploadContainer = document.getElementById('imageUploadContainer');
+            imageUploadContainer.innerHTML = `
+                <div class="image-upload-box" id="imageUploadBox">
+                    <span class="material-icons">add_photo_alternate</span>
+                    <div>Add Image</div>
+                </div>
+            `;
+            
+            reportOverlay.classList.add('active');
+        }
+
+        function generateReportId() {
+            const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let result = '';
+            for (let i = 0; i < 12; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
         editBtn.addEventListener('click', () => {
             editModal.classList.add('active');
         });
@@ -923,6 +1635,186 @@
         confirmLogout.addEventListener('click', () => {
             localStorage.clear();
             window.location.href = 'index.html';
+        });
+
+        reportClose.addEventListener('click', () => {
+            reportOverlay.classList.remove('active');
+        });
+
+        detailsClose.addEventListener('click', () => {
+            reportDetailsOverlay.classList.remove('active');
+        });
+
+        infoBtn.addEventListener('click', () => {
+            welcomeOverlay.classList.add('active');
+            welcomeVideo.play();
+        });
+
+        // Report step 1: Elephant or Tusker
+        document.getElementById('elephantOption').addEventListener('click', () => {
+            reportData.type = 'elephant';
+            document.getElementById('reportStep1').classList.remove('active');
+            document.getElementById('reportStep2').classList.add('active');
+            document.querySelector('#reportStep2 .dial-container .report-detail-label').textContent = 'Number of Elephants';
+        });
+
+        document.getElementById('tuskerOption').addEventListener('click', () => {
+            reportData.type = 'tusker';
+            document.getElementById('reportStep1').classList.remove('active');
+            document.getElementById('reportStep2').classList.add('active');
+            document.querySelector('#reportStep2 .dial-container .report-detail-label').textContent = 'Number of Tuskers';
+        });
+
+        // Report step 2: Number of elephants/tuskers
+        document.querySelectorAll('.dial-button[data-value]').forEach(button => {
+            button.addEventListener('click', () => {
+                const value = button.getAttribute('data-value');
+                const currentCount = document.getElementById('countDisplay').textContent;
+                document.getElementById('countDisplay').textContent = currentCount + value;
+            });
+        });
+
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            document.getElementById('countDisplay').textContent = '0';
+        });
+
+        document.getElementById('continueBtn2').addEventListener('click', () => {
+            reportData.count = parseInt(document.getElementById('countDisplay').textContent);
+            document.getElementById('reportStep2').classList.remove('active');
+            document.getElementById('reportStep3').classList.add('active');
+        });
+
+        // Report step 3: Injured elephants
+        document.getElementById('injuredYes').addEventListener('click', () => {
+            reportData.injured = true;
+            document.getElementById('reportStep3').classList.remove('active');
+            document.getElementById('reportStep4').classList.add('active');
+        });
+
+        document.getElementById('injuredNo').addEventListener('click', () => {
+            reportData.injured = false;
+            reportData.medicalHelp = false;
+            document.getElementById('reportStep3').classList.remove('active');
+            document.getElementById('reportStep5').classList.add('active');
+        });
+
+        // Report step 4: Medical help
+        document.getElementById('medicalYes').addEventListener('click', () => {
+            reportData.medicalHelp = true;
+            document.getElementById('reportStep4').classList.remove('active');
+            document.getElementById('reportStep5').classList.add('active');
+        });
+
+        document.getElementById('medicalNo').addEventListener('click', () => {
+            reportData.medicalHelp = false;
+            document.getElementById('reportStep4').classList.remove('active');
+            document.getElementById('reportStep5').classList.add('active');
+        });
+
+        // Report step 5: Images
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('#imageUploadBox')) {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                input.multiple = true;
+                
+                input.addEventListener('change', function() {
+                    const files = Array.from(this.files);
+                    const imageUploadContainer = document.getElementById('imageUploadContainer');
+                    
+                    files.forEach(file => {
+                        if (reportImages.length < 4) {
+                            const reader = new FileReader();
+                            reader.onload = function(event) {
+                                reportImages.push(event.target.result);
+                                
+                                const imagePreview = document.createElement('div');
+                                imagePreview.className = 'image-preview';
+                                imagePreview.style.backgroundImage = `url(${event.target.result})`;
+                                imagePreview.style.backgroundSize = 'cover';
+                                imagePreview.style.backgroundPosition = 'center';
+                                
+                                const removeBtn = document.createElement('button');
+                                removeBtn.className = 'remove-btn';
+                                removeBtn.innerHTML = '<span class="material-icons">close</span>';
+                                removeBtn.addEventListener('click', function() {
+                                    const index = reportImages.indexOf(event.target.result);
+                                    if (index > -1) {
+                                        reportImages.splice(index, 1);
+                                    }
+                                    imagePreview.remove();
+                                    
+                                    // Show upload box if we have less than 4 images
+                                    if (reportImages.length < 4) {
+                                        const uploadBox = document.createElement('div');
+                                        uploadBox.className = 'image-upload-box';
+                                        uploadBox.id = 'imageUploadBox';
+                                        uploadBox.innerHTML = `
+                                            <span class="material-icons">add_photo_alternate</span>
+                                            <div>Add Image</div>
+                                        `;
+                                        imageUploadContainer.appendChild(uploadBox);
+                                    }
+                                });
+                                
+                                imagePreview.appendChild(removeBtn);
+                                imageUploadContainer.appendChild(imagePreview);
+                                
+                                // Hide upload box if we have 4 images
+                                if (reportImages.length === 4) {
+                                    const uploadBox = document.getElementById('imageUploadBox');
+                                    if (uploadBox) {
+                                        uploadBox.style.display = 'none';
+                                    }
+                                }
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                });
+                
+                input.click();
+            }
+        });
+
+        document.getElementById('continueBtn5').addEventListener('click', () => {
+            reportData.images = reportImages;
+            document.getElementById('reportStep5').classList.remove('active');
+            document.getElementById('reportStep6').classList.add('active');
+        });
+
+        // Report step 6: Description and submit
+        document.getElementById('submitBtn').addEventListener('click', () => {
+            reportData.description = document.getElementById('description').value;
+            
+            showLoader();
+            
+            const reportId = generateReportId();
+            
+            // Save to reports collection
+            database.ref('reports/' + reportId).set(reportData)
+                .then(() => {
+                    // Save to user's reports collection
+                    return database.ref('users/' + reportData.reporterId + '/reports/' + reportId).set(true);
+                })
+                .then(() => {
+                    hideLoader();
+                    reportOverlay.classList.remove('active');
+                    successOverlay.classList.add('active');
+                    
+                    // Add marker to map
+                    addReportMarker(reportId, reportData);
+                })
+                .catch((error) => {
+                    hideLoader();
+                    console.error("Error submitting report:", error);
+                });
+        });
+
+        doneBtn.addEventListener('click', () => {
+            successOverlay.classList.remove('active');
+            location.reload();
         });
 
         welcomeVideo.addEventListener('ended', () => {
