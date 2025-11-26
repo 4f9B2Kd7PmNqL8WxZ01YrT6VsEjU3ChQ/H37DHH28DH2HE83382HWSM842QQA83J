@@ -334,8 +334,6 @@
         }
         .close-modal:hover { background: #e0e0e0; }
         .close-modal .material-symbols-outlined { font-size: 18px; color: #555; }
-
-        /* Form Elements */
         .field { position: relative; margin-bottom: 16px; }
         .field label { display: block; font-size: 13px; color: #555; margin-bottom: 6px; font-weight: 600; }
 
@@ -386,7 +384,6 @@
         .btn-danger { background: var(--red); }
         .btn-danger:hover { background: #D32F2F; }
 
-        /* Loader */
         .loader-container {
             position: fixed;
             top: 0;
@@ -412,7 +409,6 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .loader-text { font-size: 16px; color: var(--green); font-weight: 600; }
 
-        /* Report Form */
         .report-form-container {
             position: fixed;
             top: 0;
@@ -474,7 +470,7 @@
             color: white;
             text-align: center;
             padding: 20px;
-            min-height: 150px; /* Made taller */
+            min-height: 150px; 
         }
         .report-option.sighting { background: var(--green); }
         .report-option.accident { background: var(--red); }
@@ -493,7 +489,7 @@
             transition: all 0.2s ease;
             text-align: center;
             font-weight: 600;
-            min-height: 150px; /* Made taller */
+            min-height: 150px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -509,14 +505,14 @@
             border-radius: 15px;
             border: 1px solid #e6e6e6;
             background: white;
-            font-size: 28px; /* Larger font */
+            font-size: 28px; 
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 70px; /* Taller buttons */
+            min-height: 70px;
         }
         .dial-button:hover { background: #f5f5f5; }
         .dial-button:active { transform: scale(0.95); background: #e6e6e6; }
@@ -600,8 +596,6 @@
             margin-top: 20px;
         }
         .submit-button:hover { background: var(--green-strong); }
-
-        /* Other Modals */
         .welcome-banner, .success-modal, .report-details-modal, .info-modal, .location-error-modal, .logout-modal, .stats-modal, .message-modal {
             position: fixed;
             top: 0;
@@ -783,11 +777,7 @@
     </style>
 </head>
 <body>
-
-    <!-- Main Map -->
     <div id="map"></div>
-
-    <!-- Top Controls -->
     <div class="user-pill-container">
         <div class="user-pill" id="userPill">
             <div class="user-avatar-container">
@@ -812,7 +802,6 @@
         <span class="material-symbols-outlined">layers</span>
     </div>
 
-    <!-- Bottom Controls -->
     <div class="user-location-btn" id="userLocationBtn">
         <span class="material-symbols-outlined">my_location</span>
     </div>
@@ -821,37 +810,35 @@
     </div>
     <div class="other-btn" id="otherBtn">Other</div>
 
-    <!-- Welcome Banner -->
     <div class="welcome-banner" id="welcomeBanner">
         <div class="welcome-card">
             <div class="welcome-emoji">🐘🌍</div>
-            <h2 class="welcome-title">Welcome to EMA!</h2>
+            <h2 class="welcome-title">EMA වෙත සාදරයෙන් පිළිගනිමු!</h2>
             <p class="welcome-message">
-                This is EMA, Elephant Monitoring App. You can report elephant sightings, see reports from others, avoid fake reports, and help protect these magnificent creatures. Together, we're making a difference for wildlife conservation!
+                හසුරුවන ආකාරය : 1. මෙම සේවාව ලබාගැනීමට ප්‍රථම ඔබගේ දුරකතනයේ Location 📍 පහසුකම On කරන්න. ඉන්පසු ඔබ සිටිනා ස්ථානය සිතියම මත නිල් පැහැයෙන් දැකගත හැක 2. අලියෙක් හෝ ඇතෙකු දුටුවිට එම ස්ථානය සිතියමෙන් සොයා එය මත දෙවරක් Touch කරන්න. එවිට ලැබෙන පෝරමය පුරවන්න. 3. පෝරමය පුරවා අවසන් වූ පසු ඔබගේ වාර්තාව සිතියම මත දැකගත හැක. ** වැඩි විස්තර සඳහා පහළැ තිබෙන i බොත්තම ටැප් කරන්න
             </p>
-            <button class="welcome-button" id="getStartedBtn">Get Started</button>
+            <button class="welcome-button" id="getStartedBtn">ආරම්භ කරන්න</button>
         </div>
     </div>
 
-    <!-- Edit Profile Modal -->
     <div class="modal" id="editProfileModal">
         <div class="modal-card">
             <div class="modal-header">
-                <h3 class="modal-title">Edit Profile</h3>
+                <h3 class="modal-title">විස්තර සැකසුම</h3>
                 <div class="close-modal" id="closeModalBtn">
                     <span class="material-symbols-outlined">close</span>
                 </div>
             </div>
             <form id="editProfileForm">
-                <div class="field"><label for="editFullName">Full Name</label>
+                <div class="field"><label for="editFullName">නම</label>
                     <div class="input"><span class="material-symbols-outlined">person</span><input id="editFullName" type="text" required /></div>
                     <div id="editFullNameError" class="error-text"></div>
                 </div>
-                <div class="field"><label for="editPhone">Phone Number</label>
+                <div class="field"><label for="editPhone">දුරකතන අංකය</label>
                     <div class="input"><span class="material-symbols-outlined">phone</span><input id="editPhone" type="tel" required /></div>
                     <div id="editPhoneError" class="error-text"></div>
                 </div>
-                <div class="field"><label for="editDistrict">District</label>
+                <div class="field"><label for="editDistrict">දිස්ත්‍රික්කයt</label>
                     <div class="input"><span class="material-symbols-outlined">location_on</span>
                         <select id="editDistrict" required>
                             <option value="">Select District</option>
@@ -872,17 +859,16 @@
                     <div class="input"><span class="material-symbols-outlined">mail</span><input id="editEmail" type="email" required /></div>
                     <div id="editEmailError" class="error-text"></div>
                 </div>
-                <button type="button" class="btn" id="agentStatusBtn">Agent Status</button>
-                <button type="submit" class="btn" id="saveProfileBtn">Save Changes</button>
-                <button type="button" class="btn btn-danger" id="logoutBtn">Log Out</button>
+                <button type="button" class="btn" id="agentStatusBtn">නියෝජිත තත්ත්වය</button>
+                <button type="submit" class="btn" id="saveProfileBtn">සුරකින්න</button>
+                <button type="button" class="btn btn-danger" id="logoutBtn">ඉවත් වන්න</button>
             </form>
         </div>
     </div>
 
-    <!-- Report Form -->
     <div class="report-form-container" id="reportFormContainer">
         <div class="report-form-header">
-            <div class="report-form-title" id="reportFormTitle">Report</div>
+            <div class="report-form-title" id="reportFormTitle">නව වාර්තාව</div>
             <div class="report-form-close" id="reportFormClose">
                 <span class="material-symbols-outlined">close</span>
             </div>
@@ -890,23 +876,23 @@
         <div class="report-form-content">
             <div class="report-slide active" id="reportTypeSlide">
                 <div class="report-type-selection">
-                    <h2 class="report-type-title">What would you like to report?</h2>
+                    <h2 class="report-type-title">කුමන වර්ගයේ වාර්තාවක්ද?</h2>
                     <p class="report-type-subtitle">Select one of the options below to continue</p>
                     <div class="report-options">
-                        <div class="report-option sighting" id="sightingOption"><i class="fas fa-eye"></i>Elephant Sighting</div>
-                        <div class="report-option accident" id="accidentOption"><i class="fas fa-exclamation-triangle"></i>Elephant Accident</div>
+                        <div class="report-option sighting" id="sightingOption"><i class="fas fa-eye">අලි දැකීමක්</i></div>
+                        <div class="report-option accident" id="accidentOption"><i class="fas fa-exclamation-triangle"></i>අනතුරක්</div>
                     </div>
                 </div>
             </div>
             <div class="report-slide" id="elephantTypeSlide">
-                <h3 class="report-question">What did you see?</h3>
+                <h3 class="report-question">ඔබ දුටුවේ කවරෙක්ද></h3>
                 <div class="radio-options">
-                    <div class="radio-option" id="elephantOption"><i class="fas fa-elephant"></i>Elephant</div>
-                    <div class="radio-option" id="tuskerOption"><i class="fas fa-tusk"></i>Tusker</div>
+                    <div class="radio-option" id="elephantOption"><i class="fas fa-elephant"></i>අලි</div>
+                    <div class="radio-option" id="tuskerOption"><i class="fas fa-tusk"></i>ඇතුන්</div>
                 </div>
             </div>
             <div class="report-slide" id="countSlide">
-                <h3 class="report-question">How many did you see?</h3>
+                <h3 class="report-question">අලි/ඇතුන් ගණන</h3>
                 <div class="dial-display" id="countDisplay">0</div>
                 <div class="dial-pad">
                     <div class="dial-button" data-value="1">1</div><div class="dial-button" data-value="2">2</div><div class="dial-button" data-value="3">3</div>
@@ -916,122 +902,117 @@
                 </div>
                 <div class="dial-actions">
                     <div class="dial-button-action dial-backspace" id="countBackspace"><span class="material-symbols-outlined">backspace</span></div>
-                    <div class="dial-button-action dial-correct" id="countCorrect">Continue</div>
+                    <div class="dial-button-action dial-correct" id="countCorrect">ඉදිරියට</div>
                 </div>
             </div>
             <div class="report-slide" id="imagesSlide">
-                <h3 class="report-question">Add images (max 4)</h3>
+                <h3 class="report-question">ඡායාරූප එකතු කරන්න</h3>
                 <div class="image-upload-container">
-                    <div class="image-upload-box" id="imageUpload1"><i class="fas fa-camera"></i><div>Image 1</div></div>
-                    <div class="image-upload-box" id="imageUpload2"><i class="fas fa-camera"></i><div>Image 2</div></div>
-                    <div class="image-upload-box" id="imageUpload3"><i class="fas fa-camera"></i><div>Image 3</div></div>
-                    <div class="image-upload-box" id="imageUpload4"><i class="fas fa-camera"></i><div>Image 4</div></div>
+                    <div class="image-upload-box" id="imageUpload1"><i class="fas fa-camera"></i><div>1</div></div>
+                    <div class="image-upload-box" id="imageUpload2"><i class="fas fa-camera"></i><div>2</div></div>
+                    <div class="image-upload-box" id="imageUpload3"><i class="fas fa-camera"></i><div>3</div></div>
+                    <div class="image-upload-box" id="imageUpload4"><i class="fas fa-camera"></i><div>4</div></div>
                 </div>
                 <div class="dial-actions">
-                    <div class="dial-button-action dial-correct" id="continueToDescription">Continue</div>
+                    <div class="dial-button-action dial-correct" id="continueToDescription">ඉදිරියට</div>
                 </div>
             </div>
             <div class="report-slide" id="descriptionSlide">
-                <h3 class="report-question">Brief Description</h3>
-                <textarea class="text-area" id="reportDescription" placeholder="Describe what you saw..."></textarea>
-                <button class="submit-button" id="submitReportBtn">Submit Report</button>
+                <h3 class="report-question">කෙටි විස්තරයක්</h3>
+                <textarea class="text-area" id="reportDescription" placeholder="ඔබ දුටු දෙය විස්තර කරන්න"></textarea>
+                <button class="submit-button" id="submitReportBtn">වාර්තාව Submit කරන්න</button>
             </div>
             <div class="report-slide" id="injurySlide">
-                <h3 class="report-question">Were there any injuries?</h3>
+                <h3 class="report-question">අනතුරු සිදුවී තිබෙන්නෙ කාටද</h3>
                 <div class="radio-options">
-                    <div class="radio-option" id="injuredHumansOption"><i class="fas fa-user-injured"></i>Injured Humans</div>
-                    <div class="radio-option" id="injuredElephantsOption"><i class="fas fa-elephant-injured"></i>Injured Elephants</div>
+                    <div class="radio-option" id="injuredHumansOption"><i class="fas fa-user-injured"></i>මිනිසුන්ට</div>
+                    <div class="radio-option" id="injuredElephantsOption"><i class="fas fa-elephant"></i>අලි/ඇතුන්ට</div>
                 </div>
             </div>
             <div class="report-slide" id="medicalHelpSlide">
-                <h3 class="report-question">Is medical help needed?</h3>
+                <h3 class="report-question">වෛද්‍ය උපකාර අවශ්‍යද?</h3>
                 <div class="radio-options">
-                    <div class="radio-option" id="medicalYesOption"><i class="fas fa-ambulance"></i>Yes</div>
-                    <div class="radio-option" id="medicalNoOption"><i class="fas fa-check-circle"></i>No</div>
+                    <div class="radio-option" id="medicalYesOption"><i class="fas fa-ambulance"></i>ඔව්</div>
+                    <div class="radio-option" id="medicalNoOption"><i class="fas fa-check-circle"></i>නැහැ</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Success Modal -->
     <div class="success-modal" id="successModal">
         <div class="success-content">
             <div class="success-gif"><img src="https://media.tenor.com/bm8Q6yAlsPsAAAAj/verified.gif" alt="Success" width="150" height="150"></div>
-            <h2 class="success-title">Report Submitted!</h2>
-            <p class="success-message">Your report has been successfully submitted. Thank you for helping protect elephants!</p>
-            <button class="success-button" id="successCloseBtn">Close</button>
+            <h2 class="success-title">වාර්ථා කිරීම සාර්තකයි!</h2>
+            <p class="success-message">ඔබගේ වාර්තාව සාර්ථකව ඉදිරිපත් කරන ලදී. අලි/ඇතුන් හා මිනිසුන්ට උපකාර කළ ඔබට ස්තූතියි!</p>
+            <button class="success-button" id="successCloseBtn">හරි</button>
         </div>
     </div>
 
-    <!-- Report Details Modal -->
     <div class="report-details-modal" id="reportDetailsModal">
         <div class="report-details-content">
             <div class="report-details-header">
-                <h3 class="report-details-title">Report Details</h3>
+                <h3 class="report-details-title">වාර්ථාව</h3>
                 <div class="report-details-close" id="reportDetailsClose"><span class="material-symbols-outlined">close</span></div>
             </div>
-            <div class="report-info"><div class="report-info-label">Report Type</div><div class="report-info-value" id="reportTypeValue">-</div></div>
-            <div class="report-info"><div class="report-info-label">Date & Time</div><div class="report-info-value" id="reportDateTimeValue">-</div></div>
-            <div class="report-info"><div class="report-info-label">Location</div><div class="report-info-value" id="reportLocationValue">-</div></div>
-            <div class="report-info"><div class="report-info-label">Elephant Type</div><div class="report-info-value" id="reportElephantTypeValue">-</div></div>
-            <div class="report-info"><div class="report-info-label">Count</div><div class="report-info-value" id="reportCountValue">-</div></div>
+            <div class="report-info"><div class="report-info-label">වාර්ථාවේ වර්ගය</div><div class="report-info-value" id="reportTypeValue">-</div></div>
+            <div class="report-info"><div class="report-info-label">වෙලාව හා දිනය</div><div class="report-info-value" id="reportDateTimeValue">-</div></div>
+            <div class="report-info"><div class="report-info-label">ස්ථානය</div><div class="report-info-value" id="reportLocationValue">-</div></div>
+            <div class="report-info"><div class="report-info-label">වර්ගය</div><div class="report-info-value" id="reportElephantTypeValue">-</div></div>
+            <div class="report-info"><div class="report-info-label">ගණන</div><div class="report-info-value" id="reportCountValue">-</div></div>
             <div id="accidentSpecificInfo" style="display: none;">
-                <div class="report-info"><div class="report-info-label">Injuries</div><div class="report-info-value" id="reportInjuriesValue">-</div></div>
-                <div class="report-info"><div class="report-info-label">Medical Help Needed</div><div class="report-info-value" id="reportMedicalHelpValue">-</div></div>
+                <div class="report-info"><div class="report-info-label">ආබාධ තිබේද?</div><div class="report-info-value" id="reportInjuriesValue">-</div></div>
+                <div class="report-info"><div class="report-info-label">වෛද්‍ය උපකාර අවශ්‍යද?</div><div class="report-info-value" id="reportMedicalHelpValue">-</div></div>
             </div>
-            <div class="report-info"><div class="report-info-label">Description</div><div class="report-info-value" id="reportDescriptionValue">-</div></div>
-            <div class="report-info"><div class="report-info-label">Reported By</div><div class="report-info-value" id="reporterNameValue">-</div></div>
-            <div class="report-info"><div class="report-info-label">Contact Number</div><div class="report-info-value" id="reporterPhoneValue">-</div></div>
+            <div class="report-info"><div class="report-info-label">විස්තරය</div><div class="report-info-value" id="reportDescriptionValue">-</div></div>
+            <div class="report-info"><div class="report-info-label">වාර්තාකරුවාගේ නම</div><div class="report-info-value" id="reporterNameValue">-</div></div>
+            <div class="report-info"><div class="report-info-label">දුරකතන අංකය</div><div class="report-info-value" id="reporterPhoneValue">-</div></div>
             <div class="report-images" id="reportImagesContainer"></div>
             <div class="report-actions">
-                <button class="report-action-btn call-btn" id="callReporterBtn"><i class="fas fa-phone"></i>Call Reporter</button>
-                <button class="report-action-btn download-btn" id="downloadImagesBtn"><i class="fas fa-download"></i>Download Images</button>
+                <button class="report-action-btn call-btn" id="callReporterBtn"><i class="fas fa-phone"></i>වාර්තාකරුවාට අමතන්න</button>
+                <button class="report-action-btn download-btn" id="downloadImagesBtn"><i class="fas fa-download"></i>ඡායාරූප බාගත කරන්න</button>
             </div>
         </div>
     </div>
 
-    <!-- Info Modal -->
     <div class="info-modal" id="infoModal">
         <div class="info-content">
             <div class="info-close" id="closeInfoModalBtn"><span class="material-symbols-outlined">close</span></div>
-            <h2 class="info-title">EMA Information</h2>
+            <h2 class="info-title">EMA පිළිබඳ තොරතුරු</h2>
             <div class="info-section">
                 <h3 class="info-section-title"><i class="fas fa-elephant"></i>About EMA</h3>
-                <p class="info-item-text">EMA (Elephant Monitoring App) is a community-driven platform for tracking elephant sightings and accidents. It helps protect both elephants and humans by providing real-time information about elephant movements.</p>
+                <p class="info-item-text">EMA යනු අලි මිනිස් ගැටුමට විකල්පයක් ලෙස Aveesha Ninsara විසින් සෑදූ ම්රුදුකාංගයකි. මෙය ඡන්ද්‍ර්‍රිකා දත්ත, වනජීවි දත්ත හා පරිශීලක දත්ත මගින් යාවත්කාලීන වෙන සිතියමක් සහිත සේවාවකි</p>
             </div>
             <div class="info-section">
-                <h3 class="info-section-title"><i class="fas fa-map-marked-alt"></i>Map Markers</h3>
+                <h3 class="info-section-title"><i class="fas fa-map-marked-alt"></i>සිතියම පිළිබඳ විස්තර</h3>
                 <div class="marker-legend">
-                    <div class="marker-legend-item"><div class="marker-legend-color sighting-marker"></div><div class="marker-legend-text">Elephant Sighting</div></div>
-                    <div class="marker-legend-item"><div class="marker-legend-color accident-marker"></div><div class="marker-legend-text">Elephant Accident</div></div>
-                    <div class="marker-legend-item"><div class="marker-legend-color accident-medical-marker"></div><div class="marker-legend-text">Accident with Medical Help Needed</div></div>
+                    <div class="marker-legend-item"><div class="marker-legend-color sighting-marker"></div><div class="marker-legend-text">අලි දැක්මක්</div></div>
+                    <div class="marker-legend-item"><div class="marker-legend-color accident-marker"></div><div class="marker-legend-text">අනතුරක්</div></div>
+                    <div class="marker-legend-item"><div class="marker-legend-color accident-medical-marker"></div><div class="marker-legend-text">වෛද්‍ය උපකාර අවශ්‍ය අනතුරක්</div></div>
                 </div>
             </div>
             <div class="info-section">
-                <h3 class="info-section-title"><i class="fas fa-eye"></i>Report Visibility</h3>
-                <p class="info-item-text">Only reports from last 12 hours are visible on map to ensure information is current and relevant. Older reports are archived in database but not displayed on map.</p>
+                <h3 class="info-section-title"><i class="fas fa-eye"></i>වාර්තා සිතියම මත දිස්වෙන ආකාරය</h3>
+                <p class="info-item-text">වාර්තා කිරීමෙන් පැය 12ක් ඇතුළත ඔබගේ වාර්තාව සිතියමෙන් ඉවත් වන අතර එම වාර්තා අවසරලත් පුද්ගලයන්ට තවදුරටත් දැකගත හැක</p>
             </div>
             <div class="info-section">
                 <h3 class="info-section-title"><i class="fas fa-check-circle"></i>Report Verification</h3>
-                <p class="info-item-text">EMA uses a verification system to minimize fake reports. Users can report suspicious sightings, and our team reviews flagged content regularly.</p>
+                <p class="info-item-text">ඔබ විසින් උඩුගත කරනු ලබන සෑම වාර්තාවක්ම EMA Agent නොහොත් නොයෝජිතයන්ගේ පරීක්ශාවට ලක්වේ. ව්‍යාජ හා වැරදි තොරතුරු අවම කිරීමට මෙම ක්‍රියාමාර්ගය ගෙන ඇත. ඔබටත් EMA නියෝජිතයෙකු වීමට අවශ්‍ය නම් වැඩිදුර විස්තර 077 185 0503 අංකයට හෝ projectemalk@gmail.com ඊමෙල් ලිපිනයට කෙටි පණීවිඩයක් මගින් දැනගත හැක</p>
             </div>
         </div>
     </div>
 
-    <!-- Location Error Modal -->
     <div class="location-error-modal" id="locationErrorModal">
         <div class="location-error-content">
             <div class="location-error-icon"><i class="fas fa-location-crosshairs-slash"></i></div>
-            <h2 class="location-error-title">Location Access Required</h2>
-            <p class="location-error-message">EMA needs access to your location to show reports on map and allow you to report sightings at your current location. Please enable location services and try again.</p>
+            <h2 class="location-error-title">ඔබගේ ස්ථානය ලබාගත නොහැක</h2>
+            <p class="location-error-message">කරුණාකර ඔබගේ දුරකථනයේ/පරිගණකයේ Location පහසුකම සක්‍රිය කරන්න</p>
             <div class="location-error-actions">
-                <button class="location-error-btn location-error-retry" id="retryLocationBtn"><i class="fas fa-redo"></i>Retry</button>
-                <button class="location-error-btn location-error-settings" id="openSettingsBtn"><i class="fas fa-cog"></i>Open Settings</button>
+                <button class="location-error-btn location-error-retry" id="retryLocationBtn"><i class="fas fa-redo"></i>නැවත උත්සහ කරන්න</button>
+                <button class="location-error-btn location-error-settings" id="openSettingsBtn"><i class="fas fa-cog"></i>සැකසුම</button>
             </div>
         </div>
     </div>
 
-    <!-- Logout Confirmation Modal -->
     <div class="logout-modal" id="logoutModal">
         <div class="logout-content">
             <h2 class="logout-title">Log Out Options</h2>
@@ -1044,7 +1025,6 @@
         </div>
     </div>
 
-    <!-- User Stats Modal -->
     <div class="stats-modal" id="statsModal">
         <div class="stats-content">
             <div class="stats-header">
@@ -1061,7 +1041,6 @@
         </div>
     </div>
 
-    <!-- Generic Message Modal -->
     <div class="message-modal" id="messageModal">
         <div class="message-content">
             <h2 class="message-title" id="messageTitle">Message</h2>
@@ -1070,17 +1049,15 @@
         </div>
     </div>
 
-    <!-- Hidden File Inputs -->
     <input type="file" id="profilePictureInput" accept="image/*" style="display: none;">
     <input type="file" id="reportImageInput1" accept="image/*" style="display: none;">
     <input type="file" id="reportImageInput2" accept="image/*" style="display: none;">
     <input type="file" id="reportImageInput3" accept="image/*" style="display: none;">
     <input type="file" id="reportImageInput4" accept="image/*" style="display: none;">
 
-    <!-- Loader -->
     <div class="loader-container" id="loader">
         <div class="loader"></div>
-        <div class="loader-text">Loading your data...</div>
+        <div class="loader-text">ඔබගේ දත්ත පූරණය කරමින් පවතී...</div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -1160,8 +1137,7 @@
             type: '', elephantType: '', count: 0, images: [], description: '',
             injuries: [], medicalHelpNeeded: false, location: null, timestamp: null, reporterId: null
         };
-
-        // Initial Setup
+        
         document.addEventListener('DOMContentLoaded', function() {
             emaId = localStorage.getItem('emaId');
             if (!emaId) { window.location.href = 'index.html'; return; }
