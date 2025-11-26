@@ -3,530 +3,628 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EMA - Home</title>
-
-    <!-- Fonts & Icons -->
+    <title>EMA - Elephant Monitoring App</title>
     <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/mona-sans" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-
-    <!-- Leaflet Maps -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
+    
     <style>
         :root {
             --green: #42a75a;
             --green-strong: #2f8a45;
             --muted: #7a7a7a;
-            --background-light: #f5f7f5;
+            --card-radius: 20px;
+            --max-width: 420px;
             --glass: rgba(255,255,255,0.92);
-            --shadow: 0 10px 30px rgba(35,35,35,0.12);
-            --red: #d32f2f;
+            --background-light: #f5f7f5;
         }
 
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+            user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
-            user-select: none;
         }
 
         html, body {
             height: 100%;
-            width: 100%;
-            overflow: hidden;
-        }
-
-        body {
+            margin: 0;
+            padding: 0;
             font-family: "Mona Sans", "Inter", "Helvetica Neue", Arial, sans-serif;
-            background: var(--background-light);
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* ---------- LOADER ---------- */
-        .loader-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(255,255,255,.95);
-            backdrop-filter: blur(10px);
-            z-index: 3000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .loader {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(66,167,90,.1);
-            border-top-color: var(--green);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* ---------- WELCOME VIDEO ---------- */
-        .video-overlay {
-            position: fixed;
-            inset: 0;
-            background: #000;
-            z-index: 2500;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 24px;
-        }
-        .video-container {
-            width: 90%;
-            max-width: 800px;
-            border-radius: 16px;
+        body {
+            background: var(--background-light);
+            position: relative;
             overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,.5);
-        }
-        #welcomeVideo {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-        .video-btn {
-            padding: 14px 32px;
-            border-radius: 30px;
-            border: none;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all .3s;
-        }
-        .video-btn:disabled {
-            background: #bdbdbd;
-            color: #777;
-            cursor: not-allowed;
-        }
-        .video-btn.active {
-            background: var(--green);
-            color: #fff;
-            box-shadow: 0 6px 20px rgba(66,167,90,.4);
-        }
-        .video-btn.active:hover {
-            background: var(--green-strong);
         }
 
-        /* ---------- MAP ---------- */
         #map {
-            height: 100vh;
-            width: 100vw;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: 1;
         }
-        .map-toggles {
+
+        .profile-container {
             position: absolute;
-            top: 80px;
-            right: 12px;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .map-toggle {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
+            top: 20px;
+            left: 20px;
             background: var(--glass);
-            backdrop-filter: blur(6px);
-            border: 1px solid rgba(18,18,18,.04);
-            box-shadow: var(--shadow);
+            border-radius: 50px;
+            padding: 8px 15px;
+            box-shadow: 0 5px 15px rgba(35,35,35,0.1);
+            border: 1px solid rgba(18,18,18,0.04);
             display: flex;
             align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: background .2s;
-        }
-        .map-toggle:hover {
-            background: #fff;
-        }
-        .map-toggle .material-symbols-outlined {
-            font-size: 20px;
-            color: var(--muted);
+            gap: 10px;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
         }
 
-        /* ---------- USER PILL ---------- */
-        .user-pill {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            z-index: 1000;
-            background: var(--glass);
-            backdrop-filter: blur(6px);
-            border-radius: 50px;
-            padding: 6px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(18,18,18,.04);
-            max-width: 260px;
-        }
-        .user-avatar {
+        .profile-pic {
             width: 40px;
             height: 40px;
             border-radius: 50%;
             object-fit: cover;
-            flex-shrink: 0;
+            border: 2px solid var(--green);
         }
-        .user-info {
+
+        .profile-info {
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            min-width: 0;
+            margin-right: 5px;
         }
-        .user-name {
-            font-size: 14px;
+
+        .profile-name {
             font-weight: 600;
+            font-size: 14px;
             color: #111;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
-        .user-emaId {
+
+        .profile-id {
             font-size: 12px;
             color: var(--muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
-        .user-edit {
+
+        .edit-btn {
             width: 32px;
             height: 32px;
             border-radius: 50%;
             background: var(--green);
-            color: #fff;
+            color: white;
             border: none;
-            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
-            margin-left: auto;
-            margin-right: 4px;
-        }
-        .user-edit .material-symbols-outlined {
-            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
 
-        /* ---------- OTHER BUTTON ---------- */
-        .other-btn {
-            position: absolute;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            background: var(--glass);
-            backdrop-filter: blur(6px);
-            border-radius: 30px;
-            padding: 10px 24px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(18,18,18,.04);
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--green-strong);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .other-btn .material-symbols-outlined {
-            font-size: 18px;
-        }
-
-        /* ---------- EDIT PROFILE MODAL ---------- */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,.5);
-            z-index: 2000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .modal-overlay.active {
-            display: flex;
-        }
-        .modal-card {
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border-radius: var(--card-radius);
-            width: 100%;
-            max-width: 400px;
-            padding: 20px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(18,18,18,.04);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .modal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
-        }
-        .modal-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #111;
-        }
-        .modal-close {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--muted);
-        }
-        .modal-close .material-symbols-outlined {
-            font-size: 24px;
-        }
-        .modal-footer {
-            display: flex;
-            gap: 8px;
-            margin-top: 16px;
-        }
-        .modal-btn {
-            flex: 1;
-            padding: 10px;
-            border-radius: 12px;
-            border: none;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-        }
-        .modal-btn.save {
-            background: var(--green);
-            color: #fff;
-        }
-        .modal-btn.save:hover {
+        .edit-btn:hover {
             background: var(--green-strong);
         }
-        .modal-btn.cancel {
-            background: transparent;
-            color: var(--muted);
-            border: 1px solid #e6e6e6;
-        }
-        .modal-btn.logout {
-            background: var(--red);
-            color: #fff;
-        }
-        .modal-btn.logout:hover {
-            background: #b71c1c;
-        }
-        .modal-btn.agent {
-            background: #2196f3;
-            color: #fff;
-        }
-        .modal-btn.agent:hover {
-            background: #0b7dda;
+
+        .map-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--glass);
+            color: var(--green);
+            border: 1px solid rgba(18,18,18,0.04);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(35,35,35,0.1);
+            backdrop-filter: blur(5px);
+            transition: all 0.2s ease;
         }
 
-        /* ---------- CONFIRM DIALOG ---------- */
-        .confirm-dialog {
-            background: #fff;
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            max-width: 300px;
-            width: 100%;
+        .map-toggle:hover {
+            background: rgba(66, 167, 90, 0.1);
         }
-        .confirm-dialog p {
+
+        .other-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--glass);
+            color: var(--green);
+            border: 1px solid var(--green);
+            border-radius: 50px;
+            padding: 10px 20px;
+            font-weight: 600;
             font-size: 14px;
-            color: #333;
-            margin-bottom: 16px;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(35,35,35,0.1);
+            backdrop-filter: blur(5px);
+            transition: all 0.2s ease;
         }
-        .confirm-dialog .buttons {
+
+        .other-btn:hover {
+            background: rgba(66, 167, 90, 0.05);
+        }
+
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
             display: flex;
-            gap: 8px;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(3px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
         }
-        .confirm-dialog .btn {
-            flex: 1;
-            padding: 8px 12px;
-            border-radius: 8px;
+
+        .loader-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loader-popup {
+            width: 80px;
+            height: 80px;
+            background-color: var(--glass);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(35,35,35,0.2);
+            border: 1px solid rgba(18,18,18,0.04);
+        }
+
+        .loader {
+            border: 4px solid rgba(66, 167, 90, 0.1);
+            border-top: 4px solid var(--green);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .welcome-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .welcome-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .welcome-video {
+            max-width: 90%;
+            max-height: 70%;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(35,35,35,0.3);
+        }
+
+        .continue-btn {
+            margin-top: 20px;
+            padding: 12px 24px;
+            border-radius: 50px;
+            background-color: #ccc;
+            color: white;
             border: none;
             font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-        }
-        .confirm-dialog .btn.confirm {
-            background: var(--red);
-            color: #fff;
-        }
-        .confirm-dialog .btn.cancel {
-            background: #f5f5f5;
-            color: #333;
+            font-size: 16px;
+            cursor: not-allowed;
+            transition: all 0.3s ease;
         }
 
-        /* ---------- RESPONSIVE ---------- */
-        @media (max-width: 480px) {
-            .user-pill {
-                max-width: 200px;
-            }
-            .user-name {
-                font-size: 13px;
-            }
-            .user-emaId {
-                font-size: 11px;
-            }
-            .video-container {
-                width: 95%;
-            }
+        .continue-btn.active {
+            background-color: var(--green);
+            cursor: pointer;
         }
-        @media (max-width: 360px) {
-            .map-toggles {
-                top: 70px;
+
+        .continue-btn.active:hover {
+            background-color: var(--green-strong);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(35,35,35,0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #111;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--muted);
+            cursor: pointer;
+        }
+
+        .field {
+            margin-bottom: 15px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid #e6e6e6;
+            background: #fff;
+            font-size: 15px;
+            outline: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input input {
+            border: 0;
+            outline: 0;
+            font-size: 15px;
+            flex: 1;
+            background: transparent;
+        }
+
+        .input select {
+            border: 0;
+            outline: 0;
+            font-size: 15px;
+            flex: 1;
+            background: transparent;
+            appearance: none;
+        }
+
+        .input .fa {
+            font-size: 18px;
+            color: var(--muted);
+            width: 18px;
+            text-align: center;
+        }
+
+        .profile-upload-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-upload-label {
+            display: inline-block;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: rgba(66, 167, 90, 0.05);
+            border: 3px dashed var(--green);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .profile-upload-label:hover {
+            background-color: rgba(66, 167, 90, 0.1);
+        }
+
+        .profile-upload-label .fa {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 36px;
+            color: var(--green);
+        }
+
+        .profile-upload-input {
+            display: none;
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .btn {
+            display: inline-block;
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: var(--green);
+            color: white;
+            border: none;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 8px;
+            box-shadow: 0 6px 18px rgba(66,167,90,0.16);
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: var(--green-strong);
+        }
+
+        .btn:disabled {
+            background: #BDBDBD;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--green);
+            border: 1px solid var(--green);
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(66, 167, 90, 0.05);
+        }
+
+        .btn-danger {
+            background: #D32F2F;
+        }
+
+        .btn-danger:hover {
+            background: #B71C1C;
+        }
+
+        .confirmation-dialog {
+            background-color: white;
+            border-radius: 20px;
+            padding: 20px;
+            max-width: 300px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(35,35,35,0.2);
+        }
+
+        .confirmation-dialog h3 {
+            margin-top: 0;
+            color: #111;
+        }
+
+        .confirmation-dialog p {
+            margin-bottom: 20px;
+            color: var(--muted);
+        }
+
+        .dialog-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .dialog-buttons button {
+            flex: 1;
+        }
+
+        .glowing-circle {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(66, 167, 90, 0.7);
             }
-            .other-btn {
-                bottom: 16px;
-                font-size: 13px;
-                padding: 8px 20px;
+            70% {
+                box-shadow: 0 0 0 10px rgba(66, 167, 90, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(66, 167, 90, 0);
             }
         }
     </style>
 </head>
 <body>
-
-    <!-- Loader -->
-    <div id="loaderOverlay" class="loader-overlay">
-        <div class="loader"></div>
-    </div>
-
-    <!-- Welcome Video -->
-    <div id="videoOverlay" class="video-overlay" style="display:none;">
-        <div class="video-container">
-            <video id="welcomeVideo" controls>
-                <source src="https://upload.wikimedia.org/wikipedia/commons/transcoded/a/a7/How_to_make_video.webm/How_to_make_video.webm.720p.vp9.webm" type="video/webm">
-                Your browser does not support the video tag.
-            </video>
-        </div>
-        <button id="continueBtn" class="video-btn" disabled>Continue</button>
-    </div>
-
-    <!-- Map -->
     <div id="map"></div>
 
-    <!-- Map Toggles -->
-    <div class="map-toggles">
-        <button class="map-toggle" id="satelliteToggle" title="Satellite View">
-            <span class="material-symbols-outlined">satellite</span>
-        </button>
-        <button class="map-toggle" id="terrainToggle" title="Terrain View">
-            <span class="material-symbols-outlined">terrain</span>
-        </button>
-    </div>
-
-    <!-- User Pill -->
-    <div class="user-pill" id="userPill" style="display:none;">
-        <img id="userAvatar" class="user-avatar" src="" alt="User">
-        <div class="user-info">
-            <div class="user-name" id="userName"></div>
-            <div class="user-emaId" id="userEmaId"></div>
+    <div class="profile-container">
+        <img id="profilePic" class="profile-pic" src="" alt="Profile">
+        <div class="profile-info">
+            <div id="profileName" class="profile-name"></div>
+            <div id="profileId" class="profile-id"></div>
         </div>
-        <button class="user-edit" id="editProfileBtn" title="Edit Profile">
-            <span class="material-symbols-outlined">edit</span>
+        <button id="editBtn" class="edit-btn">
+            <i class="fa fa-pencil"></i>
         </button>
     </div>
 
-    <!-- Other Button -->
-    <button class="other-btn" id="otherBtn" style="display:none;">
-        <span class="material-symbols-outlined">more_horiz</span>
-        Other
+    <button id="mapToggle" class="map-toggle">
+        <i class="fa fa-satellite"></i>
     </button>
 
-    <!-- Edit Profile Modal -->
-    <div class="modal-overlay" id="editModal">
-        <div class="modal-card">
+    <button id="otherBtn" class="other-btn">Other</button>
+
+    <div class="loader-overlay" id="loaderOverlay">
+        <div class="loader-popup">
+            <div class="loader"></div>
+        </div>
+    </div>
+
+    <div class="welcome-overlay" id="welcomeOverlay">
+        <video id="welcomeVideo" class="welcome-video" controls>
+            <source src="https://upload.wikimedia.org/wikipedia/commons/transcoded/a/a7/How_to_make_video.webm/How_to_make_video.webm.720p.vp9.webm" type="video/webm">
+            Your browser does not support the video tag.
+        </video>
+        <button id="continueBtn" class="continue-btn">Continue</button>
+    </div>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title">Edit Profile</div>
-                <button class="modal-close" id="closeModalBtn">
-                    <span class="material-symbols-outlined">close</span>
+                <h2 class="modal-title">Edit Profile</h2>
+                <button class="close-btn" id="closeEditModal">
+                    <i class="fa fa-times"></i>
                 </button>
             </div>
-            <div class="modal-body">
-                <div class="profile-upload-container" style="text-align:center;margin-bottom:16px;">
-                    <label for="editProfilePicture" class="profile-upload-label" style="display:inline-block;width:100px;height:100px;">
-                        <span class="material-symbols-outlined" id="editProfileIcon" style="top:50%;left:50%;transform:translate(-50%,-50%);position:absolute;font-size:32px;color:var(--green);">person</span>
+            <form id="edit-form">
+                <div class="profile-upload-container">
+                    <label for="editProfilePicture" class="profile-upload-label">
+                        <i class="fa fa-user" id="editProfileIcon"></i>
                         <img id="editPreviewImage" class="preview-image">
                     </label>
                     <input type="file" id="editProfilePicture" class="profile-upload-input" accept="image/*">
                 </div>
 
                 <div class="field">
-                    <label>Full Name</label>
+                    <label for="editFullName">Full Name</label>
                     <div class="input">
-                        <span class="material-symbols-outlined">person</span>
-                        <input id="editFullName" type="text" required>
+                        <i class="fa fa-user"></i>
+                        <input id="editFullName" type="text" required />
                     </div>
                 </div>
 
                 <div class="field">
-                    <label>Phone Number</label>
+                    <label for="editPhone">Phone Number</label>
                     <div class="input">
-                        <span class="material-symbols-outlined">phone</span>
-                        <input id="editPhone" type="tel" required>
+                        <i class="fa fa-phone"></i>
+                        <input id="editPhone" type="tel" required />
                     </div>
                 </div>
 
                 <div class="field">
-                    <label>District</label>
+                    <label for="editDistrict">District</label>
                     <div class="input">
-                        <span class="material-symbols-outlined">location_on</span>
-                        <select id="editDistrict">
+                        <i class="fa fa-map-marker-alt"></i>
+                        <select id="editDistrict" required>
                             <option value="">Select District</option>
-                            <option>Ampara</option><option>Anuradhapura</option><option>Badulla</option><option>Batticaloa</option>
-                            <option>Colombo</option><option>Galle</option><option>Gampaha</option><option>Hambantota</option>
-                            <option>Jaffna</option><option>Kalutara</option><option>Kandy</option><option>Kegalle</option>
-                            <option>Kilinochchi</option><option>Kurunegala</option><option>Mannar</option><option>Matale</option>
-                            <option>Matara</option><option>Monaragala</option><option>Mullaitivu</option><option>Nuwara Eliya</option>
-                            <option>Polonnaruwa</option><option>Puttalam</option><option>Ratnapura</option><option>Trincomalee</option>
-                            <option>Vavuniya</option>
+                            <option value="Ampara">Ampara</option>
+                            <option value="Anuradhapura">Anuradhapura</option>
+                            <option value="Badulla">Badulla</option>
+                            <option value="Batticaloa">Batticaloa</option>
+                            <option value="Colombo">Colombo</option>
+                            <option value="Galle">Galle</option>
+                            <option value="Gampaha">Gampaha</option>
+                            <option value="Hambantota">Hambantota</option>
+                            <option value="Jaffna">Jaffna</option>
+                            <option value="Kalutara">Kalutara</option>
+                            <option value="Kandy">Kandy</option>
+                            <option value="Kegalle">Kegalle</option>
+                            <option value="Kilinochchi">Kilinochchi</option>
+                            <option value="Kurunegala">Kurunegala</option>
+                            <option value="Mannar">Mannar</option>
+                            <option value="Matale">Matale</option>
+                            <option value="Matara">Matara</option>
+                            <option value="Monaragala">Monaragala</option>
+                            <option value="Mullaitivu">Mullaitivu</option>
+                            <option value="Nuwara Eliya">Nuwara Eliya</option>
+                            <option value="Polonnaruwa">Polonnaruwa</option>
+                            <option value="Puttalam">Puttalam</option>
+                            <option value="Ratnapura">Ratnapura</option>
+                            <option value="Trincomalee">Trincomalee</option>
+                            <option value="Vavuniya">Vavuniya</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="field">
-                    <label>Email</label>
+                    <label for="editEmail">Email</label>
                     <div class="input">
-                        <span class="material-symbols-outlined">mail</span>
-                        <input id="editEmail" type="email" required>
+                        <i class="fa fa-envelope"></i>
+                        <input id="editEmail" type="email" required />
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button class="modal-btn agent" id="agentInfoBtn">Agent Info</button>
-                <button class="modal-btn logout" id="logoutBtn">Log Out</button>
-                <button class="modal-btn cancel" id="cancelModalBtn">Cancel</button>
-                <button class="modal-btn save" id="saveProfileBtn">Save</button>
+
+                <button type="button" class="btn" id="saveBtn">Save</button>
+                <button type="button" class="btn btn-secondary" id="agentInfoBtn">Agent Info</button>
+                <button type="button" class="btn btn-danger" id="logoutBtn">Log Out</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="confirmDialog" class="modal">
+        <div class="confirmation-dialog">
+            <h3>Confirm Logout</h3>
+            <p>Are you sure you want to log out?</p>
+            <div class="dialog-buttons">
+                <button class="btn btn-secondary" id="cancelLogout">Cancel</button>
+                <button class="btn btn-danger" id="confirmLogout">Log Out</button>
             </div>
         </div>
     </div>
 
-    <!-- Logout Confirmation Dialog -->
-    <div class="modal-overlay" id="confirmLogoutModal" style="background:rgba(0,0,0,.7);">
-        <div class="confirm-dialog">
-            <p>Are you sure you want to log out?</p>
-            <div class="buttons">
-                <button class="btn cancel" id="cancelLogoutBtn">Cancel</button>
-                <button class="btn confirm" id="confirmLogoutBtn">Log Out</button>
-            </div>
-        </div>
-    </div>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
-        // Firebase config (same as index.html)
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('selectstart', event => event.preventDefault());
+        document.addEventListener('dragstart', event => event.preventDefault());
+
         const firebaseConfig = {
             apiKey: "AIzaSyCtIvVHA0Q_iuTIFNanoU8RhV4oC60L_YM",
             authDomain: "emausers-9837a.firebaseapp.com",
@@ -537,356 +635,308 @@
             measurementId: "G-TRDREJFMQ9",
             databaseURL: "https://emausers-9837a-default-rtdb.asia-southeast1.firebasedatabase.app/"
         };
+
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // Check for EMA ID in localStorage
-        const emaId = localStorage.getItem('emaId');
-        if (!emaId) {
-            window.location.href = 'index.html';
-        }
-
-        // Elements
-        const loaderOverlay = document.getElementById('loaderOverlay');
-        const videoOverlay = document.getElementById('videoOverlay');
-        const welcomeVideo = document.getElementById('welcomeVideo');
-        const continueBtn = document.getElementById('continueBtn');
-        const mapContainer = document.getElementById('map');
-        const userPill = document.getElementById('userPill');
-        const otherBtn = document.getElementById('otherBtn');
-        const editModal = document.getElementById('editModal');
-        const confirmLogoutModal = document.getElementById('confirmLogoutModal');
-
         let map;
         let userMarker;
-        let userCircle;
+        let currentPosition;
+        let mapLayer = 'satellite';
         let userData = {};
-        let watchId;
 
-        // Hide loader
-        function hideLoader() {
-            loaderOverlay.style.display = 'none';
-        }
+        const loaderOverlay = document.getElementById('loaderOverlay');
+        const welcomeOverlay = document.getElementById('welcomeOverlay');
+        const welcomeVideo = document.getElementById('welcomeVideo');
+        const continueBtn = document.getElementById('continueBtn');
+        const profilePic = document.getElementById('profilePic');
+        const profileName = document.getElementById('profileName');
+        const profileId = document.getElementById('profileId');
+        const editBtn = document.getElementById('editBtn');
+        const mapToggle = document.getElementById('mapToggle');
+        const otherBtn = document.getElementById('otherBtn');
+        const editModal = document.getElementById('editModal');
+        const closeEditModal = document.getElementById('closeEditModal');
+        const editProfilePicture = document.getElementById('editProfilePicture');
+        const editPreviewImage = document.getElementById('editPreviewImage');
+        const editProfileIcon = document.getElementById('editProfileIcon');
+        const saveBtn = document.getElementById('saveBtn');
+        const agentInfoBtn = document.getElementById('agentInfoBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const confirmDialog = document.getElementById('confirmDialog');
+        const cancelLogout = document.getElementById('cancelLogout');
+        const confirmLogout = document.getElementById('confirmLogout');
 
-        // Show loader
         function showLoader() {
-            loaderOverlay.style.display = 'flex';
+            loaderOverlay.classList.add('active');
         }
 
-        // Check if first video shown
-        const firstVideoShown = localStorage.getItem('firstVideoShown');
-        if (!firstVideoShown) {
-            // Request location permission
+        function hideLoader() {
+            loaderOverlay.classList.remove('active');
+        }
+
+        function initMap() {
+            map = L.map('map').setView([7.8731, 80.7718], 8);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     position => {
-                        hideLoader();
-                        videoOverlay.style.display = 'flex';
-                        welcomeVideo.play();
+                        currentPosition = [position.coords.latitude, position.coords.longitude];
+                        map.setView(currentPosition, 13);
+                        
+                        userMarker = L.circleMarker(currentPosition, {
+                            radius: 8,
+                            fillColor: "#42a75a",
+                            color: "#fff",
+                            weight: 2,
+                            opacity: 1,
+                            fillOpacity: 0.8
+                        }).addTo(map);
+                        
+                        userMarker.bindPopup("Your Location").openPopup();
+                        
+                        navigator.geolocation.watchPosition(
+                            pos => {
+                                const newPos = [pos.coords.latitude, pos.coords.longitude];
+                                userMarker.setLatLng(newPos);
+                            },
+                            error => {
+                                console.error("Error getting location:", error);
+                            }
+                        );
                     },
                     error => {
-                        console.log('Location permission denied or error:', error);
-                        hideLoader();
-                        videoOverlay.style.display = 'flex';
-                        welcomeVideo.play();
+                        console.error("Error getting location:", error);
                     }
                 );
-            } else {
-                hideLoader();
-                videoOverlay.style.display = 'flex';
-                welcomeVideo.play();
             }
-        } else {
-            hideLoader();
-            initApp();
         }
 
-        // Video ended
-        welcomeVideo.addEventListener('ended', () => {
-            continueBtn.disabled = false;
-            continueBtn.classList.add('active');
-        });
-
-        // Continue button
-        continueBtn.addEventListener('click', () => {
-            localStorage.setItem('firstVideoShown', 'true');
-            videoOverlay.style.display = 'none';
-            initApp();
-        });
-
-        // Initialize app
-        function initApp() {
-            loadUserData();
-            initMap();
-            requestLocation();
-        }
-
-        // Load user data from Firebase
         function loadUserData() {
+            const emaId = localStorage.getItem('emaId');
+            if (!emaId) {
+                window.location.href = 'index.html';
+                return;
+            }
+
             showLoader();
-            database.ref('users/' + emaId).once('value', snapshot => {
-                if (snapshot.exists()) {
-                    userData = snapshot.val();
-                    updateUserPill();
-                    hideLoader();
-                } else {
-                    hideLoader();
-                    alert('User data not found');
-                    localStorage.removeItem('emaId');
-                    window.location.href = 'index.html';
-                }
-            });
-        }
-
-        // Update user pill
-        function updateUserPill() {
-            document.getElementById('userName').textContent = userData.fullName || 'Unknown';
-            document.getElementById('userEmaId').textContent = emaId;
-            const avatar = document.getElementById('userAvatar');
-            if (userData.profilePicture) {
-                avatar.src = userData.profilePicture;
-            } else {
-                avatar.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjN2E3YTdhIj48cGF0aCBkPSJNMTIgMTJjMi4yMSAwIDQtMS43OSA0LTRzLTEuNzktNC00LTQtNCAxLjc5LTQgNCAxLjc5IDQgNCA0em0wIDJjLTIuNjcgMC04IDEuMzQtOCA0djJoMTZ2LTJjMC0yLjY2LTUuMzMtNC04LTR6Ii8+PC9zdmc+';
-            }
-            userPill.style.display = 'flex';
-            otherBtn.style.display = 'flex';
-        }
-
-        // Initialize map
-        function initMap() {
-            map = L.map('map').setView([7.8731, 80.7718], 8);
-            L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-                maxZoom: 20,
-                subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-                attribution: 'Google Satellite'
-            }).addTo(map);
-        }
-
-        // Map toggles
-        document.getElementById('satelliteToggle').addEventListener('click', () => {
-            map.eachLayer(layer => {
-                if (layer._url && layer._url.includes('google')) map.removeLayer(layer);
-            });
-            L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-                maxZoom: 20,
-                subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-                attribution: 'Google Satellite'
-            }).addTo(map);
-        });
-
-        document.getElementById('terrainToggle').addEventListener('click', () => {
-            map.eachLayer(layer => {
-                if (layer._url && layer._url.includes('google')) map.removeLayer(layer);
-            });
-            L.tileLayer('https://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
-                maxZoom: 20,
-                subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-                attribution: 'Google Terrain'
-            }).addTo(map);
-        });
-
-        // Request location
-        function requestLocation() {
-            if (navigator.geolocation) {
-                watchId = navigator.geolocation.watchPosition(
-                    position => {
-                        const lat = position.coords.latitude;
-                        const lng = position.coords.longitude;
-                        updateUserLocation(lat, lng);
-                    },
-                    error => {
-                        console.log('Location error:', error);
-                    },
-                    {
-                        enableHighAccuracy: true,
-                        timeout: 10000,
-                        maximumAge: 0
-                    }
-                );
-            } else {
-                alert('Geolocation is not supported by this browser.');
-            }
-        }
-
-        // Update user location on map
-        function updateUserLocation(lat, lng) {
-            const latLng = [lat, lng];
             
-            if (userMarker) {
-                map.removeLayer(userMarker);
-                map.removeLayer(userCircle);
-            }
-
-            // Custom glowing blue icon
-            const glowIcon = L.divIcon({
-                className: 'glowing-marker',
-                html: `<div style="width:20px;height:20px;background:#0066ff;border-radius:50%;box-shadow:0 0 10px #0066ff,0 0 20px #0066ff;"></div>`,
-                iconSize: [20, 20],
-                iconAnchor: [10, 10]
-            });
-
-            userMarker = L.marker(latLng, { icon: glowIcon }).addTo(map);
-            userCircle = L.circle(latLng, {
-                color: '#0066ff',
-                fillColor: '#0066ff',
-                fillOpacity: 0.1,
-                radius: 50
-            }).addTo(map);
-
-            map.setView(latLng, 16);
+            database.ref('users/' + emaId).once('value')
+                .then((snapshot) => {
+                    if (snapshot.exists()) {
+                        userData = snapshot.val();
+                        displayUserData();
+                        
+                        if (!localStorage.getItem('firstmessageshown')) {
+                            welcomeOverlay.classList.add('active');
+                            welcomeVideo.play();
+                        }
+                    } else {
+                        window.location.href = 'index.html';
+                    }
+                    hideLoader();
+                })
+                .catch((error) => {
+                    console.error("Error loading user data:", error);
+                    hideLoader();
+                });
         }
 
-        // Edit profile button
-        document.getElementById('editProfileBtn').addEventListener('click', () => {
-            // Populate edit form
+        function displayUserData() {
+            const emaId = localStorage.getItem('emaId');
+            
+            profileId.textContent = emaId;
+            profileName.textContent = userData.fullName;
+            
+            if (userData.profilePicture) {
+                profilePic.src = userData.profilePicture;
+            } else {
+                profilePic.src = 'https://via.placeholder.com/100';
+            }
+            
             document.getElementById('editFullName').value = userData.fullName || '';
             document.getElementById('editPhone').value = userData.phone || '';
             document.getElementById('editDistrict').value = userData.district || '';
             document.getElementById('editEmail').value = userData.email || '';
             
-            // Set profile picture
-            const editPreview = document.getElementById('editPreviewImage');
-            const editIcon = document.getElementById('editProfileIcon');
             if (userData.profilePicture) {
-                editPreview.src = userData.profilePicture;
-                editPreview.style.display = 'block';
-                editIcon.style.display = 'none';
-            } else {
-                editPreview.style.display = 'none';
-                editIcon.style.display = 'block';
+                editPreviewImage.src = userData.profilePicture;
+                editPreviewImage.style.display = 'block';
+                editProfileIcon.style.display = 'none';
             }
-            
-            editModal.classList.add('active');
-        });
+        }
 
-        // Close modal
-        document.getElementById('closeModalBtn').addEventListener('click', () => {
-            editModal.classList.remove('active');
-        });
-        document.getElementById('cancelModalBtn').addEventListener('click', () => {
-            editModal.classList.remove('active');
-        });
-
-        // Profile picture edit
-        document.getElementById('editProfilePicture').addEventListener('change', e => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = ev => {
-                document.getElementById('editPreviewImage').src = ev.target.result;
-                document.getElementById('editPreviewImage').style.display = 'block';
-                document.getElementById('editProfileIcon').style.display = 'none';
-            };
-            reader.readAsDataURL(file);
-        });
-
-        // Save profile
-        document.getElementById('saveProfileBtn').addEventListener('click', async () => {
-            const fullName = document.getElementById('editFullName').value.trim();
-            const phone = document.getElementById('editPhone').value.trim();
-            const district = document.getElementById('editDistrict').value;
-            const email = document.getElementById('editEmail').value.trim();
-            const file = document.getElementById('editProfilePicture').files[0];
-
-            if (!fullName || !phone || !district || !email) {
-                alert('Please fill all fields');
-                return;
-            }
-
-            showLoader();
-            let profilePicture = userData.profilePicture;
-            if (file) {
-                try {
-                    const compressed = await compressImage(file);
-                    profilePicture = await new Promise(r => {
-                        const reader = new FileReader();
-                        reader.onload = () => r(reader.result);
-                        reader.readAsDataURL(compressed);
-                    });
-                } catch (e) {
-                    hideLoader();
-                    alert('Image processing failed');
-                    return;
-                }
-            }
-
-            const updatedData = {
-                fullName,
-                phone,
-                district,
-                email,
-                profilePicture,
-                registrationDate: userData.registrationDate || new Date().toISOString()
-            };
-
-            database.ref('users/' + emaId).update(updatedData)
-                .then(() => {
-                    hideLoader();
-                    userData = updatedData;
-                    updateUserPill();
-                    editModal.classList.remove('active');
-                    location.reload(); // Refresh page as requested
-                })
-                .catch(err => {
-                    hideLoader();
-                    alert('Save failed: ' + err.message);
-                });
-        });
-
-        // Agent Info button
-        document.getElementById('agentInfoBtn').addEventListener('click', () => {
-            window.location.href = 'agent.html';
-        });
-
-        // Logout button
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            confirmLogoutModal.classList.add('active');
-        });
-
-        // Cancel logout
-        document.getElementById('cancelLogoutBtn').addEventListener('click', () => {
-            confirmLogoutModal.classList.remove('active');
-        });
-
-        // Confirm logout
-        document.getElementById('confirmLogoutBtn').addEventListener('click', () => {
-            localStorage.removeItem('emaId');
-            localStorage.removeItem('firstVideoShown');
-            if (watchId) navigator.geolocation.clearWatch(watchId);
-            window.location.href = 'index.html';
-        });
-
-        // Other button
-        document.getElementById('otherBtn').addEventListener('click', () => {
-            // Placeholder for other functionality
-            alert('Other features coming soon!');
-        });
-
-        // Image compression helper
-        function compressImage(file, quality = 0.2, max = 400) {
+        function compressImage(file, quality) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
-                reader.onload = e => {
+                reader.onload = function(event) {
                     const img = new Image();
-                    img.onload = () => {
+                    img.onload = function() {
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
-                        let { width, height } = img;
-                        if (width > height ? width > max : height > max) {
-                            const ratio = width / height;
-                            width = width > height ? max : max * ratio;
-                            height = width / ratio;
+
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > 400) {
+                                height *= 400 / width;
+                                width = 400;
+                            }
+                        } else {
+                            if (height > 400) {
+                                width *= 400 / height;
+                                height = 400;
+                            }
                         }
+
                         canvas.width = width;
                         canvas.height = height;
+
                         ctx.drawImage(img, 0, 0, width, height);
-                        canvas.toBlob(blob => resolve(blob), 'image/jpeg', quality);
+
+                        canvas.toBlob(function(blob) {
+                            resolve(blob);
+                        }, 'image/jpeg', quality);
                     };
-                    img.src = e.target.result;
+                    img.src = event.target.result;
                 };
                 reader.readAsDataURL(file);
             });
         }
+
+        editBtn.addEventListener('click', () => {
+            editModal.classList.add('active');
+        });
+
+        closeEditModal.addEventListener('click', () => {
+            editModal.classList.remove('active');
+        });
+
+        editProfilePicture.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    editPreviewImage.src = event.target.result;
+                    editPreviewImage.style.display = 'block';
+                    editProfileIcon.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        saveBtn.addEventListener('click', () => {
+            const emaId = localStorage.getItem('emaId');
+            const fullName = document.getElementById('editFullName').value;
+            const phone = document.getElementById('editPhone').value;
+            const district = document.getElementById('editDistrict').value;
+            const email = document.getElementById('editEmail').value;
+            const profilePicture = document.getElementById('editProfilePicture').files[0];
+
+            showLoader();
+            saveBtn.disabled = true;
+
+            const processUpdate = (profilePictureBase64) => {
+                const updatedData = {
+                    fullName,
+                    phone,
+                    district,
+                    email,
+                    profilePicture: profilePictureBase64 || userData.profilePicture,
+                    registrationDate: userData.registrationDate
+                };
+
+                database.ref('users/' + emaId).set(updatedData)
+                    .then(() => {
+                        hideLoader();
+                        saveBtn.disabled = false;
+                        editModal.classList.remove('active');
+                        location.reload();
+                    })
+                    .catch((error) => {
+                        hideLoader();
+                        saveBtn.disabled = false;
+                        console.error("Error updating profile:", error);
+                    });
+            };
+
+            if (profilePicture) {
+                compressImage(profilePicture, 0.2)
+                    .then(compressedImage => {
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            processUpdate(event.target.result);
+                        };
+                        reader.readAsDataURL(compressedImage);
+                    })
+                    .catch(error => {
+                        hideLoader();
+                        saveBtn.disabled = false;
+                        console.error("Error processing image:", error);
+                    });
+            } else {
+                processUpdate(null);
+            }
+        });
+
+        agentInfoBtn.addEventListener('click', () => {
+            window.location.href = 'agent.html';
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            confirmDialog.classList.add('active');
+        });
+
+        cancelLogout.addEventListener('click', () => {
+            confirmDialog.classList.remove('active');
+        });
+
+        confirmLogout.addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = 'index.html';
+        });
+
+        mapToggle.addEventListener('click', () => {
+            if (mapLayer === 'satellite') {
+                mapLayer = 'terrain';
+                mapToggle.innerHTML = '<i class="fa fa-map"></i>';
+                L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                    attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+                }).addTo(map);
+            } else {
+                mapLayer = 'satellite';
+                mapToggle.innerHTML = '<i class="fa fa-satellite"></i>';
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+                }).addTo(map);
+            }
+        });
+
+        otherBtn.addEventListener('click', () => {
+            alert('Other functionality to be implemented');
+        });
+
+        welcomeVideo.addEventListener('ended', () => {
+            continueBtn.classList.add('active');
+            continueBtn.disabled = false;
+        });
+
+        continueBtn.addEventListener('click', () => {
+            if (continueBtn.classList.contains('active')) {
+                localStorage.setItem('firstmessageshown', 'true');
+                welcomeOverlay.classList.remove('active');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initMap();
+            loadUserData();
+        });
     </script>
 </body>
 </html>
