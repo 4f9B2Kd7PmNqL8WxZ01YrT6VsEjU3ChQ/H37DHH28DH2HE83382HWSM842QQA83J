@@ -588,6 +588,8 @@
             flex-direction: column;
             align-items: center;
             margin-top: 20px;
+            flex: 1;
+            justify-content: center;
         }
         
         .number-display {
@@ -597,6 +599,12 @@
             min-height: 60px;
             color: #4CAF50;
             text-align: center;
+            background-color: #f9f9f9;
+            border-radius: 12px;
+            padding: 15px;
+            width: 100%;
+            max-width: 300px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
         .number-pad {
@@ -648,6 +656,11 @@
             background-color: #45a049;
         }
         
+        .number-button.continue:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
         /* Yes/No Selection */
         .yesno-selection {
             display: flex;
@@ -681,6 +694,9 @@
         /* Image Upload */
         .image-upload-container {
             margin-top: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
         
         .image-upload-area {
@@ -691,6 +707,11 @@
             margin-bottom: 20px;
             cursor: pointer;
             transition: all 0.3s ease;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
         
         .image-upload-area:hover {
@@ -1034,6 +1055,20 @@
             margin-left: 10px;
         }
         
+        /* Required Field Indicator */
+        .required-indicator {
+            color: #f44336;
+            margin-left: 4px;
+        }
+        
+        /* Error Message */
+        .field-error {
+            color: #f44336;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
         /* Responsive Design */
         @media (max-width: 768px) {
             .profile-pill {
@@ -1119,7 +1154,7 @@
     
     <!-- Welcome Video Modal -->
     <div class="welcome-modal" id="welcomeModal">
-        <video class="welcome-video" id="welcomeVideo" controls>
+        <video class="welcome-video" id="welcomeVideo">
             <source src="https://upload.wikimedia.org/wikipedia/commons/transcoded/a/a7/How_to_make_video.webm/How_to_make_video.webm.720p.vp9.webm" type="video/webm">
             Your browser does not support the video tag.
         </video>
@@ -1209,7 +1244,8 @@
         <div class="wizard-content">
             <!-- Slide 1: Type Selection -->
             <div class="wizard-slide active" id="slide1">
-                <div class="slide-title">What did you see?</div>
+                <div class="slide-title">What did you see? <span class="required-indicator">*</span></div>
+                <div class="field-error" id="typeError">Please select an option</div>
                 <div class="type-selection">
                     <div class="type-option" id="elephantOption">
                         <img src="https://static.wixstatic.com/media/2fdcf0_799ec75bf4a0438f8f4ef8601a6ebf11~mv2.jpeg/v1/fill/w_640,h_640,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/2fdcf0_799ec75bf4a0438f8f4ef8601a6ebf11~mv2.jpeg" alt="Elephant" class="type-image">
@@ -1224,7 +1260,8 @@
             
             <!-- Slide 2: Number Input -->
             <div class="wizard-slide" id="slide2">
-                <div class="slide-title">How many did you see?</div>
+                <div class="slide-title">How many did you see? <span class="required-indicator">*</span></div>
+                <div class="field-error" id="numberError">Please enter a valid number</div>
                 <div class="number-input-container">
                     <div class="number-display" id="numberDisplay">0</div>
                     <div class="number-pad">
@@ -1241,14 +1278,15 @@
                             <span class="material-icons">backspace</span>
                         </button>
                         <button class="number-button" data-value="0">0</button>
-                        <button class="number-button continue" id="continueFromNumber">Continue</button>
+                        <button class="number-button continue" id="continueFromNumber" disabled>Continue</button>
                     </div>
                 </div>
             </div>
             
             <!-- Slide 3: Injured -->
             <div class="wizard-slide" id="slide3">
-                <div class="slide-title">Is any of them injured?</div>
+                <div class="slide-title">Is any of them injured? <span class="required-indicator">*</span></div>
+                <div class="field-error" id="injuredError">Please select an option</div>
                 <div class="yesno-selection">
                     <div class="yesno-option" id="injuredYes">Yes</div>
                     <div class="yesno-option" id="injuredNo">No</div>
@@ -1257,7 +1295,8 @@
             
             <!-- Slide 4: Medical Help -->
             <div class="wizard-slide" id="slide4">
-                <div class="slide-title">Does it need medical help?</div>
+                <div class="slide-title">Does it need medical help? <span class="required-indicator">*</span></div>
+                <div class="field-error" id="medicalError">Please select an option</div>
                 <div class="yesno-selection">
                     <div class="yesno-option" id="medicalYes">Yes</div>
                     <div class="yesno-option" id="medicalNo">No</div>
@@ -1280,7 +1319,8 @@
             
             <!-- Slide 6: Description -->
             <div class="wizard-slide" id="slide6">
-                <div class="slide-title">Brief description</div>
+                <div class="slide-title">Brief description <span class="required-indicator">*</span></div>
+                <div class="field-error" id="descriptionError">Please enter a description</div>
                 <textarea class="form-textarea" id="reportDescription" placeholder="Describe what you saw..."></textarea>
                 <button class="action-button primary-button" id="submitReport">Submit Report</button>
             </div>
@@ -1316,7 +1356,7 @@
             </div>
         </div>
         <div class="modal-content">
-            <div class="slide-title">Does the elephant moved? Update the location!</div>
+            <div class="slide-title">Does elephant moved? Update location!</div>
             <div class="update-location-map" id="updateLocationMap"></div>
             <div class="location-error" id="locationError">Selected point is outside the allowed 1 km radius.</div>
             <div class="image-upload-container">
@@ -1329,7 +1369,7 @@
             </div>
             <div class="form-group">
                 <label class="form-label">Brief description</label>
-                <textarea class="form-textarea" id="updateDescription" placeholder="Describe the update..."></textarea>
+                <textarea class="form-textarea" id="updateDescription" placeholder="Describe update..."></textarea>
             </div>
             <button class="action-button primary-button" id="submitUpdate">Update</button>
         </div>
@@ -1443,11 +1483,27 @@
                 const video = document.getElementById('welcomeVideo');
                 const continueButton = document.getElementById('continueButton');
                 
+                // Fix video playback issues
+                video.play().catch(error => {
+                    console.error('Video autoplay failed:', error);
+                });
+                
+                // Set up video event listeners
+                video.addEventListener('loadedmetadata', function() {
+                    console.log('Video metadata loaded');
+                });
+                
+                video.addEventListener('canplay', function() {
+                    console.log('Video can play');
+                });
+                
                 video.addEventListener('ended', function() {
+                    console.log('Video ended');
                     continueButton.classList.add('active');
                     continueButton.disabled = false;
                 });
                 
+                // Add click event to continue button
                 continueButton.addEventListener('click', function() {
                     localStorage.setItem('firstmessageshown', 'true');
                     document.getElementById('welcomeModal').style.display = 'none';
@@ -1639,11 +1695,13 @@
             // Type selection
             document.getElementById('elephantOption').addEventListener('click', function() {
                 newReport.type = 'elephant';
+                hideError('typeError');
                 goToSlide(2);
             });
             
             document.getElementById('tuskerOption').addEventListener('click', function() {
                 newReport.type = 'tusker';
+                hideError('typeError');
                 goToSlide(2);
             });
             
@@ -1659,6 +1717,10 @@
                     } else {
                         display.textContent += value;
                     }
+                    
+                    // Enable continue button if we have a valid number
+                    document.getElementById('continueFromNumber').disabled = false;
+                    hideError('numberError');
                 });
             });
             
@@ -1670,35 +1732,46 @@
                     display.textContent = display.textContent.slice(0, -1);
                 } else {
                     display.textContent = '0';
+                    // Disable continue button if we're back to 0
+                    document.getElementById('continueFromNumber').disabled = true;
                 }
             });
             
             // Continue from number slide
             document.getElementById('continueFromNumber').addEventListener('click', function() {
-                newReport.count = parseInt(document.getElementById('numberDisplay').textContent);
-                goToSlide(3);
+                const count = parseInt(document.getElementById('numberDisplay').textContent);
+                if (count > 0) {
+                    newReport.count = count;
+                    goToSlide(3);
+                } else {
+                    showError('numberError');
+                }
             });
             
             // Injured selection
             document.getElementById('injuredYes').addEventListener('click', function() {
                 newReport.injured = true;
+                hideError('injuredError');
                 goToSlide(4);
             });
             
             document.getElementById('injuredNo').addEventListener('click', function() {
                 newReport.injured = false;
                 newReport.medicalHelp = false;
+                hideError('injuredError');
                 goToSlide(5);
             });
             
             // Medical help selection
             document.getElementById('medicalYes').addEventListener('click', function() {
                 newReport.medicalHelp = true;
+                hideError('medicalError');
                 goToSlide(5);
             });
             
             document.getElementById('medicalNo').addEventListener('click', function() {
                 newReport.medicalHelp = false;
+                hideError('medicalError');
                 goToSlide(5);
             });
             
@@ -1717,7 +1790,16 @@
             });
             
             // Submit report
-            document.getElementById('submitReport').addEventListener('click', submitReport);
+            document.getElementById('submitReport').addEventListener('click', function() {
+                const description = document.getElementById('reportDescription').value.trim();
+                if (description) {
+                    newReport.description = description;
+                    hideError('descriptionError');
+                    submitReport();
+                } else {
+                    showError('descriptionError');
+                }
+            });
             
             // Success modal done button
             document.getElementById('doneButton').addEventListener('click', function() {
@@ -1853,6 +1935,14 @@
             // Clear description
             document.getElementById('reportDescription').value = '';
             
+            // Reset continue button state
+            document.getElementById('continueFromNumber').disabled = true;
+            
+            // Hide all error messages
+            document.querySelectorAll('.field-error').forEach(error => {
+                error.style.display = 'none';
+            });
+            
             // Show wizard
             document.getElementById('reportWizard').style.display = 'flex';
             
@@ -1968,8 +2058,7 @@
         
         // Submit Report
         function submitReport() {
-            // Get description
-            newReport.description = document.getElementById('reportDescription').value;
+            // Set timestamp
             newReport.timestamp = new Date().toISOString();
             
             // Generate report ID
@@ -2468,6 +2557,22 @@
         function showError(message) {
             document.getElementById('errorMessage').textContent = message;
             document.getElementById('errorModal').style.display = 'flex';
+        }
+        
+        // Show Field Error
+        function showError(fieldId) {
+            const element = document.getElementById(fieldId);
+            if (element) {
+                element.style.display = 'block';
+            }
+        }
+        
+        // Hide Field Error
+        function hideError(fieldId) {
+            const element = document.getElementById(fieldId);
+            if (element) {
+                element.style.display = 'none';
+            }
         }
     </script>
 </body>
