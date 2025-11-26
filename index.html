@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EMA – Elephant Monitoring App</title>
+    <title>EMA - Elephant Monitoring App</title>
+
     <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/mona-sans" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <style>
         :root {
@@ -20,21 +20,22 @@
             --glass: rgba(255,255,255,0.92);
             --background-light: #f5f7f5;
             --shadow: 0 10px 30px rgba(35,35,35,0.12);
-            --red: #d32f2f;
         }
 
         * {
             box-sizing: border-box;
+            user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
-            user-select: none;
         }
+
         html, body {
             height: 100%;
-            margin: 0;
         }
+
         body {
+            margin: 0;
             font-family: "Mona Sans", "Inter", "Helvetica Neue", Arial, sans-serif;
             background: var(--background-light);
             display: flex;
@@ -46,77 +47,6 @@
             position: relative;
         }
 
-        .translate-wrapper {
-            position: fixed;
-            top: 12px;
-            right: 12px;
-            z-index: 1000;
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            padding: 6px 10px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(18,18,18,0.04);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 13px;
-            color: var(--muted);
-        }
-        .translate-wrapper .material-symbols-outlined {
-            font-size: 18px;
-            color: var(--green);
-        }
-        .skiptranslate {
-            display: none !important;
-        }
-        .goog-te-gadget {
-            font-family: inherit !important;
-            font-size: 13px !important;
-            color: inherit !important;
-        }
-        .goog-te-combo {
-            background: #fff;
-            border: 1px solid #e6e6e6;
-            border-radius: 8px;
-            padding: 6px 8px;
-            font-family: inherit;
-            font-size: 13px;
-            color: #333;
-            cursor: pointer;
-            outline: none;
-            transition: border-color .2s;
-        }
-        .goog-te-combo:hover,
-        .goog-te-combo:focus {
-            border-color: var(--green);
-        }
-
-        .loader-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(255,255,255,.95);
-            backdrop-filter: blur(10px);
-            z-index: 2000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-        }
-        .loader-overlay.active {
-            display: flex;
-        }
-        .loader {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(66,167,90,.1);
-            border-top-color: var(--green);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
         .card {
             width: 100%;
             max-width: var(--max-width);
@@ -126,6 +56,8 @@
             padding: 22px;
             backdrop-filter: blur(6px) saturate(110%);
             border: 1px solid rgba(18,18,18,0.04);
+            position: relative;
+            z-index: 1;
         }
 
         .badge {
@@ -136,11 +68,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(180deg, #fff 0%, #f3fff5 100%);
+            background: linear-gradient(180deg, #ffffff 0%, #f3fff5 100%);
             box-shadow: 0 8px 20px rgba(66,167,90,0.15);
             border: 1px solid rgba(66,167,90,0.12);
             overflow: hidden;
         }
+
         .badge img {
             width: 100%;
             height: 100%;
@@ -153,6 +86,7 @@
             text-align: center;
             color: #111;
         }
+
         p.lead {
             text-align: center;
             font-size: 13px;
@@ -164,9 +98,12 @@
         form {
             margin-top: 6px;
         }
+
         .field {
+            position: relative;
             margin-bottom: 12px;
         }
+
         .field label {
             display: block;
             font-size: 13px;
@@ -174,6 +111,7 @@
             margin-bottom: 6px;
             font-weight: 600;
         }
+
         .input {
             width: 100%;
             padding: 12px 14px;
@@ -186,17 +124,24 @@
             align-items: center;
             gap: 10px;
         }
-        .input input,
-        .input select {
+
+        .input input {
             border: 0;
             outline: 0;
             font-size: 15px;
             flex: 1;
             background: transparent;
         }
+
         .input select {
+            border: 0;
+            outline: 0;
+            font-size: 15px;
+            flex: 1;
+            background: transparent;
             appearance: none;
         }
+
         .input .material-symbols-outlined {
             font-size: 18px;
             color: var(--muted);
@@ -206,32 +151,37 @@
             text-align: center;
             margin-bottom: 20px;
         }
+
         .profile-upload-label {
             display: inline-block;
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            background: rgba(66,167,90,.05);
+            background-color: rgba(66, 167, 90, 0.05);
             border: 3px dashed var(--green);
             cursor: pointer;
             position: relative;
             overflow: hidden;
-            transition: background .2s;
+            transition: all 0.2s ease;
         }
+
         .profile-upload-label:hover {
-            background: rgba(66,167,90,.1);
+            background-color: rgba(66, 167, 90, 0.1);
         }
+
         .profile-upload-label .material-symbols-outlined {
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%,-50%);
+            transform: translate(-50%, -50%);
             font-size: 36px;
             color: var(--green);
         }
+
         .profile-upload-input {
             display: none;
         }
+
         .preview-image {
             width: 100%;
             height: 100%;
@@ -240,35 +190,41 @@
         }
 
         .btn {
+            display: inline-block;
             width: 100%;
             padding: 12px 14px;
             border-radius: 12px;
             background: var(--green);
-            color: #fff;
+            color: white;
             border: none;
             font-weight: 700;
             font-size: 15px;
             cursor: pointer;
             margin-top: 8px;
             box-shadow: 0 6px 18px rgba(66,167,90,0.16);
-            transition: background .2s;
+            transition: all 0.2s ease;
         }
+
         .btn:hover {
             background: var(--green-strong);
         }
+
         .btn:disabled {
-            background: #bdbdbd;
+            background: #BDBDBD;
             cursor: not-allowed;
         }
+
         .btn-secondary {
             background: transparent;
             color: var(--green);
             border: 1px solid var(--green);
             box-shadow: none;
         }
+
         .btn-secondary:hover {
-            background: rgba(66,167,90,.05);
+            background: rgba(66, 167, 90, 0.05);
         }
+
         .link {
             display: block;
             text-align: center;
@@ -279,28 +235,11 @@
             font-weight: 600;
         }
 
-        .message {
-            padding: 12px;
-            border-radius: 12px;
-            margin-bottom: 16px;
-            display: none;
+        .muted {
+            text-align: center;
             font-size: 13px;
-        }
-        .message.error {
-            background: rgba(211,47,47,.1);
-            color: var(--red);
-            border: 1px solid rgba(211,47,47,.2);
-        }
-        .message.success {
-            background: rgba(66,167,90,.1);
-            color: var(--green);
-            border: 1px solid rgba(66,167,90,.2);
-        }
-        .error-text {
-            color: var(--red);
-            font-size: 12px;
-            margin-top: 4px;
-            display: none;
+            color: #777;
+            margin-top: 10px;
         }
 
         .big-illustration {
@@ -311,13 +250,15 @@
             align-items: center;
             justify-content: center;
             border-radius: 18px;
-            background: linear-gradient(180deg,#fff,#f8fff8);
-            border: 1px solid rgba(66,167,90,.08);
+            background: linear-gradient(180deg, #ffffff, #f8fff8);
+            border: 1px solid rgba(66,167,90,0.08);
         }
+
         .big-illustration .material-symbols-outlined {
             font-size: 48px;
             color: var(--green);
         }
+
         .ema-id {
             font-size: 24px;
             font-weight: 700;
@@ -325,65 +266,180 @@
             text-align: center;
             margin: 20px 0;
             padding: 16px;
-            background: rgba(66,167,90,.05);
+            background-color: rgba(66, 167, 90, 0.05);
             border-radius: 12px;
-            word-break: break-all;
         }
 
+        .note {
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+            margin-top: 12px;
+            line-height: 1.3;
+        }
 
-        @media (max-width: 480px) {
+        .footer {
+            margin-top: 12px;
+            text-align: center;
+            font-size: 12px;
+            color: #9b9b9b;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            display: none;
+            font-size: 13px;
+        }
+
+        .message.error {
+            background-color: rgba(211, 47, 47, 0.1);
+            color: #D32F2F;
+            border: 1px solid rgba(211, 47, 47, 0.2);
+        }
+
+        .message.success {
+            background-color: rgba(66, 167, 90, 0.1);
+            color: var(--green);
+            border: 1px solid rgba(66, 167, 90, 0.2);
+        }
+
+        .error-text {
+            color: #D32F2F;
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .loader-overlay.active {
+            display: flex;
+        }
+
+        .loader {
+            border: 4px solid rgba(66, 167, 90, 0.1);
+            border-top: 4px solid var(--green);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .google-translate-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(18,18,18,0.04);
+        }
+
+        .skiptranslate {
+            display: none;
+        }
+
+        .goog-te-gadget {
+            font-family: "Mona Sans", sans-serif !important;
+            font-size: 13px !important;
+            color: var(--muted) !important;
+        }
+
+        .goog-te-gadget .goog-te-combo {
+            background: white;
+            border: 1px solid #e6e6e6;
+            border-radius: 8px;
+            padding: 6px 8px;
+            font-family: inherit;
+            font-size: 13px;
+            color: #333;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .goog-te-gadget .goog-te-combo:hover {
+            border-color: var(--green);
+        }
+
+        .goog-te-gadget .goog-te-combo:focus {
+            border-color: var(--green-strong);
+            box-shadow: 0 0 0 2px rgba(66, 167, 90, 0.2);
+        }
+
+        .goog-te-gadget .goog-te-combo option {
+            background: white;
+            color: #333;
+        }
+
+        @media (max-width: 420px) {
             body {
                 padding: 18px;
             }
+
             .card {
                 padding: 18px;
             }
+
             .badge {
                 width: 68px;
                 height: 68px;
             }
+
             .big-illustration {
                 width: 98px;
                 height: 98px;
             }
-            .translate-wrapper {
-                top: 8px;
-                right: 8px;
-                font-size: 12px;
-                padding: 5px 8px;
-            }
-        }
-        @media (max-width: 360px) {
-            h1 {
-                font-size: 18px;
-            }
-            p.lead {
-                font-size: 12px;
-            }
-            .btn {
-                font-size: 14px;
+
+            .google-translate-container {
+                top: 10px;
+                right: 10px;
             }
         }
     </style>
 </head>
-
 <body>
 
-    <div class="translate-wrapper">
-        <span class="material-symbols-outlined" aria-hidden="true">translate</span>
+    <!-- Google Translate Widget -->
+    <div class="google-translate-container">
         <div id="google_translate_element"></div>
     </div>
 
+    <!-- Loader Overlay -->
     <div id="loaderOverlay" class="loader-overlay">
         <div class="loader"></div>
     </div>
 
-
     <div class="card" role="main" aria-labelledby="title">
+
         <section id="login-screen" class="screen" aria-hidden="false">
-            <div class="badge"><img src="https://www.mediafire.com/convkey/9884/4tvqloa9af9utcazg.jpg?size_id=3" alt="EMA Logo"></div>
+            <div class="badge" aria-hidden="true">
+                <img src="https://www.mediafire.com/convkey/9884/4tvqloa9af9utcazg.jpg?size_id=3" alt="EMA Logo">
+            </div>
+
             <h1 id="title">Login to EMA</h1>
-            <p class="lead">Enter your EMA ID to access the Elephant Monitoring App.<br>ඔබගේ EMA කේතය ඇතුලත් කරන්න</p>
+            <p class="lead">Enter your EMA ID to access the Elephant Monitoring App. | ඔබගේ EMA කේතය ඇතුලත් කරන්න</p>
 
             <div id="loginMessage" class="message"></div>
 
@@ -392,10 +448,11 @@
                     <label for="emaId">EMA ID</label>
                     <div class="input">
                         <span class="material-symbols-outlined" aria-hidden="true">badge</span>
-                        <input id="emaId" type="text" placeholder="කේත 123456 හෝ 123456-E ලෙස ඇතුළත් කළ හැකිය" required>
+                        <input id="emaId" type="text" placeholder="කේත 123456 හෝ 123456-E ලෙස ඇතුළත් කළ හැකිය" required />
                     </div>
                     <div id="emaIdError" class="error-text"></div>
                 </div>
+
                 <button class="btn" id="loginBtn">LOGIN</button>
             </form>
 
@@ -406,7 +463,10 @@
         </section>
 
         <section id="register-screen" class="screen" aria-hidden="true" style="display:none;">
-            <div class="badge"><img src="https://www.mediafire.com/convkey/9884/4tvqloa9af9utcazg.jpg?size_id=3" alt="EMA Logo"></div>
+            <div class="badge" aria-hidden="true">
+                <img src="https://www.mediafire.com/convkey/9884/4tvqloa9af9utcazg.jpg?size_id=3" alt="EMA Logo">
+            </div>
+
             <h1>Register for EMA</h1>
             <p class="lead">Create your account to help monitor and protect elephants.</p>
 
@@ -425,7 +485,7 @@
                     <label for="fullName">Full Name</label>
                     <div class="input">
                         <span class="material-symbols-outlined" aria-hidden="true">person</span>
-                        <input id="fullName" type="text" placeholder="Enter your full name" required>
+                        <input id="fullName" type="text" placeholder="Enter your full name" required />
                     </div>
                     <div id="fullNameError" class="error-text"></div>
                 </div>
@@ -434,7 +494,7 @@
                     <label for="phone">Phone Number</label>
                     <div class="input">
                         <span class="material-symbols-outlined" aria-hidden="true">phone</span>
-                        <input id="phone" type="tel" placeholder="Enter 10-digit phone number" required>
+                        <input id="phone" type="tel" placeholder="Enter 10-digit phone number" required />
                     </div>
                     <div id="phoneError" class="error-text"></div>
                 </div>
@@ -445,31 +505,31 @@
                         <span class="material-symbols-outlined" aria-hidden="true">location_on</span>
                         <select id="district" required>
                             <option value="">Select District</option>
-                            <option>Ampara</option>
-                            <option>Anuradhapura</option>
-                            <option>Badulla</option>
-                            <option>Batticaloa</option>
-                            <option>Colombo</option>
-                            <option>Galle</option>
-                            <option>Gampaha</option>
-                            <option>Hambantota</option>
-                            <option>Jaffna</option>
-                            <option>Kalutara</option>
-                            <option>Kandy</option>
-                            <option>Kegalle</option>
-                            <option>Kilinochchi</option>
-                            <option>Kurunegala</option>
-                            <option>Mannar</option>
-                            <option>Matale</option>
-                            <option>Matara</option>
-                            <option>Monaragala</option>
-                            <option>Mullaitivu</option>
-                            <option>Nuwara Eliya</option>
-                            <option>Polonnaruwa</option>
-                            <option>Puttalam</option>
-                            <option>Ratnapura</option>
-                            <option>Trincomalee</option>
-                            <option>Vavuniya</option>
+                            <option value="Ampara">Ampara</option>
+                            <option value="Anuradhapura">Anuradhapura</option>
+                            <option value="Badulla">Badulla</option>
+                            <option value="Batticaloa">Batticaloa</option>
+                            <option value="Colombo">Colombo</option>
+                            <option value="Galle">Galle</option>
+                            <option value="Gampaha">Gampaha</option>
+                            <option value="Hambantota">Hambantota</option>
+                            <option value="Jaffna">Jaffna</option>
+                            <option value="Kalutara">Kalutara</option>
+                            <option value="Kandy">Kandy</option>
+                            <option value="Kegalle">Kegalle</option>
+                            <option value="Kilinochchi">Kilinochchi</option>
+                            <option value="Kurunegala">Kurunegala</option>
+                            <option value="Mannar">Mannar</option>
+                            <option value="Matale">Matale</option>
+                            <option value="Matara">Matara</option>
+                            <option value="Monaragala">Monaragala</option>
+                            <option value="Mullaitivu">Mullaitivu</option>
+                            <option value="Nuwara Eliya">Nuwara Eliya</option>
+                            <option value="Polonnaruwa">Polonnaruwa</option>
+                            <option value="Puttalam">Puttalam</option>
+                            <option value="Ratnapura">Ratnapura</option>
+                            <option value="Trincomalee">Trincomalee</option>
+                            <option value="Vavuniya">Vavuniya</option>
                         </select>
                     </div>
                     <div id="districtError" class="error-text"></div>
@@ -479,7 +539,7 @@
                     <label for="email">Email</label>
                     <div class="input">
                         <span class="material-symbols-outlined" aria-hidden="true">mail</span>
-                        <input id="email" type="email" placeholder="Enter your email address" required>
+                        <input id="email" type="email" placeholder="Enter your email address" required />
                     </div>
                     <div id="emailError" class="error-text"></div>
                 </div>
@@ -491,20 +551,27 @@
             <div class="footer">By creating an account you agree to our Terms & Privacy.</div>
         </section>
 
-
         <section id="success-screen" class="screen" aria-hidden="true" style="display:none;">
-            <div class="big-illustration"><span class="material-symbols-outlined">task_alt</span></div>
+            <div class="big-illustration">
+                <span class="material-symbols-outlined">task_alt</span>
+            </div>
+
             <h1>Registration Successful!</h1>
-            <p class="lead">Your EMA ID has been generated. Please save it for future logins.<br>ඔබගේ EMA කේතය නිර්මාණය කර ඇත. වෙනත් දුරක්තනවලදී ඔබගේ ගිනුමග පිවිසීමට මෙම අංකය අවශ්‍ය බැවින් එය සුරකින්න.</p>
+            <p class="lead">Your EMA ID has been generated. Please save it for future logins. | ඔබගේ EMA කේතය නිර්මාණය කර ඇත. වෙනත් දුරක්තනවලදී ඔබගේ ගිනුමග පිවිසීමට මෙම අංකය අවශ්‍ය බැවින් එය සුරකින්න.</p>
+
             <div id="generatedEmaId" class="ema-id"></div>
+
             <button class="btn" id="goToLoginBtn">GO TO LOGIN</button>
         </section>
 
-
         <section id="forgot-screen" class="screen" aria-hidden="true" style="display:none;">
-            <div class="big-illustration"><span class="material-symbols-outlined">badge</span></div>
+            <div class="big-illustration">
+                <span class="material-symbols-outlined">badge</span>
+            </div>
+
             <h1>Find Your EMA ID</h1>
             <p class="lead">Enter your email and phone number to retrieve your EMA ID.</p>
+
             <div id="forgotIdMessage" class="message"></div>
 
             <form id="forgot-form" onsubmit="return false" autocomplete="on">
@@ -512,7 +579,7 @@
                     <label for="forgotEmail">Email Address</label>
                     <div class="input">
                         <span class="material-symbols-outlined" aria-hidden="true">mail</span>
-                        <input id="forgotEmail" type="email" placeholder="Enter your email address" required>
+                        <input id="forgotEmail" type="email" placeholder="Enter your email address" required />
                     </div>
                     <div id="forgotEmailError" class="error-text"></div>
                 </div>
@@ -521,7 +588,7 @@
                     <label for="forgotPhone">Phone Number</label>
                     <div class="input">
                         <span class="material-symbols-outlined" aria-hidden="true">phone</span>
-                        <input id="forgotPhone" type="tel" placeholder="Enter your phone number" required>
+                        <input id="forgotPhone" type="tel" placeholder="Enter your phone number" required />
                     </div>
                     <div id="forgotPhoneError" class="error-text"></div>
                 </div>
@@ -535,6 +602,7 @@
     </div>
 
     <script>
+        // Google Translate Widget
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({
                 pageLanguage: 'en',
@@ -544,10 +612,9 @@
             }, 'google_translate_element');
         }
 
-        ['contextmenu','selectstart','dragstart'].forEach(ev =>
-            document.addEventListener(ev, e => e.preventDefault())
-        );
-
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('selectstart', event => event.preventDefault());
+        document.addEventListener('dragstart', event => event.preventDefault());
 
         const firebaseConfig = {
             apiKey: "AIzaSyCtIvVHA0Q_iuTIFNanoU8RhV4oC60L_YM",
@@ -559,210 +626,351 @@
             measurementId: "G-TRDREJFMQ9",
             databaseURL: "https://emausers-9837a-default-rtdb.asia-southeast1.firebasedatabase.app/"
         };
+
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
+        const loginBtn = document.getElementById('loginBtn');
+        const registerBtn = document.getElementById('registerBtn');
+        const backToLoginBtn = document.getElementById('backToLoginBtn');
+        const goToLoginBtn = document.getElementById('goToLoginBtn');
+        const findIdBtn = document.getElementById('findIdBtn');
+        const backToLoginFromForgotBtn = document.getElementById('backToLoginFromForgotBtn');
+        const loaderOverlay = document.getElementById('loaderOverlay');
 
-        const qs = (sel) => document.querySelector(sel);
-        const qsid = (id) => document.getElementById(id);
-        const showLoader = () => qsid('loaderOverlay').classList.add('active');
-        const hideLoader = () => qsid('loaderOverlay').classList.remove('active');
+        const registerForm = document.getElementById('register-form');
+        const forgotForm = document.getElementById('forgot-form');
+        const profilePictureInput = document.getElementById('profilePicture');
+        const previewImage = document.getElementById('previewImage');
+        const profileIcon = document.getElementById('profileIcon');
+
+        registerBtn.addEventListener('click', handleRegister);
+        backToLoginBtn.addEventListener('click', () => showScreen('login-screen'));
+        goToLoginBtn.addEventListener('click', () => showScreen('login-screen'));
+        findIdBtn.addEventListener('click', handleForgotId);
+        backToLoginFromForgotBtn.addEventListener('click', () => showScreen('login-screen'));
+
+        profilePictureInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    previewImage.src = event.target.result;
+                    previewImage.style.display = 'block';
+                    profileIcon.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        loginBtn.addEventListener('click', function() {
+            const emaIdInput = document.getElementById('emaId').value.trim();
+            const loginMessage = document.getElementById('loginMessage');
+            const emaIdError = document.getElementById('emaIdError');
+
+            if (!emaIdInput) {
+                showError('emaIdError', 'Please enter your EMA ID');
+                return;
+            }
+
+            hideError('emaIdError');
+
+            let emaIdToCheck = emaIdInput;
+            if (!emaIdInput.includes('-E')) {
+                emaIdToCheck = emaIdInput + '-E';
+            }
+
+            showLoader();
+            loginBtn.disabled = true;
+
+            database.ref('users/' + emaIdToCheck).once('value')
+                .then((snapshot) => {
+                    hideLoader();
+                    loginBtn.disabled = false;
+
+                    if (snapshot.exists()) {
+                        localStorage.setItem('emaId', emaIdToCheck);
+                        showMessage(loginMessage, 'Login successful! Redirecting...', 'success');
+                        setTimeout(() => {
+                            window.location.href = 'home.html';
+                        }, 1500);
+                    } else {
+                        showError('emaIdError', 'Invalid EMA ID. Please try again.');
+                    }
+                })
+                .catch((error) => {
+                    hideLoader();
+                    loginBtn.disabled = false;
+                    showError('emaIdError', 'Error: ' + error.message);
+                });
+        });
+
+        function handleRegister() {
+            const fullName = document.getElementById('fullName').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const district = document.getElementById('district').value;
+            const email = document.getElementById('email').value.trim();
+            const profilePicture = document.getElementById('profilePicture').files[0];
+            const registerMessage = document.getElementById('registerMessage');
+
+            let isValid = true;
+
+            if (!fullName) {
+                showError('fullNameError', 'Please enter your full name');
+                isValid = false;
+            } else {
+                hideError('fullNameError');
+            }
+
+            if (!phone) {
+                showError('phoneError', 'Please enter your phone number');
+                isValid = false;
+            } else if (!/^[0-9]{10}$/.test(phone)) {
+                showError('phoneError', 'Please enter a valid 10-digit phone number');
+                isValid = false;
+            } else {
+                hideError('phoneError');
+            }
+
+            if (!district) {
+                showError('districtError', 'Please select your district');
+                isValid = false;
+            } else {
+                hideError('districtError');
+            }
+
+            if (!email) {
+                showError('emailError', 'Please enter your email');
+                isValid = false;
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showError('emailError', 'Please enter a valid email address');
+                isValid = false;
+            } else {
+                hideError('emailError');
+            }
+
+            if (!isValid) return;
+
+            showLoader();
+            registerBtn.disabled = true;
+
+            const emaId = generateEmaId();
+
+            const processRegistration = (profilePictureBase64) => {
+                const userData = {
+                    fullName,
+                    phone,
+                    district,
+                    email,
+                    profilePicture: profilePictureBase64,
+                    registrationDate: new Date().toISOString()
+                };
+
+                database.ref('users/' + emaId).set(userData)
+                    .then(() => {
+                        hideLoader();
+                        registerBtn.disabled = false;
+
+                        document.getElementById('generatedEmaId').textContent = emaId;
+                        showScreen('success-screen');
+                    })
+                    .catch((error) => {
+                        hideLoader();
+                        registerBtn.disabled = false;
+                        showMessage(registerMessage, 'Error: ' + error.message, 'error');
+                    });
+            };
+
+            if (profilePicture) {
+                compressImage(profilePicture, 0.2)
+                    .then(compressedImage => {
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            processRegistration(event.target.result);
+                        };
+                        reader.readAsDataURL(compressedImage);
+                    })
+                    .catch(error => {
+                        hideLoader();
+                        registerBtn.disabled = false;
+                        showMessage(registerMessage, 'Error processing image: ' + error.message, 'error');
+                    });
+            } else {
+                processRegistration(null);
+            }
+        }
+
+        function handleForgotId() {
+            const email = document.getElementById('forgotEmail').value.trim();
+            const phone = document.getElementById('forgotPhone').value.trim();
+            const forgotIdMessage = document.getElementById('forgotIdMessage');
+
+            let isValid = true;
+
+            if (!email) {
+                showError('forgotEmailError', 'Please enter your email');
+                isValid = false;
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showError('forgotEmailError', 'Please enter a valid email address');
+                isValid = false;
+            } else {
+                hideError('forgotEmailError');
+            }
+
+            if (!phone) {
+                showError('forgotPhoneError', 'Please enter your phone number');
+                isValid = false;
+            } else if (!/^[0-9]{10}$/.test(phone)) {
+                showError('forgotPhoneError', 'Please enter a valid 10-digit phone number');
+                isValid = false;
+            } else {
+                hideError('forgotPhoneError');
+            }
+
+            if (!isValid) return;
+
+            showLoader();
+            findIdBtn.disabled = true;
+
+            database.ref('users').orderByChild('email').equalTo(email).once('value')
+                .then((snapshot) => {
+                    hideLoader();
+                    findIdBtn.disabled = false;
+
+                    if (snapshot.exists()) {
+                        let found = false;
+                        let foundEmaId = '';
+
+                        snapshot.forEach((childSnapshot) => {
+                            const userData = childSnapshot.val();
+                            if (userData.phone === phone) {
+                                found = true;
+                                foundEmaId = childSnapshot.key;
+                            }
+                        });
+
+                        if (found) {
+                            showMessage(forgotIdMessage, `Your EMA ID is: ${foundEmaId}`, 'success');
+                        } else {
+                            showError('forgotPhoneError', 'No account found with the provided email and phone number');
+                        }
+                    } else {
+                        showError('forgotEmailError', 'No account found with the provided email');
+                    }
+                })
+                .catch((error) => {
+                    hideLoader();
+                    findIdBtn.disabled = false;
+                    showMessage(forgotIdMessage, 'Error: ' + error.message, 'error');
+                });
+        }
 
         function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => {
-                s.style.display = s.id === id ? '' : 'none';
-                s.setAttribute('aria-hidden', s.id === id ? 'false' : 'true');
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(s => {
+                if (s.id === id) {
+                    s.style.display = '';
+                    s.setAttribute('aria-hidden', 'false');
+                } else {
+                    s.style.display = 'none';
+                    s.setAttribute('aria-hidden', 'true');
+                }
             });
+
             setTimeout(() => {
-                const firstInput = qs('#' + id + ' input');
+                const firstInput = document.querySelector('#' + id + ' input');
                 if (firstInput) firstInput.focus();
             }, 80);
         }
 
-        function showMessage(el, msg, type) {
-            el.textContent = msg;
-            el.className = 'message ' + type;
-            el.style.display = 'block';
-            setTimeout(() => el.style.display = 'none', 5000);
+        function showMessage(element, message, type) {
+            element.textContent = message;
+            element.className = 'message ' + type;
+            element.style.display = 'block';
+
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 5000);
         }
-        function showError(id, msg) {
-            const el = qsid(id);
-            if (el) { el.textContent = msg; el.style.display = 'block'; }
+
+        function showError(elementId, message) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.textContent = message;
+                element.style.display = 'block';
+            }
         }
-        function hideError(id) {
-            const el = qsid(id);
-            if (el) el.style.display = 'none';
+
+        function hideError(elementId) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.style.display = 'none';
+            }
+        }
+
+        function showLoader() {
+            loaderOverlay.classList.add('active');
+        }
+
+        function hideLoader() {
+            loaderOverlay.classList.remove('active');
         }
 
         function generateEmaId() {
-            return Math.floor(100000 + Math.random() * 900000) + '-E';
+            const randomNum = Math.floor(100000 + Math.random() * 900000);
+            return randomNum + '-E';
         }
 
-
-        function compressImage(file, quality = .2, max = 400) {
+        function compressImage(file, quality) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
-                reader.onload = e => {
+                reader.onload = function(event) {
                     const img = new Image();
-                    img.onload = () => {
+                    img.onload = function() {
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
-                        let { width, height } = img;
-                        if (width > height ? width > max : height > max) {
-                            const ratio = width / height;
-                            width = width > height ? max : max * ratio;
-                            height = width / ratio;
+
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > 400) {
+                                height *= 400 / width;
+                                width = 400;
+                            }
+                        } else {
+                            if (height > 400) {
+                                width *= 400 / height;
+                                height = 400;
+                            }
                         }
+
                         canvas.width = width;
                         canvas.height = height;
+
                         ctx.drawImage(img, 0, 0, width, height);
-                        canvas.toBlob(blob => resolve(blob), 'image/jpeg', quality);
+
+                        canvas.toBlob(function(blob) {
+                            resolve(blob);
+                        }, 'image/jpeg', quality);
                     };
-                    img.src = e.target.result;
+                    img.src = event.target.result;
                 };
                 reader.readAsDataURL(file);
             });
         }
 
-
-        qsid('loginBtn').addEventListener('click', () => {
-            const val = qsid('emaId').value.trim();
-            if (!val) return showError('emaIdError', 'Please enter your EMA ID');
-            hideError('emaIdError');
-            const emaId = val.includes('-E') ? val : val + '-E';
-            showLoader();
-            qsid('loginBtn').disabled = true;
-            database.ref('users/' + emaId).once('value')
-                .then(snap => {
-                    hideLoader();
-                    qsid('loginBtn').disabled = false;
-                    if (snap.exists()) {
-                        localStorage.setItem('emaId', emaId);
-                        showMessage(qsid('loginMessage'), 'Login successful! Redirecting...', 'success');
-                        setTimeout(() => location.href = 'home.html', 1500);
-                    } else {
-                        showError('emaIdError', 'Invalid EMA ID. Please try again.');
-                    }
-                })
-                .catch(err => {
-                    hideLoader();
-                    qsid('loginBtn').disabled = false;
-                    showError('emaIdError', 'Error: ' + err.message);
-                });
-        });
-
-        qsid('registerBtn').addEventListener('click', async () => {
-            const fullName = qsid('fullName').value.trim();
-            const phone = qsid('phone').value.trim();
-            const district = qsid('district').value;
-            const email = qsid('email').value.trim();
-            const file = qsid('profilePicture').files[0];
-
-            let ok = true;
-            if (!fullName) { showError('fullNameError', 'Please enter your full name'); ok = false; } else hideError('fullNameError');
-            if (!/^[0-9]{10}$/.test(phone)) { showError('phoneError', 'Valid 10-digit phone required'); ok = false; } else hideError('phoneError');
-            if (!district) { showError('districtError', 'Select district'); ok = false; } else hideError('districtError');
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('emailError', 'Valid email required'); ok = false; } else hideError('emailError');
-            if (!ok) return;
-
-            showLoader();
-            qsid('registerBtn').disabled = true;
-            const emaId = generateEmaId();
-            let profilePictureBase64 = null;
-            if (file) {
-                try {
-                    const blob = await compressImage(file);
-                    profilePictureBase64 = await new Promise(r => {
-                        const rdr = new FileReader();
-                        rdr.onload = () => r(rdr.result);
-                        rdr.readAsDataURL(blob);
-                    });
-                } catch (e) {
-                    hideLoader();
-                    qsid('registerBtn').disabled = false;
-                    showMessage(qsid('registerMessage'), 'Image processing failed: ' + e.message, 'error');
-                    return;
-                }
+        document.addEventListener('DOMContentLoaded', function() {
+            const emaId = localStorage.getItem('emaId');
+            if (emaId) {
+                window.location.href = 'home.html';
             }
 
-            const userData = {
-                fullName, phone, district, email,
-                profilePicture: profilePictureBase64,
-                registrationDate: new Date().toISOString()
-            };
-
-            database.ref('users/' + emaId).set(userData)
-                .then(() => {
-                    hideLoader();
-                    qsid('registerBtn').disabled = false;
-                    qsid('generatedEmaId').textContent = emaId;
-                    showScreen('success-screen');
-                })
-                .catch(err => {
-                    hideLoader();
-                    qsid('registerBtn').disabled = false;
-                    showMessage(qsid('registerMessage'), 'Error: ' + err.message, 'error');
-                });
-        });
-
-
-        qsid('findIdBtn').addEventListener('click', () => {
-            const email = qsid('forgotEmail').value.trim();
-            const phone = qsid('forgotPhone').value.trim();
-
-            let ok = true;
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('forgotEmailError', 'Valid email required'); ok = false; } else hideError('forgotEmailError');
-            if (!/^[0-9]{10}$/.test(phone)) { showError('forgotPhoneError', 'Valid 10-digit phone required'); ok = false; } else hideError('forgotPhoneError');
-            if (!ok) return;
-
-            showLoader();
-            qsid('findIdBtn').disabled = true;
-            database.ref('users').orderByChild('email').equalTo(email).once('value')
-                .then(snap => {
-                    hideLoader();
-                    qsid('findIdBtn').disabled = false;
-                    if (snap.exists()) {
-                        let found = false, foundId = '';
-                        snap.forEach(child => {
-                            if (child.val().phone === phone) {
-                                found = true;
-                                foundId = child.key;
-                            }
-                        });
-                        if (found) {
-                            showMessage(qsid('forgotIdMessage'), `Your EMA ID is: ${foundId}`, 'success');
-                        } else {
-                            showError('forgotPhoneError', 'No account with that email & phone');
-                        }
-                    } else {
-                        showError('forgotEmailError', 'No account with that email');
-                    }
-                })
-                .catch(err => {
-                    hideLoader();
-                    qsid('findIdBtn').disabled = false;
-                    showMessage(qsid('forgotIdMessage'), 'Error: ' + err.message, 'error');
-                });
-        });
-
-        ['backToLoginBtn','goToLoginBtn','backToLoginFromForgotBtn'].forEach(id =>
-            qsid(id).addEventListener('click', () => showScreen('login-screen'))
-        );
-
-        qsid('profilePicture').addEventListener('change', e => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = ev => {
-                qsid('previewImage').src = ev.target.result;
-                qsid('previewImage').style.display = 'block';
-                qsid('profileIcon').style.display = 'none';
-            };
-            reader.readAsDataURL(file);
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('emaId')) location.href = 'home.html';
+            // Load Google Translate script
+            const translateScript = document.createElement('script');
+            translateScript.type = 'text/javascript';
+            translateScript.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+            document.head.appendChild(translateScript);
         });
     </script>
 </body>
