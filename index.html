@@ -5,10 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EMA - Elephant Monitoring App</title>
 
-    <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/mona-sans" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/mona-sans " crossorigin="anonymous">
+
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined " rel="stylesheet" />
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js "></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js "></script>
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,si,ta',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <style>
         :root {
@@ -19,7 +34,6 @@
             --max-width: 420px;
             --glass: rgba(255,255,255,0.92);
             --background-light: #f5f7f5;
-            --shadow: 0 10px 30px rgba(35,35,35,0.12);
         }
 
         * {
@@ -52,12 +66,10 @@
             max-width: var(--max-width);
             background: var(--glass);
             border-radius: var(--card-radius);
-            box-shadow: var(--shadow);
+            box-shadow: 0 10px 30px rgba(35,35,35,0.12);
             padding: 22px;
             backdrop-filter: blur(6px) saturate(110%);
             border: 1px solid rgba(18,18,18,0.04);
-            position: relative;
-            z-index: 1;
         }
 
         .badge {
@@ -312,22 +324,39 @@
             display: none;
         }
 
+        /* Popup Loader Styles */
         .loader-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            display: none;
-            align-items: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
             justify-content: center;
-            z-index: 1000;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(3px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
         }
 
         .loader-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loader-popup {
+            width: 80px;
+            height: 80px;
+            background-color: var(--glass);
+            border-radius: 50%;
             display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(35,35,35,0.2);
+            border: 1px solid rgba(18,18,18,0.04);
         }
 
         .loader {
@@ -344,53 +373,68 @@
             100% { transform: rotate(360deg); }
         }
 
-        .google-translate-container {
+        /* Google Translate Widget Styles */
+        .translate-container {
             position: fixed;
-            top: 20px;
+            bottom: 20px;
             right: 20px;
-            z-index: 100;
+            z-index: 1000;
             background: var(--glass);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            padding: 8px;
-            box-shadow: var(--shadow);
+            border-radius: 50px;
+            padding: 8px 15px;
+            box-shadow: 0 5px 15px rgba(35,35,35,0.1);
             border: 1px solid rgba(18,18,18,0.04);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
         }
 
-        .skiptranslate {
+        .translate-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(35,35,35,0.15);
+        }
+
+        .translate-container .material-symbols-outlined {
+            color: var(--green);
+            font-size: 20px;
+        }
+
+        #google_translate_element {
+            display: flex;
+            align-items: center;
+        }
+
+        #google_translate_element select {
+            background: transparent;
+            border: none;
+            color: var(--green);
+            font-weight: 600;
+            font-size: 13px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        #google_translate_element .goog-te-gadget-simple {
+            background-color: transparent !important;
+            border: none !important;
+            font-size: 13px;
+        }
+
+        #google_translate_element .goog-te-gadget-simple .goog-te-menu-value span {
+            color: var(--green) !important;
+        }
+
+        #google_translate_element .goog-te-gadget-simple .goog-te-menu-value span:first-child {
             display: none;
         }
 
-        .goog-te-gadget {
-            font-family: "Mona Sans", sans-serif !important;
-            font-size: 13px !important;
-            color: var(--muted) !important;
+        .goog-te-banner-frame.skiptranslate {
+            display: none !important;
         }
 
-        .goog-te-gadget .goog-te-combo {
-            background: white;
-            border: 1px solid #e6e6e6;
-            border-radius: 8px;
-            padding: 6px 8px;
-            font-family: inherit;
-            font-size: 13px;
-            color: #333;
-            cursor: pointer;
-            outline: none;
-        }
-
-        .goog-te-gadget .goog-te-combo:hover {
-            border-color: var(--green);
-        }
-
-        .goog-te-gadget .goog-te-combo:focus {
-            border-color: var(--green-strong);
-            box-shadow: 0 0 0 2px rgba(66, 167, 90, 0.2);
-        }
-
-        .goog-te-gadget .goog-te-combo option {
-            background: white;
-            color: #333;
+        body {
+            top: 0px !important;
         }
 
         @media (max-width: 420px) {
@@ -412,30 +456,21 @@
                 height: 98px;
             }
 
-            .google-translate-container {
-                top: 10px;
-                right: 10px;
+            .translate-container {
+                bottom: 15px;
+                right: 15px;
+                padding: 6px 12px;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Google Translate Widget -->
-    <div class="google-translate-container">
-        <div id="google_translate_element"></div>
-    </div>
-
-    <!-- Loader Overlay -->
-    <div id="loaderOverlay" class="loader-overlay">
-        <div class="loader"></div>
-    </div>
-
     <div class="card" role="main" aria-labelledby="title">
 
         <section id="login-screen" class="screen" aria-hidden="false">
             <div class="badge" aria-hidden="true">
-                <img src="https://www.mediafire.com/convkey/9884/4tvqloa9af9utcazg.jpg?size_id=3" alt="EMA Logo">
+                <img src="https://www.mediafire.com/convkey/9884/4tvqloa9af9utcazg.jpg?size_id=3 " alt="EMA Logo">
             </div>
 
             <h1 id="title">Login to EMA</h1>
@@ -464,7 +499,7 @@
 
         <section id="register-screen" class="screen" aria-hidden="true" style="display:none;">
             <div class="badge" aria-hidden="true">
-                <img src="https://www.mediafire.com/convkey/9884/4tvqloa9af9utcazg.jpg?size_id=3" alt="EMA Logo">
+                <img src="https://www.mediafire.com/convkey/9884/4tvqloa9af9utcazg.jpg?size_id=3 " alt="EMA Logo">
             </div>
 
             <h1>Register for EMA</h1>
@@ -601,16 +636,20 @@
         </section>
     </div>
 
+    <!-- Popup Loader -->
+    <div class="loader-overlay" id="loaderOverlay">
+        <div class="loader-popup">
+            <div class="loader"></div>
+        </div>
+    </div>
+
+    <!-- Google Translate Widget -->
+    <div class="translate-container">
+        <span class="material-symbols-outlined">translate</span>
+        <div id="google_translate_element"></div>
+    </div>
+
     <script>
-        // Google Translate Widget
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'en',
-                includedLanguages: 'en,si,ta',
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-                autoDisplay: false
-            }, 'google_translate_element');
-        }
 
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('selectstart', event => event.preventDefault());
@@ -624,7 +663,7 @@
             messagingSenderId: "418180372006",
             appId: "1:418180372006:web:5534a07888222cdb0a78e7",
             measurementId: "G-TRDREJFMQ9",
-            databaseURL: "https://emausers-9837a-default-rtdb.asia-southeast1.firebasedatabase.app/"
+            databaseURL: "https://emausers-9837a-default-rtdb.asia-southeast1.firebasedatabase.app/ "
         };
 
         firebase.initializeApp(firebaseConfig);
@@ -636,13 +675,13 @@
         const goToLoginBtn = document.getElementById('goToLoginBtn');
         const findIdBtn = document.getElementById('findIdBtn');
         const backToLoginFromForgotBtn = document.getElementById('backToLoginFromForgotBtn');
-        const loaderOverlay = document.getElementById('loaderOverlay');
 
         const registerForm = document.getElementById('register-form');
         const forgotForm = document.getElementById('forgot-form');
         const profilePictureInput = document.getElementById('profilePicture');
         const previewImage = document.getElementById('previewImage');
         const profileIcon = document.getElementById('profileIcon');
+        const loaderOverlay = document.getElementById('loaderOverlay');
 
         registerBtn.addEventListener('click', handleRegister);
         backToLoginBtn.addEventListener('click', () => showScreen('login-screen'));
@@ -908,14 +947,6 @@
             }
         }
 
-        function showLoader() {
-            loaderOverlay.classList.add('active');
-        }
-
-        function hideLoader() {
-            loaderOverlay.classList.remove('active');
-        }
-
         function generateEmaId() {
             const randomNum = Math.floor(100000 + Math.random() * 900000);
             return randomNum + '-E';
@@ -960,17 +991,19 @@
             });
         }
 
+        function showLoader() {
+            loaderOverlay.classList.add('active');
+        }
+
+        function hideLoader() {
+            loaderOverlay.classList.remove('active');
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const emaId = localStorage.getItem('emaId');
             if (emaId) {
                 window.location.href = 'home.html';
             }
-
-            // Load Google Translate script
-            const translateScript = document.createElement('script');
-            translateScript.type = 'text/javascript';
-            translateScript.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-            document.head.appendChild(translateScript);
         });
     </script>
 </body>
