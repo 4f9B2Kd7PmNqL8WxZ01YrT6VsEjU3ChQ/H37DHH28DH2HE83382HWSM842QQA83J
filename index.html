@@ -6,9 +6,7 @@
     <title>EMA - Elephant Monitoring App</title>
 
     <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/mona-sans" crossorigin="anonymous">
-
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
@@ -21,6 +19,7 @@
             --max-width: 420px;
             --glass: rgba(255,255,255,0.92);
             --background-light: #f5f7f5;
+            --shadow: 0 10px 30px rgba(35,35,35,0.12);
         }
 
         * {
@@ -45,6 +44,7 @@
             padding: 28px;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            position: relative;
         }
 
         .card {
@@ -52,10 +52,12 @@
             max-width: var(--max-width);
             background: var(--glass);
             border-radius: var(--card-radius);
-            box-shadow: 0 10px 30px rgba(35,35,35,0.12);
+            box-shadow: var(--shadow);
             padding: 22px;
             backdrop-filter: blur(6px) saturate(110%);
             border: 1px solid rgba(18,18,18,0.04);
+            position: relative;
+            z-index: 1;
         }
 
         .badge {
@@ -310,20 +312,85 @@
             display: none;
         }
 
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .loader-overlay.active {
+            display: flex;
+        }
+
         .loader {
             border: 4px solid rgba(66, 167, 90, 0.1);
             border-top: 4px solid var(--green);
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             animation: spin 1s linear infinite;
-            margin: 20px auto;
-            display: none;
         }
 
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        .google-translate-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(18,18,18,0.04);
+        }
+
+        .skiptranslate {
+            display: none;
+        }
+
+        .goog-te-gadget {
+            font-family: "Mona Sans", sans-serif !important;
+            font-size: 13px !important;
+            color: var(--muted) !important;
+        }
+
+        .goog-te-gadget .goog-te-combo {
+            background: white;
+            border: 1px solid #e6e6e6;
+            border-radius: 8px;
+            padding: 6px 8px;
+            font-family: inherit;
+            font-size: 13px;
+            color: #333;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .goog-te-gadget .goog-te-combo:hover {
+            border-color: var(--green);
+        }
+
+        .goog-te-gadget .goog-te-combo:focus {
+            border-color: var(--green-strong);
+            box-shadow: 0 0 0 2px rgba(66, 167, 90, 0.2);
+        }
+
+        .goog-te-gadget .goog-te-combo option {
+            background: white;
+            color: #333;
         }
 
         @media (max-width: 420px) {
@@ -344,10 +411,25 @@
                 width: 98px;
                 height: 98px;
             }
+
+            .google-translate-container {
+                top: 10px;
+                right: 10px;
+            }
         }
     </style>
 </head>
 <body>
+
+    <!-- Google Translate Widget -->
+    <div class="google-translate-container">
+        <div id="google_translate_element"></div>
+    </div>
+
+    <!-- Loader Overlay -->
+    <div id="loaderOverlay" class="loader-overlay">
+        <div class="loader"></div>
+    </div>
 
     <div class="card" role="main" aria-labelledby="title">
 
@@ -389,7 +471,6 @@
             <p class="lead">Create your account to help monitor and protect elephants.</p>
 
             <div id="registerMessage" class="message"></div>
-            <div id="registerLoader" class="loader"></div>
 
             <form id="register-form" onsubmit="return false" autocomplete="on">
                 <div class="profile-upload-container">
@@ -492,7 +573,6 @@
             <p class="lead">Enter your email and phone number to retrieve your EMA ID.</p>
 
             <div id="forgotIdMessage" class="message"></div>
-            <div id="forgotIdLoader" class="loader"></div>
 
             <form id="forgot-form" onsubmit="return false" autocomplete="on">
                 <div class="field">
@@ -522,6 +602,15 @@
     </div>
 
     <script>
+        // Google Translate Widget
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,si,ta',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
 
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('selectstart', event => event.preventDefault());
@@ -547,6 +636,7 @@
         const goToLoginBtn = document.getElementById('goToLoginBtn');
         const findIdBtn = document.getElementById('findIdBtn');
         const backToLoginFromForgotBtn = document.getElementById('backToLoginFromForgotBtn');
+        const loaderOverlay = document.getElementById('loaderOverlay');
 
         const registerForm = document.getElementById('register-form');
         const forgotForm = document.getElementById('forgot-form');
@@ -590,13 +680,12 @@
                 emaIdToCheck = emaIdInput + '-E';
             }
 
-            const registerLoader = document.getElementById('registerLoader');
-            registerLoader.style.display = 'block';
+            showLoader();
             loginBtn.disabled = true;
 
             database.ref('users/' + emaIdToCheck).once('value')
                 .then((snapshot) => {
-                    registerLoader.style.display = 'none';
+                    hideLoader();
                     loginBtn.disabled = false;
 
                     if (snapshot.exists()) {
@@ -610,7 +699,7 @@
                     }
                 })
                 .catch((error) => {
-                    registerLoader.style.display = 'none';
+                    hideLoader();
                     loginBtn.disabled = false;
                     showError('emaIdError', 'Error: ' + error.message);
                 });
@@ -623,7 +712,6 @@
             const email = document.getElementById('email').value.trim();
             const profilePicture = document.getElementById('profilePicture').files[0];
             const registerMessage = document.getElementById('registerMessage');
-            const registerLoader = document.getElementById('registerLoader');
 
             let isValid = true;
 
@@ -663,7 +751,7 @@
 
             if (!isValid) return;
 
-            registerLoader.style.display = 'block';
+            showLoader();
             registerBtn.disabled = true;
 
             const emaId = generateEmaId();
@@ -680,14 +768,14 @@
 
                 database.ref('users/' + emaId).set(userData)
                     .then(() => {
-                        registerLoader.style.display = 'none';
+                        hideLoader();
                         registerBtn.disabled = false;
 
                         document.getElementById('generatedEmaId').textContent = emaId;
                         showScreen('success-screen');
                     })
                     .catch((error) => {
-                        registerLoader.style.display = 'none';
+                        hideLoader();
                         registerBtn.disabled = false;
                         showMessage(registerMessage, 'Error: ' + error.message, 'error');
                     });
@@ -703,7 +791,7 @@
                         reader.readAsDataURL(compressedImage);
                     })
                     .catch(error => {
-                        registerLoader.style.display = 'none';
+                        hideLoader();
                         registerBtn.disabled = false;
                         showMessage(registerMessage, 'Error processing image: ' + error.message, 'error');
                     });
@@ -716,7 +804,6 @@
             const email = document.getElementById('forgotEmail').value.trim();
             const phone = document.getElementById('forgotPhone').value.trim();
             const forgotIdMessage = document.getElementById('forgotIdMessage');
-            const forgotIdLoader = document.getElementById('forgotIdLoader');
 
             let isValid = true;
 
@@ -742,12 +829,12 @@
 
             if (!isValid) return;
 
-            forgotIdLoader.style.display = 'block';
+            showLoader();
             findIdBtn.disabled = true;
 
             database.ref('users').orderByChild('email').equalTo(email).once('value')
                 .then((snapshot) => {
-                    forgotIdLoader.style.display = 'none';
+                    hideLoader();
                     findIdBtn.disabled = false;
 
                     if (snapshot.exists()) {
@@ -772,7 +859,7 @@
                     }
                 })
                 .catch((error) => {
-                    forgotIdLoader.style.display = 'none';
+                    hideLoader();
                     findIdBtn.disabled = false;
                     showMessage(forgotIdMessage, 'Error: ' + error.message, 'error');
                 });
@@ -819,6 +906,14 @@
             if (element) {
                 element.style.display = 'none';
             }
+        }
+
+        function showLoader() {
+            loaderOverlay.classList.add('active');
+        }
+
+        function hideLoader() {
+            loaderOverlay.classList.remove('active');
         }
 
         function generateEmaId() {
@@ -870,6 +965,12 @@
             if (emaId) {
                 window.location.href = 'home.html';
             }
+
+            // Load Google Translate script
+            const translateScript = document.createElement('script');
+            translateScript.type = 'text/javascript';
+            translateScript.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+            document.head.appendChild(translateScript);
         });
     </script>
 </body>
