@@ -502,7 +502,6 @@
             z-index: 10000;
             display: none;
             flex-direction: column;
-            overflow-y: auto;
         }
 
         .report-overlay.active {
@@ -535,6 +534,7 @@
             flex: 1;
             padding: 20px;
             display: none;
+            overflow-y: auto;
         }
 
         .report-content.active {
@@ -583,38 +583,41 @@
         .dial-container {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            margin-bottom: 20px;
             height: 100%;
+            padding: 20px;
         }
 
         .dial-display {
-            width: 80%;
-            padding: 15px;
+            width: 100%;
+            padding: 20px;
             border-radius: 10px;
             border: 1px solid #e6e6e6;
-            font-size: 24px;
+            font-size: 36px;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            background-color: #f9f9f9;
         }
 
         .dial-buttons {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            width: 80%;
+            gap: 15px;
+            flex-grow: 1;
         }
 
         .dial-button {
-            padding: 15px;
             border-radius: 10px;
             border: 1px solid #e6e6e6;
             background: white;
-            font-size: 20px;
+            font-size: 24px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .dial-button:hover {
@@ -622,7 +625,24 @@
         }
 
         .dial-button.action {
-            grid-column: span 2;
+            grid-column: span 3;
+            background-color: var(--green);
+            color: white;
+            border-color: var(--green);
+        }
+
+        .dial-button.action:hover {
+            background-color: var(--green-strong);
+        }
+        
+        .dial-button.clear {
+            background-color: #f44336;
+            color: white;
+            border-color: #f44336;
+        }
+
+        .dial-button.clear:hover {
+            background-color: #d32f2f;
         }
 
         .image-upload-container {
@@ -846,18 +866,9 @@
             color: white;
         }
 
-        .leaflet-control-container .leaflet-top.leaflet-left {
-            display: none;
-        }
-
-        .leaflet-control-container .leaflet-top.leaflet-right {
-            display: none;
-        }
-
-        .leaflet-control-container .leaflet-bottom.leaflet-left {
-            display: none;
-        }
-
+        .leaflet-control-container .leaflet-top.leaflet-left,
+        .leaflet-control-container .leaflet-top.leaflet-right,
+        .leaflet-control-container .leaflet-bottom.leaflet-left,
         .leaflet-control-container .leaflet-bottom.leaflet-right {
             display: none;
         }
@@ -921,7 +932,7 @@
     <div class="welcome-overlay" id="welcomeOverlay">
         <video id="welcomeVideo" class="welcome-video" controls>
             <source src="https://upload.wikimedia.org/wikipedia/commons/transcoded/a/a7/How_to_make_video.webm/How_to_make_video.webm.720p.vp9.webm" type="video/webm">
-            Your browser does not support video tag.
+            Your browser does not support the video tag.
         </video>
         <button id="continueBtn" class="continue-btn">Continue</button>
     </div>
@@ -1054,7 +1065,7 @@
                     <button class="dial-button" data-value="7">7</button>
                     <button class="dial-button" data-value="8">8</button>
                     <button class="dial-button" data-value="9">9</button>
-                    <button class="dial-button action" id="clearBtn">Clear</button>
+                    <button class="dial-button clear" id="clearBtn">Clear</button>
                     <button class="dial-button" data-value="0">0</button>
                     <button class="dial-button action" id="continueBtn2">Continue</button>
                 </div>
@@ -1120,7 +1131,6 @@
             </button>
         </div>
         <div class="report-details-content" id="reportDetailsContent">
-            <!-- Report details will be populated here -->
         </div>
     </div>
 
@@ -1681,9 +1691,11 @@
 
         document.querySelectorAll('.dial-button[data-value]').forEach(button => {
             button.addEventListener('click', () => {
-                const value = button.getAttribute('data-value');
-                const currentCount = document.getElementById('countDisplay').textContent;
-                document.getElementById('countDisplay').textContent = currentCount + value;
+                const digit = parseInt(button.getAttribute('data-value'));
+                const displayElement = document.getElementById('countDisplay');
+                let currentCount = parseInt(displayElement.textContent) || 0;
+                let newCount = currentCount * 10 + digit;
+                displayElement.textContent = newCount;
             });
         });
 
