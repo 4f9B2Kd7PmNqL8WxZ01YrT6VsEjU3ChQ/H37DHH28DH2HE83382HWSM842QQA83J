@@ -26,13 +26,13 @@
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
+            font-family: "Mona Sans", "Inter", "Helvetica Neue", Arial, sans-serif;
         }
 
         html, body {
             height: 100%;
             margin: 0;
             padding: 0;
-            font-family: "Mona Sans", "Inter", "Helvetica Neue", Arial, sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
@@ -52,32 +52,18 @@
             z-index: 1;
         }
 
-        .search-container {
+        .top-bar-container {
             position: absolute;
             top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             z-index: 1000;
-            width: 80%;
-            max-width: 400px;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 12px 16px;
-            border-radius: 50px;
-            border: none;
-            background: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            font-family: "Mona Sans", sans-serif;
-            font-size: 16px;
-            outline: none;
         }
 
         .profile-container {
-            position: absolute;
-            top: 80px;
-            left: 20px;
             background: var(--glass);
             border-radius: 50px;
             padding: 8px 15px;
@@ -86,7 +72,6 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            z-index: 1000;
             backdrop-filter: blur(5px);
         }
 
@@ -133,10 +118,24 @@
             background: var(--green-strong);
         }
 
+        .search-container {
+            flex: 1;
+            max-width: 400px;
+            margin: 0 15px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 50px;
+            border: none;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            font-size: 16px;
+            outline: none;
+        }
+
         .map-toggle {
-            position: absolute;
-            top: 80px;
-            right: 20px;
             width: 60px;
             height: 60px;
             border-radius: 50%;
@@ -147,7 +146,6 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            z-index: 1000;
             box-shadow: 0 5px 15px rgba(35,35,35,0.1);
             transition: all 0.2s ease;
         }
@@ -276,6 +274,26 @@
             visibility: visible;
         }
 
+        .welcome-header {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .welcome-header .close-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
         .welcome-video {
             max-width: 90%;
             max-height: 70%;
@@ -545,7 +563,6 @@
             z-index: 10000;
             display: none;
             flex-direction: column;
-            overflow-y: auto;
         }
 
         .report-overlay.active {
@@ -578,22 +595,32 @@
             flex: 1;
             padding: 20px;
             display: none;
+            flex-direction: column;
         }
 
         .report-content.active {
-            display: block;
+            display: flex;
+        }
+
+        .report-options {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            gap: 20px;
         }
 
         .report-option {
+            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 200px;
             cursor: pointer;
             transition: all 0.2s ease;
+            border: 1px solid #e6e6e6;
             border-radius: 10px;
-            margin-bottom: 20px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         .report-option:hover {
@@ -612,13 +639,16 @@
             font-size: 18px;
             font-weight: 600;
             color: #111;
+            text-align: center;
         }
 
         .dial-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 20px;
+            justify-content: space-between;
+            height: 100%;
+            padding: 20px 0;
         }
 
         .dial-display {
@@ -628,24 +658,25 @@
             border: 1px solid #e6e6e6;
             font-size: 24px;
             text-align: center;
-            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         .dial-buttons {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
+            gap: 15px;
             width: 80%;
         }
 
         .dial-button {
-            padding: 15px;
-            border-radius: 50%;
+            padding: 20px;
+            border-radius: 10px;
             border: 1px solid #e6e6e6;
             background: white;
-            font-size: 20px;
+            font-size: 24px;
             cursor: pointer;
             transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         .dial-button:hover {
@@ -654,7 +685,7 @@
 
         .dial-button.action {
             grid-column: span 2;
-            border-radius: 10px;
+            font-size: 18px;
         }
 
         .image-upload-container {
@@ -675,6 +706,7 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         .image-upload-box:hover {
@@ -720,6 +752,7 @@
             font-size: 16px;
             resize: none;
             margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         .success-overlay {
@@ -741,8 +774,8 @@
         }
 
         .success-gif {
-            width: 150px;
-            height: 150px;
+            width: 80%;
+            max-width: 300px;
             margin-bottom: 20px;
         }
 
@@ -751,6 +784,8 @@
             font-size: 24px;
             font-weight: 600;
             margin-bottom: 20px;
+            text-align: center;
+            max-width: 80%;
         }
 
         .success-btn {
@@ -774,7 +809,6 @@
             z-index: 10000;
             display: none;
             flex-direction: column;
-            overflow-y: auto;
         }
 
         .report-details-overlay.active {
@@ -783,6 +817,8 @@
 
         .report-details-content {
             padding: 20px;
+            overflow-y: auto;
+            flex-grow: 1;
         }
 
         .report-detail-item {
@@ -798,24 +834,57 @@
             color: var(--muted);
         }
 
-        .report-images {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+        .report-images-container {
+            position: relative;
+            width: 100%;
             margin-bottom: 15px;
         }
 
+        .report-images {
+            display: flex;
+            transition: transform 0.3s ease;
+        }
+
         .report-image {
-            width: calc(50% - 5px);
-            height: 150px;
-            border-radius: 10px;
-            object-fit: cover;
+            width: 100%;
+            height: 250px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .slideshow-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .slideshow-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--green);
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .slideshow-indicator {
+            font-size: 16px;
+            color: var(--muted);
         }
 
         .report-actions {
             display: flex;
             gap: 10px;
             margin-top: 20px;
+            padding: 20px;
+            border-top: 1px solid #eee;
         }
 
         .report-action-btn {
@@ -845,44 +914,64 @@
             display: none;
         }
 
-        .leaflet-control-container .leaflet-top.leaflet-left {
-            display: none;
-        }
-
-        .leaflet-control-container .leaflet-top.leaflet-right {
-            display: none;
-        }
-
-        .leaflet-control-container .leaflet-bottom.leaflet-left {
-            display: none;
-        }
-
+        .leaflet-control-container .leaflet-top.leaflet-left,
+        .leaflet-control-container .leaflet-top.leaflet-right,
+        .leaflet-control-container .leaflet-bottom.leaflet-left,
         .leaflet-control-container .leaflet-bottom.leaflet-right {
             display: none;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .slide-up {
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .scale-in {
+            animation: scaleIn 0.3s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
     </style>
 </head>
 <body>
     <div id="map"></div>
 
-    <div class="search-container">
-        <input id="searchInput" class="search-input" type="text" placeholder="Search for a place...">
-    </div>
-
-    <div class="profile-container">
-        <img id="profilePic" class="profile-pic" src="" alt="Profile">
-        <div class="profile-info">
-            <div id="profileName" class="profile-name"></div>
-            <div id="profileId" class="profile-id"></div>
+    <div class="top-bar-container">
+        <div class="profile-container">
+            <img id="profilePic" class="profile-pic" src="" alt="Profile">
+            <div class="profile-info">
+                <div id="profileName" class="profile-name"></div>
+                <div id="profileId" class="profile-id"></div>
+            </div>
+            <button id="editBtn" class="edit-btn">
+                <span class="material-icons">edit</span>
+            </button>
         </div>
-        <button id="editBtn" class="edit-btn">
-            <span class="material-icons">edit</span>
+
+        <div class="search-container">
+            <input id="searchInput" class="search-input" type="text" placeholder="Search for a place...">
+        </div>
+
+        <button id="mapToggle" class="map-toggle">
+            <span class="material-icons">satellite</span>
         </button>
     </div>
-
-    <button id="mapToggle" class="map-toggle">
-        <span class="material-icons">satellite</span>
-    </button>
 
     <a href="other.html" id="otherBtn" class="other-btn">Other</a>
 
@@ -897,7 +986,12 @@
     </div>
 
     <div class="welcome-overlay" id="welcomeOverlay">
-        <video id="welcomeVideo" class="welcome-video" controls>
+        <div class="welcome-header">
+            <button class="close-btn" id="welcomeCloseBtn">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+        <video id="welcomeVideo" class="welcome-video">
             <source src="https://upload.wikimedia.org/wikipedia/commons/transcoded/a/a7/How_to_make_video.webm/How_to_make_video.webm.720p.vp9.webm" type="video/webm">
             Your browser does not support the video tag.
         </video>
@@ -1007,13 +1101,15 @@
         </div>
 
         <div id="reportStep1" class="report-content active">
-            <div class="report-option" id="elephantOption">
-                <img src="https://static.wixstatic.com/media/2fdcf0_799ec75bf4a0438f8f4ef8601a6ebf11~mv2.jpeg/v1/fill/w_568,h_378,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/2fdcf0_799ec75bf4a0438f8f4ef8601a6ebf11~mv2.jpeg" alt="Elephant">
-                <div class="report-option-label">Elephant</div>
-            </div>
-            <div class="report-option" id="tuskerOption">
-                <img src="https://mawratanews.lk/wp-content/uploads/2023/05/ELEPHANT-1-750x375.jpg" alt="Tusker">
-                <div class="report-option-label">Tusker</div>
+            <div class="report-options">
+                <div class="report-option" id="elephantOption">
+                    <img src="https://static.wixstatic.com/media/2fdcf0_799ec75bf4a0438f8f4ef8601a6ebf11~mv2.jpeg/v1/fill/w_568,h_378,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/2fdcf0_799ec75bf4a0438f8f4ef8601a6ebf11~mv2.jpeg" alt="Elephant">
+                    <div class="report-option-label">Elephant</div>
+                </div>
+                <div class="report-option" id="tuskerOption">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvxEXMSS7y1qmZJqI2x7hxd3lVAqx3P_-SH0zmLkBUIFcPeM7jse6bPPtooMR5Y_6MqRk&usqp=CAU" alt="Tusker">
+                    <div class="report-option-label">Tusker</div>
+                </div>
             </div>
         </div>
 
@@ -1038,24 +1134,28 @@
         </div>
 
         <div id="reportStep3" class="report-content">
-            <div class="report-option" id="injuredYes">
-                <span class="material-icons" style="font-size: 100px; color: #D32F2F;">warning</span>
-                <div class="report-option-label">Yes, there are injured elephants</div>
-            </div>
-            <div class="report-option" id="injuredNo">
-                <span class="material-icons" style="font-size: 100px; color: var(--green);">check_circle</span>
-                <div class="report-option-label">No, all elephants seem healthy</div>
+            <div class="report-options">
+                <div class="report-option" id="injuredYes">
+                    <span class="material-icons" style="font-size: 100px; color: #D32F2F;">warning</span>
+                    <div class="report-option-label">Yes, there are injured elephants</div>
+                </div>
+                <div class="report-option" id="injuredNo">
+                    <span class="material-icons" style="font-size: 100px; color: var(--green);">check_circle</span>
+                    <div class="report-option-label">No, all elephants seem healthy</div>
+                </div>
             </div>
         </div>
 
         <div id="reportStep4" class="report-content">
-            <div class="report-option" id="medicalYes">
-                <span class="material-icons" style="font-size: 100px; color: #D32F2F;">medical_services</span>
-                <div class="report-option-label">Yes, medical help is needed</div>
-            </div>
-            <div class="report-option" id="medicalNo">
-                <span class="material-icons" style="font-size: 100px; color: var(--green);">healing</span>
-                <div class="report-option-label">No, medical help is not needed</div>
+            <div class="report-options">
+                <div class="report-option" id="medicalYes">
+                    <span class="material-icons" style="font-size: 100px; color: #D32F2F;">medical_services</span>
+                    <div class="report-option-label">Yes, medical help is needed</div>
+                </div>
+                <div class="report-option" id="medicalNo">
+                    <span class="material-icons" style="font-size: 100px; color: var(--green);">healing</span>
+                    <div class="report-option-label">No, medical help is not needed</div>
+                </div>
             </div>
         </div>
 
@@ -1080,7 +1180,7 @@
 
     <div id="successOverlay" class="success-overlay">
         <img src="https://media.tenor.com/AWKzZ19awFYAAAAj/checkmark-transparent.gif" alt="Success" class="success-gif">
-        <div class="success-message">Report submitted successfully!</div>
+        <div class="success-message">Your report has been successfully submitted! Thank you for helping to protect elephants. Your contribution is valuable for conservation efforts.</div>
         <button class="success-btn" id="doneBtn">Done</button>
     </div>
 
@@ -1092,7 +1192,8 @@
             </button>
         </div>
         <div class="report-details-content" id="reportDetailsContent">
-            <!-- Report details will be populated here -->
+        </div>
+        <div class="report-actions" id="reportActions">
         </div>
     </div>
 
@@ -1131,11 +1232,14 @@
         let reportImages = [];
         let reportMarkers = [];
         let geocoder;
+        let currentReportImages = [];
+        let currentImageIndex = 0;
 
         const loaderOverlay = document.getElementById('loaderOverlay');
         const welcomeOverlay = document.getElementById('welcomeOverlay');
         const welcomeVideo = document.getElementById('welcomeVideo');
         const continueBtn = document.getElementById('continueBtn');
+        const welcomeCloseBtn = document.getElementById('welcomeCloseBtn');
         const profilePic = document.getElementById('profilePic');
         const profileName = document.getElementById('profileName');
         const profileId = document.getElementById('profileId');
@@ -1176,25 +1280,24 @@
                 attributionControl: false
             }).setView([7.8731, 80.7718], 8);
 
-            // Add ESRI World Imagery layer
             const esriLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                 attribution: ''
             }).addTo(map);
 
-            // Add OpenStreetMap layer
             const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: ''
             });
 
-            // Initialize geocoder
             geocoder = L.Control.geocoder({
                 defaultMarkGeocode: false,
-                placeholder: 'Search for a place...',
+                placeholder: 'Search...',
                 errorMessage: 'Nothing found.',
                 showResultIcons: false,
                 suggestMinLength: 2,
                 suggestTimeout: 250,
-                queryMinLength: 1
+                queryMinLength: 1,
+                collapsed: true,
+                expand: 'click'
             }).on('markgeocode', function(e) {
                 const bbox = e.geocode.bbox;
                 const poly = L.polygon([
@@ -1204,19 +1307,18 @@
                     bbox.getSouthWest()
                 ]);
                 map.fitBounds(poly.getBounds());
+                searchInput.value = e.geocode.name;
             });
 
-            // Handle search input
+            geocoder.addTo(map);
+
             searchInput.addEventListener('input', function() {
                 const query = this.value;
                 if (query.length > 2) {
-                    geocoder._geocode(query, function(results) {
-                        // Process search results if needed
-                    });
+                    geocoder._geocode(query, function(results) {});
                 }
             });
 
-            // Handle double click on map to open report
             map.on('dblclick', function(e) {
                 reportData.location = e.latlng;
                 openReportOverlay();
@@ -1268,7 +1370,6 @@
                 }
             });
 
-            // Load existing reports
             loadReports();
         }
 
@@ -1290,16 +1391,16 @@
         }
 
         function addReportMarker(reportId, report) {
-            let iconColor = 'green'; // Default color for normal sightings
+            let iconColor = 'green';
             
             if (report.injured && report.medicalHelp) {
-                iconColor = 'red'; // Red for injured elephants needing medical help
+                iconColor = 'red';
             } else if (report.injured) {
-                iconColor = 'yellow'; // Yellow for injured elephants
+                iconColor = 'yellow';
             }
             
             const icon = L.divIcon({
-                html: `<div style="background-color: ${iconColor}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white;"></div>`,
+                html: `<div style="background-color: ${iconColor}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>`,
                 iconSize: [20, 20],
                 className: 'report-marker'
             });
@@ -1315,18 +1416,34 @@
 
         function showReportDetails(reportId, report) {
             const reportDetailsContent = document.getElementById('reportDetailsContent');
+            const reportActions = document.getElementById('reportActions');
+            currentImageIndex = 0;
+            currentReportImages = report.images || [];
             
             let reportType = report.type === 'tusker' ? 'Tusker' : 'Elephant';
             let injuredStatus = report.injured ? 'Yes' : 'No';
             let medicalStatus = report.medicalHelp ? 'Yes' : 'No';
             
             let imagesHtml = '';
-            if (report.images && report.images.length > 0) {
-                imagesHtml = '<div class="report-images">';
-                report.images.forEach(image => {
-                    imagesHtml += `<img src="${image}" alt="Report image" class="report-image">`;
-                });
-                imagesHtml += '</div>';
+            if (currentReportImages.length > 0) {
+                imagesHtml = `
+                    <div class="report-images-container">
+                        <div class="report-images" id="slideshowImages">
+                             ${currentReportImages.map(image => `<img src="${image}" class="report-image">`).join('')}
+                        </div>
+                        <div class="slideshow-controls">
+                            <button class="slideshow-btn" id="prevImageBtn">
+                                <span class="material-icons">arrow_back</span>
+                            </button>
+                            <div class="slideshow-indicator">
+                                <span id="currentImageNum">1</span> / <span id="totalImageNum">${currentReportImages.length}</span>
+                            </div>
+                            <button class="slideshow-btn" id="nextImageBtn">
+                                <span class="material-icons">arrow_forward</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
             }
             
             reportDetailsContent.innerHTML = `
@@ -1359,38 +1476,48 @@
                     <div class="report-detail-value">${report.reporterName} (${report.reporterPhone})</div>
                 </div>
                 ${imagesHtml}
-                <div class="report-actions">
-                    <button class="report-action-btn call-btn" onclick="window.location.href='tel:${report.reporterPhone}'">
-                        <span class="material-icons">call</span>
-                        Call Reporter
-                    </button>
-                    <button class="report-action-btn download-btn" onclick="downloadReportImages('${reportId}', ${JSON.stringify(report.images || [])})">
-                        <span class="material-icons">download</span>
-                        Download Images
-                    </button>
-                </div>
+            `;
+
+            reportActions.innerHTML = `
+                <button class="report-action-btn call-btn" onclick="window.location.href='tel:${report.reporterPhone}'">
+                    <span class="material-icons">call</span>
+                    Call Reporter
+                </button>
+                <button class="report-action-btn download-btn" onclick="downloadReportImages('${reportId}')">
+                    <span class="material-icons">download</span>
+                    Download Images
+                </button>
             `;
             
+            updateSlideshow();
+            
             reportDetailsOverlay.classList.add('active');
+            reportDetailsOverlay.classList.add('fade-in');
         }
 
-        function downloadReportImages(reportId, images) {
-            if (images.length === 0) return;
+        function updateSlideshow() {
+            if (currentReportImages.length === 0) return;
+            const slideshowImages = document.getElementById('slideshowImages');
+            if (slideshowImages) {
+                slideshowImages.style.transform = `translateX(-${currentImageIndex * 100}%)`;
+            }
+            document.getElementById('currentImageNum').textContent = currentImageIndex + 1;
+        }
+
+        function downloadReportImages(reportId) {
+            if (currentReportImages.length === 0) return;
             
-            if (images.length === 1) {
-                // Single image, download directly
+            if (currentReportImages.length === 1) {
                 const link = document.createElement('a');
-                link.href = images[0];
+                link.href = currentReportImages[0];
                 link.download = `${reportId}_image.jpg`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
             } else {
-                // Multiple images, create a zip
                 const zip = new JSZip();
                 
-                images.forEach((image, index) => {
-                    // Extract base64 data
+                currentReportImages.forEach((image, index) => {
                     const base64Data = image.split(',')[1];
                     zip.file(`${reportId}_image_${index + 1}.jpg`, base64Data, {base64: true});
                 });
@@ -1469,14 +1596,14 @@
                         let height = img.height;
 
                         if (width > height) {
-                            if (width > 400) {
-                                height *= 400 / width;
-                                width = 400;
+                            if (width > 800) {
+                                height *= 800 / width;
+                                width = 800;
                             }
                         } else {
-                            if (height > 400) {
-                                width *= 400 / height;
-                                height = 400;
+                            if (height > 800) {
+                                width *= 800 / height;
+                                height = 800;
                             }
                         }
 
@@ -1512,19 +1639,15 @@
             
             reportImages = [];
             
-            // Reset all steps
             document.querySelectorAll('.report-content').forEach(step => {
                 step.classList.remove('active');
             });
             
-            // Show first step
             document.getElementById('reportStep1').classList.add('active');
             
-            // Reset form elements
             document.getElementById('countDisplay').textContent = '0';
             document.getElementById('description').value = '';
             
-            // Reset image upload
             const imageUploadContainer = document.getElementById('imageUploadContainer');
             imageUploadContainer.innerHTML = `
                 <div class="image-upload-box" id="imageUploadBox">
@@ -1534,6 +1657,7 @@
             `;
             
             reportOverlay.classList.add('active');
+            reportOverlay.classList.add('slide-up');
         }
 
         function generateReportId() {
@@ -1547,6 +1671,7 @@
 
         editBtn.addEventListener('click', () => {
             editModal.classList.add('active');
+            editModal.classList.add('scale-in');
         });
 
         closeEditModal.addEventListener('click', () => {
@@ -1626,6 +1751,7 @@
 
         logoutBtn.addEventListener('click', () => {
             confirmDialog.classList.add('active');
+            confirmDialog.classList.add('scale-in');
         });
 
         cancelLogout.addEventListener('click', () => {
@@ -1648,24 +1774,27 @@
         infoBtn.addEventListener('click', () => {
             welcomeOverlay.classList.add('active');
             welcomeVideo.play();
+            continueBtn.classList.add('active');
+            continueBtn.disabled = false;
         });
 
-        // Report step 1: Elephant or Tusker
+        welcomeCloseBtn.addEventListener('click', () => {
+            welcomeOverlay.classList.remove('active');
+            welcomeVideo.pause();
+        });
+
         document.getElementById('elephantOption').addEventListener('click', () => {
             reportData.type = 'elephant';
             document.getElementById('reportStep1').classList.remove('active');
             document.getElementById('reportStep2').classList.add('active');
-            document.querySelector('#reportStep2 .dial-container .report-detail-label').textContent = 'Number of Elephants';
         });
 
         document.getElementById('tuskerOption').addEventListener('click', () => {
             reportData.type = 'tusker';
             document.getElementById('reportStep1').classList.remove('active');
             document.getElementById('reportStep2').classList.add('active');
-            document.querySelector('#reportStep2 .dial-container .report-detail-label').textContent = 'Number of Tuskers';
         });
 
-        // Report step 2: Number of elephants/tuskers
         document.querySelectorAll('.dial-button[data-value]').forEach(button => {
             button.addEventListener('click', () => {
                 const value = button.getAttribute('data-value');
@@ -1684,7 +1813,6 @@
             document.getElementById('reportStep3').classList.add('active');
         });
 
-        // Report step 3: Injured elephants
         document.getElementById('injuredYes').addEventListener('click', () => {
             reportData.injured = true;
             document.getElementById('reportStep3').classList.remove('active');
@@ -1698,7 +1826,6 @@
             document.getElementById('reportStep5').classList.add('active');
         });
 
-        // Report step 4: Medical help
         document.getElementById('medicalYes').addEventListener('click', () => {
             reportData.medicalHelp = true;
             document.getElementById('reportStep4').classList.remove('active');
@@ -1711,7 +1838,6 @@
             document.getElementById('reportStep5').classList.add('active');
         });
 
-        // Report step 5: Images
         document.addEventListener('click', function(e) {
             if (e.target.closest('#imageUploadBox')) {
                 const input = document.createElement('input');
@@ -1745,7 +1871,6 @@
                                     }
                                     imagePreview.remove();
                                     
-                                    // Show upload box if we have less than 4 images
                                     if (reportImages.length < 4) {
                                         const uploadBox = document.createElement('div');
                                         uploadBox.className = 'image-upload-box';
@@ -1761,7 +1886,6 @@
                                 imagePreview.appendChild(removeBtn);
                                 imageUploadContainer.appendChild(imagePreview);
                                 
-                                // Hide upload box if we have 4 images
                                 if (reportImages.length === 4) {
                                     const uploadBox = document.getElementById('imageUploadBox');
                                     if (uploadBox) {
@@ -1784,7 +1908,6 @@
             document.getElementById('reportStep6').classList.add('active');
         });
 
-        // Report step 6: Description and submit
         document.getElementById('submitBtn').addEventListener('click', () => {
             reportData.description = document.getElementById('description').value;
             
@@ -1792,18 +1915,14 @@
             
             const reportId = generateReportId();
             
-            // Save to reports collection
             database.ref('reports/' + reportId).set(reportData)
                 .then(() => {
-                    // Save to user's reports collection
                     return database.ref('users/' + reportData.reporterId + '/reports/' + reportId).set(true);
                 })
                 .then(() => {
                     hideLoader();
                     reportOverlay.classList.remove('active');
                     successOverlay.classList.add('active');
-                    
-                    // Add marker to map
                     addReportMarker(reportId, reportData);
                 })
                 .catch((error) => {
@@ -1818,14 +1937,36 @@
         });
 
         welcomeVideo.addEventListener('ended', () => {
-            continueBtn.classList.add('active');
-            continueBtn.disabled = false;
+            if (!localStorage.getItem('firstmessageshown')) {
+                continueBtn.classList.add('active');
+                continueBtn.disabled = false;
+            }
         });
 
         continueBtn.addEventListener('click', () => {
             if (continueBtn.classList.contains('active')) {
                 localStorage.setItem('firstmessageshown', 'true');
                 welcomeOverlay.classList.remove('active');
+                welcomeVideo.pause();
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('#prevImageBtn')) {
+                if (currentImageIndex > 0) {
+                    currentImageIndex--;
+                } else {
+                    currentImageIndex = currentReportImages.length - 1;
+                }
+                updateSlideshow();
+            }
+            if (e.target.closest('#nextImageBtn')) {
+                if (currentImageIndex < currentReportImages.length - 1) {
+                    currentImageIndex++;
+                } else {
+                    currentImageIndex = 0;
+                }
+                updateSlideshow();
             }
         });
 
