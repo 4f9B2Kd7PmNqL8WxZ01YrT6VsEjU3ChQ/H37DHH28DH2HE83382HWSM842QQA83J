@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EMA - Elephant Monitoring App</title>
 
-    <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/mona-sans " crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/mona-sans" crossorigin="anonymous">
 
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined " rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js "></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js "></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <script type="text/javascript">
         function googleTranslateElementInit() {
@@ -154,9 +154,11 @@
             appearance: none;
         }
 
-        .input .material-symbols-outlined {
+        .input .fa {
             font-size: 18px;
             color: var(--muted);
+            width: 18px;
+            text-align: center;
         }
 
         .profile-upload-container {
@@ -181,7 +183,7 @@
             background-color: rgba(66, 167, 90, 0.1);
         }
 
-        .profile-upload-label .material-symbols-outlined {
+        .profile-upload-label .fa {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -266,7 +268,7 @@
             border: 1px solid rgba(66,167,90,0.08);
         }
 
-        .big-illustration .material-symbols-outlined {
+        .big-illustration .fa {
             font-size: 48px;
             color: var(--green);
         }
@@ -324,7 +326,6 @@
             display: none;
         }
 
-        /* Popup Loader Styles */
         .loader-overlay {
             position: fixed;
             top: 0;
@@ -373,7 +374,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Google Translate Widget Styles */
         .translate-container {
             position: fixed;
             bottom: 20px;
@@ -395,7 +395,7 @@
             box-shadow: 0 8px 20px rgba(35,35,35,0.15);
         }
 
-        .translate-container .material-symbols-outlined {
+        .translate-container .fa {
             color: var(--green);
             font-size: 20px;
         }
@@ -470,7 +470,7 @@
 
         <section id="login-screen" class="screen" aria-hidden="false">
             <div class="badge" aria-hidden="true">
-                <img src="https://www.mediafire.com/convkey/9884/4tvqloa9af9utcazg.jpg?size_id=3 " alt="EMA Logo">
+                <img src="https://www.mediafire.com/convkey/9884/4tvqloa9af9utcazg.jpg?size_id=3" alt="EMA Logo">
             </div>
 
             <h1 id="title">Login to EMA</h1>
@@ -482,7 +482,7 @@
                 <div class="field">
                     <label for="emaId">EMA ID</label>
                     <div class="input">
-                        <span class="material-symbols-outlined" aria-hidden="true">badge</span>
+                        <i class="fa fa-id-card" aria-hidden="true"></i>
                         <input id="emaId" type="text" placeholder="කේත 123456 හෝ 123456-E ලෙස ඇතුළත් කළ හැකිය" required />
                     </div>
                     <div id="emaIdError" class="error-text"></div>
@@ -499,7 +499,7 @@
 
         <section id="register-screen" class="screen" aria-hidden="true" style="display:none;">
             <div class="badge" aria-hidden="true">
-                <img src="https://www.mediafire.com/convkey/9884/4tvqloa9af9utcazg.jpg?size_id=3 " alt="EMA Logo">
+                <img src="https://www.mediafire.com/convkey/9884/4tvqloa9af9utcazg.jpg?size_id=3" alt="EMA Logo">
             </div>
 
             <h1>Register for EMA</h1>
@@ -510,7 +510,7 @@
             <form id="register-form" onsubmit="return false" autocomplete="on">
                 <div class="profile-upload-container">
                     <label for="profilePicture" class="profile-upload-label">
-                        <span class="material-symbols-outlined" id="profileIcon">person</span>
+                        <i class="fa fa-user" id="profileIcon"></i>
                         <img id="previewImage" class="preview-image">
                     </label>
                     <input type="file" id="profilePicture" class="profile-upload-input" accept="image/*">
@@ -519,7 +519,7 @@
                 <div class="field">
                     <label for="fullName">Full Name</label>
                     <div class="input">
-                        <span class="material-symbols-outlined" aria-hidden="true">person</span>
+                        <i class="fa fa-user" aria-hidden="true"></i>
                         <input id="fullName" type="text" placeholder="Enter your full name" required />
                     </div>
                     <div id="fullNameError" class="error-text"></div>
@@ -528,7 +528,7 @@
                 <div class="field">
                     <label for="phone">Phone Number</label>
                     <div class="input">
-                        <span class="material-symbols-outlined" aria-hidden="true">phone</span>
+                        <i class="fa fa-phone" aria-hidden="true"></i>
                         <input id="phone" type="tel" placeholder="Enter 10-digit phone number" required />
                     </div>
                     <div id="phoneError" class="error-text"></div>
@@ -537,7 +537,7 @@
                 <div class="field">
                     <label for="district">District</label>
                     <div class="input">
-                        <span class="material-symbols-outlined" aria-hidden="true">location_on</span>
+                        <i class="fa fa-map-marker-alt" aria-hidden="true"></i>
                         <select id="district" required>
                             <option value="">Select District</option>
                             <option value="Ampara">Ampara</option>
@@ -573,7 +573,7 @@
                 <div class="field">
                     <label for="email">Email</label>
                     <div class="input">
-                        <span class="material-symbols-outlined" aria-hidden="true">mail</span>
+                        <i class="fa fa-envelope" aria-hidden="true"></i>
                         <input id="email" type="email" placeholder="Enter your email address" required />
                     </div>
                     <div id="emailError" class="error-text"></div>
@@ -588,7 +588,7 @@
 
         <section id="success-screen" class="screen" aria-hidden="true" style="display:none;">
             <div class="big-illustration">
-                <span class="material-symbols-outlined">task_alt</span>
+                <i class="fa fa-check-circle"></i>
             </div>
 
             <h1>Registration Successful!</h1>
@@ -601,7 +601,7 @@
 
         <section id="forgot-screen" class="screen" aria-hidden="true" style="display:none;">
             <div class="big-illustration">
-                <span class="material-symbols-outlined">badge</span>
+                <i class="fa fa-id-card"></i>
             </div>
 
             <h1>Find Your EMA ID</h1>
@@ -613,7 +613,7 @@
                 <div class="field">
                     <label for="forgotEmail">Email Address</label>
                     <div class="input">
-                        <span class="material-symbols-outlined" aria-hidden="true">mail</span>
+                        <i class="fa fa-envelope" aria-hidden="true"></i>
                         <input id="forgotEmail" type="email" placeholder="Enter your email address" required />
                     </div>
                     <div id="forgotEmailError" class="error-text"></div>
@@ -622,7 +622,7 @@
                 <div class="field">
                     <label for="forgotPhone">Phone Number</label>
                     <div class="input">
-                        <span class="material-symbols-outlined" aria-hidden="true">phone</span>
+                        <i class="fa fa-phone" aria-hidden="true"></i>
                         <input id="forgotPhone" type="tel" placeholder="Enter your phone number" required />
                     </div>
                     <div id="forgotPhoneError" class="error-text"></div>
@@ -636,16 +636,14 @@
         </section>
     </div>
 
-    <!-- Popup Loader -->
     <div class="loader-overlay" id="loaderOverlay">
         <div class="loader-popup">
             <div class="loader"></div>
         </div>
     </div>
 
-    <!-- Google Translate Widget -->
     <div class="translate-container">
-        <span class="material-symbols-outlined">translate</span>
+        <i class="fa fa-language"></i>
         <div id="google_translate_element"></div>
     </div>
 
@@ -663,7 +661,7 @@
             messagingSenderId: "418180372006",
             appId: "1:418180372006:web:5534a07888222cdb0a78e7",
             measurementId: "G-TRDREJFMQ9",
-            databaseURL: "https://emausers-9837a-default-rtdb.asia-southeast1.firebasedatabase.app/ "
+            databaseURL: "https://emausers-9837a-default-rtdb.asia-southeast1.firebasedatabase.app/"
         };
 
         firebase.initializeApp(firebaseConfig);
