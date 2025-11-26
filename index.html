@@ -7,12 +7,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EMA - Elephant Monitoring App</title>
 
-<link rel="stylesheet" href="https://fonts.cdnfonts.com/css/mona-sans " crossorigin="anonymous">
+<link rel="stylesheet" href="https://fonts.cdnfonts.com/css/mona-sans" crossorigin="anonymous">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js "></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js "></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
 <script type="text/javascript">
 function googleTranslateElementInit() {
@@ -156,11 +156,9 @@ background: transparent;
 appearance: none;
 }
 
-.input .fa-solid {
+.input .fa {
 font-size: 18px;
 color: var(--muted);
-width: 18px;
-text-align: center;
 }
 
 .profile-upload-container {
@@ -185,7 +183,7 @@ transition: all 0.2s ease;
 background-color: rgba(66, 167, 90, 0.1);
 }
 
-.profile-upload-label .fa-solid {
+.profile-upload-label .fa {
 position: absolute;
 top: 50%;
 left: 50%;
@@ -270,7 +268,7 @@ background: linear-gradient(180deg, #ffffff, #f8fff8);
 border: 1px solid rgba(66,167,90,0.08);
 }
 
-.big-illustration .fa-solid {
+.big-illustration .fa {
 font-size: 48px;
 color: var(--green);
 }
@@ -397,7 +395,7 @@ transform: translateY(-5px);
 box-shadow: 0 8px 20px rgba(35,35,35,0.15);
 }
 
-.translate-container .fa-solid {
+.translate-container .fa {
 color: var(--green);
 font-size: 20px;
 }
@@ -472,7 +470,7 @@ padding: 6px 12px;
 
 <section id="login-screen" class="screen" aria-hidden="false">
 <div class="badge" aria-hidden="true">
-<img src="https://www.mediafire.com/convkey/9884/4tvqloa9af9utcazg.jpg?size_id=3 " alt="EMA Logo">
+<img src="https://www.mediafire.com/convkey/9884/4tvqloa9af9utcazg.jpg?size_id=3" alt="EMA Logo">
 </div>
 
 <h1 id="title">Login to EMA</h1>
@@ -484,7 +482,7 @@ padding: 6px 12px;
 <div class="field">
 <label for="emaId">EMA ID</label>
 <div class="input">
-<i class="fa-solid fa-id-card" aria-hidden="true"></i>
+<i class="fa fa-id-badge" aria-hidden="true"></i>
 <input id="emaId" type="text" placeholder="කේත 123456 හෝ 123456-E ලෙස ඇතුළත් කළ හැකිය" required />
 </div>
 <div id="emaIdError" class="error-text"></div>
@@ -501,7 +499,7 @@ padding: 6px 12px;
 
 <section id="register-screen" class="screen" aria-hidden="true" style="display:none;">
 <div class="badge" aria-hidden="true">
-<img src="https://www.mediafire.com/convkey/9884/4tvqloa9af9utcazg.jpg?size_id=3 " alt="EMA Logo">
+<img src="https://www.mediafire.com/convkey/9884/4tvqloa9af9utcazg.jpg?size_id=3" alt="EMA Logo">
 </div>
 
 <h1>Register for EMA</h1>
@@ -512,7 +510,7 @@ padding: 6px 12px;
 <form id="register-form" onsubmit="return false" autocomplete="on">
 <div class="profile-upload-container">
 <label for="profilePicture" class="profile-upload-label">
-<i class="fa-solid fa-user" id="profileIcon"></i>
+<i class="fa fa-user" id="profileIcon"></i>
 <img id="previewImage" class="preview-image">
 </label>
 <input type="file" id="profilePicture" class="profile-upload-input" accept="image/*">
@@ -521,7 +519,7 @@ padding: 6px 12px;
 <div class="field">
 <label for="fullName">Full Name</label>
 <div class="input">
-<i class="fa-solid fa-user" aria-hidden="true"></i>
+<i class="fa fa-user" aria-hidden="true"></i>
 <input id="fullName" type="text" placeholder="Enter your full name" required />
 </div>
 <div id="fullNameError" class="error-text"></div>
@@ -530,7 +528,7 @@ padding: 6px 12px;
 <div class="field">
 <label for="phone">Phone Number</label>
 <div class="input">
-<i class="fa-solid fa-phone" aria-hidden="true"></i>
+<i class="fa fa-phone" aria-hidden="true"></i>
 <input id="phone" type="tel" placeholder="Enter 10-digit phone number" required />
 </div>
 <div id="phoneError" class="error-text"></div>
@@ -539,7 +537,7 @@ padding: 6px 12px;
 <div class="field">
 <label for="district">District</label>
 <div class="input">
-<i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+<i class="fa fa-location-dot" aria-hidden="true"></i>
 <select id="district" required>
 <option value="">Select District</option>
 <option value="Ampara">Ampara</option>
@@ -575,7 +573,7 @@ padding: 6px 12px;
 <div class="field">
 <label for="email">Email</label>
 <div class="input">
-<i class="fa-solid fa-envelope" aria-hidden="true"></i>
+<i class="fa fa-envelope" aria-hidden="true"></i>
 <input id="email" type="email" placeholder="Enter your email address" required />
 </div>
 <div id="emailError" class="error-text"></div>
@@ -590,7 +588,7 @@ padding: 6px 12px;
 
 <section id="success-screen" class="screen" aria-hidden="true" style="display:none;">
 <div class="big-illustration">
-<i class="fa-solid fa-circle-check"></i>
+<i class="fa fa-check-circle"></i>
 </div>
 
 <h1>Registration Successful!</h1>
@@ -603,7 +601,7 @@ padding: 6px 12px;
 
 <section id="forgot-screen" class="screen" aria-hidden="true" style="display:none;">
 <div class="big-illustration">
-<i class="fa-solid fa-id-card"></i>
+<i class="fa fa-id-badge"></i>
 </div>
 
 <h1>Find Your EMA ID</h1>
@@ -615,7 +613,7 @@ padding: 6px 12px;
 <div class="field">
 <label for="forgotEmail">Email Address</label>
 <div class="input">
-<i class="fa-solid fa-envelope" aria-hidden="true"></i>
+<i class="fa fa-envelope" aria-hidden="true"></i>
 <input id="forgotEmail" type="email" placeholder="Enter your email address" required />
 </div>
 <div id="forgotEmailError" class="error-text"></div>
@@ -624,7 +622,7 @@ padding: 6px 12px;
 <div class="field">
 <label for="forgotPhone">Phone Number</label>
 <div class="input">
-<i class="fa-solid fa-phone" aria-hidden="true"></i>
+<i class="fa fa-phone" aria-hidden="true"></i>
 <input id="forgotPhone" type="tel" placeholder="Enter your phone number" required />
 </div>
 <div id="forgotPhoneError" class="error-text"></div>
@@ -645,12 +643,11 @@ padding: 6px 12px;
 </div>
 
 <div class="translate-container">
-<i class="fa-solid fa-language"></i>
+<i class="fa fa-language"></i>
 <div id="google_translate_element"></div>
 </div>
 
 <script>
-
 document.addEventListener('contextmenu', event => event.preventDefault());
 document.addEventListener('selectstart', event => event.preventDefault());
 document.addEventListener('dragstart', event => event.preventDefault());
@@ -663,11 +660,17 @@ storageBucket: "emausers-9837a.firebasestorage.app",
 messagingSenderId: "418180372006",
 appId: "1:418180372006:web:5534a07888222cdb0a78e7",
 measurementId: "G-TRDREJFMQ9",
-databaseURL: "https://emausers-9837a-default-rtdb.asia-southeast1.firebasedatabase.app/ "
+databaseURL: "https://emausers-9837a-default-rtdb.asia-southeast1.firebasedatabase.app/"
 };
 
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
+
+document.addEventListener('DOMContentLoaded', function() {
+const emaId = localStorage.getItem('emaId');
+if (emaId) {
+window.location.href = 'home.html';
+}
 
 const loginBtn = document.getElementById('loginBtn');
 const registerBtn = document.getElementById('registerBtn');
@@ -741,6 +744,7 @@ showError('emaIdError', 'Invalid EMA ID. Please try again.');
 hideLoader();
 loginBtn.disabled = false;
 showError('emaIdError', 'Error: ' + error.message);
+});
 });
 });
 
@@ -998,13 +1002,6 @@ loaderOverlay.classList.add('active');
 function hideLoader() {
 loaderOverlay.classList.remove('active');
 }
-
-document.addEventListener('DOMContentLoaded', function() {
-const emaId = localStorage.getItem('emaId');
-if (emaId) {
-window.location.href = 'home.html';
-}
-});
 </script>
 </body>
 </html>
