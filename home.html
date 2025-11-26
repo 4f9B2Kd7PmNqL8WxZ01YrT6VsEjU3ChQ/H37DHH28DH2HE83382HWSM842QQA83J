@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/mona-sans" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
     
     <style>
         :root {
@@ -52,7 +51,7 @@
             z-index: 1;
         }
 
-        .top-bar-container {
+        .header-container {
             position: absolute;
             top: 20px;
             left: 20px;
@@ -118,23 +117,6 @@
             background: var(--green-strong);
         }
 
-        .search-container {
-            flex: 1;
-            max-width: 400px;
-            margin: 0 15px;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 12px 16px;
-            border-radius: 50px;
-            border: none;
-            background: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            font-size: 16px;
-            outline: none;
-        }
-
         .map-toggle {
             width: 60px;
             height: 60px;
@@ -179,29 +161,6 @@
 
         .other-btn:hover {
             background: rgba(66, 167, 90, 0.05);
-        }
-
-        .info-btn {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: white;
-            color: var(--green);
-            border: 1px solid rgba(18,18,18,0.04);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 1000;
-            box-shadow: 0 5px 15px rgba(35,35,35,0.1);
-            transition: all 0.2s ease;
-        }
-
-        .info-btn:hover {
-            background: rgba(66, 167, 90, 0.1);
         }
 
         .loader-overlay {
@@ -274,26 +233,6 @@
             visibility: visible;
         }
 
-        .welcome-header {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-        }
-
-        .welcome-header .close-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
         .welcome-video {
             max-width: 90%;
             max-height: 70%;
@@ -563,6 +502,7 @@
             z-index: 10000;
             display: none;
             flex-direction: column;
+            overflow-y: auto;
         }
 
         .report-overlay.active {
@@ -595,18 +535,16 @@
             flex: 1;
             padding: 20px;
             display: none;
-            flex-direction: column;
         }
 
         .report-content.active {
-            display: flex;
+            display: block;
         }
 
         .report-options {
             display: flex;
             flex-direction: column;
             height: 100%;
-            gap: 20px;
         }
 
         .report-option {
@@ -619,6 +557,7 @@
             transition: all 0.2s ease;
             border: 1px solid #e6e6e6;
             border-radius: 10px;
+            margin-bottom: 20px;
             padding: 20px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
@@ -639,16 +578,14 @@
             font-size: 18px;
             font-weight: 600;
             color: #111;
-            text-align: center;
         }
 
         .dial-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between;
+            margin-bottom: 20px;
             height: 100%;
-            padding: 20px 0;
         }
 
         .dial-display {
@@ -658,22 +595,23 @@
             border: 1px solid #e6e6e6;
             font-size: 24px;
             text-align: center;
+            margin-bottom: 20px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         .dial-buttons {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
+            gap: 10px;
             width: 80%;
         }
 
         .dial-button {
-            padding: 20px;
+            padding: 15px;
             border-radius: 10px;
             border: 1px solid #e6e6e6;
             background: white;
-            font-size: 24px;
+            font-size: 20px;
             cursor: pointer;
             transition: all 0.2s ease;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -685,7 +623,6 @@
 
         .dial-button.action {
             grid-column: span 2;
-            font-size: 18px;
         }
 
         .image-upload-container {
@@ -774,7 +711,7 @@
         }
 
         .success-gif {
-            width: 80%;
+            width: 100%;
             max-width: 300px;
             margin-bottom: 20px;
         }
@@ -809,6 +746,7 @@
             z-index: 10000;
             display: none;
             flex-direction: column;
+            overflow-y: auto;
         }
 
         .report-details-overlay.active {
@@ -817,8 +755,6 @@
 
         .report-details-content {
             padding: 20px;
-            overflow-y: auto;
-            flex-grow: 1;
         }
 
         .report-detail-item {
@@ -836,33 +772,34 @@
 
         .report-images-container {
             position: relative;
-            width: 100%;
             margin-bottom: 15px;
         }
 
         .report-images {
             display: flex;
-            transition: transform 0.3s ease;
+            overflow-x: auto;
+            gap: 10px;
+            padding: 10px 0;
         }
 
         .report-image {
-            width: 100%;
-            height: 250px;
-            object-fit: contain;
+            width: 200px;
+            height: 150px;
+            border-radius: 10px;
+            object-fit: cover;
             flex-shrink: 0;
         }
 
         .slideshow-controls {
             display: flex;
             justify-content: center;
-            align-items: center;
-            gap: 15px;
+            gap: 10px;
             margin-top: 10px;
         }
 
         .slideshow-btn {
-            width: 40px;
-            height: 40px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             background: var(--green);
             color: white;
@@ -871,11 +808,12 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
         .slideshow-indicator {
-            font-size: 16px;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
             color: var(--muted);
         }
 
@@ -883,8 +821,6 @@
             display: flex;
             gap: 10px;
             margin-top: 20px;
-            padding: 20px;
-            border-top: 1px solid #eee;
         }
 
         .report-action-btn {
@@ -910,13 +846,18 @@
             color: white;
         }
 
-        .leaflet-control-geocoder {
+        .leaflet-control-container .leaflet-top.leaflet-left {
             display: none;
         }
 
-        .leaflet-control-container .leaflet-top.leaflet-left,
-        .leaflet-control-container .leaflet-top.leaflet-right,
-        .leaflet-control-container .leaflet-bottom.leaflet-left,
+        .leaflet-control-container .leaflet-top.leaflet-right {
+            display: none;
+        }
+
+        .leaflet-control-container .leaflet-bottom.leaflet-left {
+            display: none;
+        }
+
         .leaflet-control-container .leaflet-bottom.leaflet-right {
             display: none;
         }
@@ -952,7 +893,7 @@
 <body>
     <div id="map"></div>
 
-    <div class="top-bar-container">
+    <div class="header-container">
         <div class="profile-container">
             <img id="profilePic" class="profile-pic" src="" alt="Profile">
             <div class="profile-info">
@@ -964,20 +905,12 @@
             </button>
         </div>
 
-        <div class="search-container">
-            <input id="searchInput" class="search-input" type="text" placeholder="Search for a place...">
-        </div>
-
         <button id="mapToggle" class="map-toggle">
             <span class="material-icons">satellite</span>
         </button>
     </div>
 
     <a href="other.html" id="otherBtn" class="other-btn">Other</a>
-
-    <button id="infoBtn" class="info-btn">
-        <span class="material-icons">info</span>
-    </button>
 
     <div class="loader-overlay" id="loaderOverlay">
         <div class="loader-popup">
@@ -986,14 +919,9 @@
     </div>
 
     <div class="welcome-overlay" id="welcomeOverlay">
-        <div class="welcome-header">
-            <button class="close-btn" id="welcomeCloseBtn">
-                <span class="material-icons">close</span>
-            </button>
-        </div>
-        <video id="welcomeVideo" class="welcome-video">
+        <video id="welcomeVideo" class="welcome-video" controls>
             <source src="https://upload.wikimedia.org/wikipedia/commons/transcoded/a/a7/How_to_make_video.webm/How_to_make_video.webm.720p.vp9.webm" type="video/webm">
-            Your browser does not support the video tag.
+            Your browser does not support video tag.
         </video>
         <button id="continueBtn" class="continue-btn">Continue</button>
     </div>
@@ -1192,15 +1120,13 @@
             </button>
         </div>
         <div class="report-details-content" id="reportDetailsContent">
-        </div>
-        <div class="report-actions" id="reportActions">
+            <!-- Report details will be populated here -->
         </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
@@ -1231,22 +1157,18 @@
         let reportData = {};
         let reportImages = [];
         let reportMarkers = [];
-        let geocoder;
-        let currentReportImages = [];
         let currentImageIndex = 0;
 
         const loaderOverlay = document.getElementById('loaderOverlay');
         const welcomeOverlay = document.getElementById('welcomeOverlay');
         const welcomeVideo = document.getElementById('welcomeVideo');
         const continueBtn = document.getElementById('continueBtn');
-        const welcomeCloseBtn = document.getElementById('welcomeCloseBtn');
         const profilePic = document.getElementById('profilePic');
         const profileName = document.getElementById('profileName');
         const profileId = document.getElementById('profileId');
         const editBtn = document.getElementById('editBtn');
         const mapToggle = document.getElementById('mapToggle');
         const otherBtn = document.getElementById('otherBtn');
-        const infoBtn = document.getElementById('infoBtn');
         const editModal = document.getElementById('editModal');
         const closeEditModal = document.getElementById('closeEditModal');
         const editProfilePicture = document.getElementById('editProfilePicture');
@@ -1264,7 +1186,6 @@
         const doneBtn = document.getElementById('doneBtn');
         const reportDetailsOverlay = document.getElementById('reportDetailsOverlay');
         const detailsClose = document.getElementById('detailsClose');
-        const searchInput = document.getElementById('searchInput');
 
         function showLoader() {
             loaderOverlay.classList.add('active');
@@ -1286,37 +1207,6 @@
 
             const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: ''
-            });
-
-            geocoder = L.Control.geocoder({
-                defaultMarkGeocode: false,
-                placeholder: 'Search...',
-                errorMessage: 'Nothing found.',
-                showResultIcons: false,
-                suggestMinLength: 2,
-                suggestTimeout: 250,
-                queryMinLength: 1,
-                collapsed: true,
-                expand: 'click'
-            }).on('markgeocode', function(e) {
-                const bbox = e.geocode.bbox;
-                const poly = L.polygon([
-                    bbox.getSouthEast(),
-                    bbox.getNorthEast(),
-                    bbox.getNorthWest(),
-                    bbox.getSouthWest()
-                ]);
-                map.fitBounds(poly.getBounds());
-                searchInput.value = e.geocode.name;
-            });
-
-            geocoder.addTo(map);
-
-            searchInput.addEventListener('input', function() {
-                const query = this.value;
-                if (query.length > 2) {
-                    geocoder._geocode(query, function(results) {});
-                }
             });
 
             map.on('dblclick', function(e) {
@@ -1400,7 +1290,7 @@
             }
             
             const icon = L.divIcon({
-                html: `<div style="background-color: ${iconColor}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>`,
+                html: `<div style="background-color: ${iconColor}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white;"></div>`,
                 iconSize: [20, 20],
                 className: 'report-marker'
             });
@@ -1416,27 +1306,27 @@
 
         function showReportDetails(reportId, report) {
             const reportDetailsContent = document.getElementById('reportDetailsContent');
-            const reportActions = document.getElementById('reportActions');
             currentImageIndex = 0;
-            currentReportImages = report.images || [];
             
             let reportType = report.type === 'tusker' ? 'Tusker' : 'Elephant';
             let injuredStatus = report.injured ? 'Yes' : 'No';
             let medicalStatus = report.medicalHelp ? 'Yes' : 'No';
             
             let imagesHtml = '';
-            if (currentReportImages.length > 0) {
+            if (report.images && report.images.length > 0) {
                 imagesHtml = `
                     <div class="report-images-container">
-                        <div class="report-images" id="slideshowImages">
-                             ${currentReportImages.map(image => `<img src="${image}" class="report-image">`).join('')}
+                        <div class="report-images" id="reportImages">
+                            ${report.images.map((image, index) => 
+                                `<img src="${image}" alt="Report image" class="report-image" data-index="${index}" style="${index === 0 ? 'display: block;' : 'display: none;'}">`
+                            ).join('')}
                         </div>
                         <div class="slideshow-controls">
                             <button class="slideshow-btn" id="prevImageBtn">
                                 <span class="material-icons">arrow_back</span>
                             </button>
                             <div class="slideshow-indicator">
-                                <span id="currentImageNum">1</span> / <span id="totalImageNum">${currentReportImages.length}</span>
+                                <span id="currentImageNum">1</span> / <span id="totalImageNum">${report.images.length}</span>
                             </div>
                             <button class="slideshow-btn" id="nextImageBtn">
                                 <span class="material-icons">arrow_forward</span>
@@ -1476,40 +1366,46 @@
                     <div class="report-detail-value">${report.reporterName} (${report.reporterPhone})</div>
                 </div>
                 ${imagesHtml}
-            `;
-
-            reportActions.innerHTML = `
-                <button class="report-action-btn call-btn" onclick="window.location.href='tel:${report.reporterPhone}'">
-                    <span class="material-icons">call</span>
-                    Call Reporter
-                </button>
-                <button class="report-action-btn download-btn" onclick="downloadReportImages('${reportId}')">
-                    <span class="material-icons">download</span>
-                    Download Images
-                </button>
+                <div class="report-actions">
+                    <button class="report-action-btn call-btn" onclick="window.location.href='tel:${report.reporterPhone}'">
+                        <span class="material-icons">call</span>
+                        Call Reporter
+                    </button>
+                    <button class="report-action-btn download-btn" onclick="downloadReportImages('${reportId}', ${JSON.stringify(report.images || [])})">
+                        <span class="material-icons">download</span>
+                        Download Images
+                    </button>
+                </div>
             `;
             
-            updateSlideshow();
+            if (report.images && report.images.length > 0) {
+                document.getElementById('prevImageBtn').addEventListener('click', () => {
+                    const images = document.querySelectorAll('.report-image');
+                    images[currentImageIndex].style.display = 'none';
+                    currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+                    images[currentImageIndex].style.display = 'block';
+                    document.getElementById('currentImageNum').textContent = currentImageIndex + 1;
+                });
+                
+                document.getElementById('nextImageBtn').addEventListener('click', () => {
+                    const images = document.querySelectorAll('.report-image');
+                    images[currentImageIndex].style.display = 'none';
+                    currentImageIndex = (currentImageIndex + 1) % images.length;
+                    images[currentImageIndex].style.display = 'block';
+                    document.getElementById('currentImageNum').textContent = currentImageIndex + 1;
+                });
+            }
             
             reportDetailsOverlay.classList.add('active');
             reportDetailsOverlay.classList.add('fade-in');
         }
 
-        function updateSlideshow() {
-            if (currentReportImages.length === 0) return;
-            const slideshowImages = document.getElementById('slideshowImages');
-            if (slideshowImages) {
-                slideshowImages.style.transform = `translateX(-${currentImageIndex * 100}%)`;
-            }
-            document.getElementById('currentImageNum').textContent = currentImageIndex + 1;
-        }
-
-        function downloadReportImages(reportId) {
-            if (currentReportImages.length === 0) return;
+        function downloadReportImages(reportId, images) {
+            if (images.length === 0) return;
             
-            if (currentReportImages.length === 1) {
+            if (images.length === 1) {
                 const link = document.createElement('a');
-                link.href = currentReportImages[0];
+                link.href = images[0];
                 link.download = `${reportId}_image.jpg`;
                 document.body.appendChild(link);
                 link.click();
@@ -1517,7 +1413,7 @@
             } else {
                 const zip = new JSZip();
                 
-                currentReportImages.forEach((image, index) => {
+                images.forEach((image, index) => {
                     const base64Data = image.split(',')[1];
                     zip.file(`${reportId}_image_${index + 1}.jpg`, base64Data, {base64: true});
                 });
@@ -1596,14 +1492,14 @@
                         let height = img.height;
 
                         if (width > height) {
-                            if (width > 800) {
-                                height *= 800 / width;
-                                width = 800;
+                            if (width > 400) {
+                                height *= 400 / width;
+                                width = 400;
                             }
                         } else {
-                            if (height > 800) {
-                                width *= 800 / height;
-                                height = 800;
+                            if (height > 400) {
+                                width *= 400 / height;
+                                height = 400;
                             }
                         }
 
@@ -1771,18 +1667,6 @@
             reportDetailsOverlay.classList.remove('active');
         });
 
-        infoBtn.addEventListener('click', () => {
-            welcomeOverlay.classList.add('active');
-            welcomeVideo.play();
-            continueBtn.classList.add('active');
-            continueBtn.disabled = false;
-        });
-
-        welcomeCloseBtn.addEventListener('click', () => {
-            welcomeOverlay.classList.remove('active');
-            welcomeVideo.pause();
-        });
-
         document.getElementById('elephantOption').addEventListener('click', () => {
             reportData.type = 'elephant';
             document.getElementById('reportStep1').classList.remove('active');
@@ -1923,6 +1807,7 @@
                     hideLoader();
                     reportOverlay.classList.remove('active');
                     successOverlay.classList.add('active');
+                    
                     addReportMarker(reportId, reportData);
                 })
                 .catch((error) => {
@@ -1937,36 +1822,14 @@
         });
 
         welcomeVideo.addEventListener('ended', () => {
-            if (!localStorage.getItem('firstmessageshown')) {
-                continueBtn.classList.add('active');
-                continueBtn.disabled = false;
-            }
+            continueBtn.classList.add('active');
+            continueBtn.disabled = false;
         });
 
         continueBtn.addEventListener('click', () => {
             if (continueBtn.classList.contains('active')) {
                 localStorage.setItem('firstmessageshown', 'true');
                 welcomeOverlay.classList.remove('active');
-                welcomeVideo.pause();
-            }
-        });
-
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('#prevImageBtn')) {
-                if (currentImageIndex > 0) {
-                    currentImageIndex--;
-                } else {
-                    currentImageIndex = currentReportImages.length - 1;
-                }
-                updateSlideshow();
-            }
-            if (e.target.closest('#nextImageBtn')) {
-                if (currentImageIndex < currentReportImages.length - 1) {
-                    currentImageIndex++;
-                } else {
-                    currentImageIndex = 0;
-                }
-                updateSlideshow();
             }
         });
 
