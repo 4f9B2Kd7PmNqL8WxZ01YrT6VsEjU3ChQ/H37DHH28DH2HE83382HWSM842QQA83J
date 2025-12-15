@@ -1,1007 +1,109 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EMA - Elephant Monitoring App</title>
-
-<link rel="stylesheet" href="https://fonts.cdnfonts.com/css/mona-sans" crossorigin="anonymous">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Rhythm Chat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Mona+Sans:wght@200..900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-
-<script type="text/javascript">
-function googleTranslateElementInit() {
-new google.translate.TranslateElement({
-pageLanguage: 'en',
-includedLanguages: 'en,si,ta',
-layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-autoDisplay: false
-}, 'google_translate_element');
-}
-</script>
-
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
 <style>
-:root {
---green: #42a75a;
---green-strong: #2f8a45;
---muted: #7a7a7a;
---card-radius: 20px;
---max-width: 420px;
---glass: rgba(255,255,255,0.92);
---background-light: #f5f7f5;
-}
-
-* {
-box-sizing: border-box;
-user-select: none;
--webkit-user-select: none;
--moz-user-select: none;
--ms-user-select: none;
-}
-
-html, body {
-height: 100%;
-}
-
-body {
-margin: 0;
-font-family: "Mona Sans", "Inter", "Helvetica Neue", Arial, sans-serif;
-background: var(--background-light);
-display: flex;
-align-items: center;
-justify-content: center;
-padding: 28px;
--webkit-font-smoothing: antialiased;
--moz-osx-font-smoothing: grayscale;
-position: relative;
-}
-
-.card {
-width: 100%;
-max-width: var(--max-width);
-background: var(--glass);
-border-radius: var(--card-radius);
-box-shadow: 0 10px 30px rgba(35,35,35,0.12);
-padding: 22px;
-backdrop-filter: blur(6px) saturate(110%);
-border: 1px solid rgba(18,18,18,0.04);
-}
-
-.badge {
-width: 78px;
-height: 78px;
-border-radius: 50%;
-margin: 6px auto 8px;
-display: flex;
-align-items: center;
-justify-content: center;
-background: linear-gradient(180deg, #ffffff 0%, #f3fff5 100%);
-box-shadow: 0 8px 20px rgba(66,167,90,0.15);
-border: 1px solid rgba(66,167,90,0.12);
-overflow: hidden;
-}
-
-.badge img {
-width: 100%;
-height: 100%;
-object-fit: cover;
-}
-
-h1 {
-font-size: 20px;
-margin: 14px 0 6px;
-text-align: center;
-color: #111;
-}
-
-p.lead {
-text-align: center;
-font-size: 13px;
-color: var(--muted);
-margin: 0 0 18px;
-line-height: 1.4;
-}
-
-form {
-margin-top: 6px;
-}
-
-.field {
-position: relative;
-margin-bottom: 12px;
-}
-
-.field label {
-display: block;
-font-size: 13px;
-color: #555;
-margin-bottom: 6px;
-font-weight: 600;
-}
-
-.input {
-width: 100%;
-padding: 12px 14px;
-border-radius: 12px;
-border: 1px solid #e6e6e6;
-background: #fff;
-font-size: 15px;
-outline: none;
-display: flex;
-align-items: center;
-gap: 10px;
-}
-
-.input input {
-border: 0;
-outline: 0;
-font-size: 15px;
-flex: 1;
-background: transparent;
-}
-
-.input select {
-border: 0;
-outline: 0;
-font-size: 15px;
-flex: 1;
-background: transparent;
-appearance: none;
-}
-
-.input .fa {
-font-size: 18px;
-color: var(--muted);
-}
-
-.profile-upload-container {
-text-align: center;
-margin-bottom: 20px;
-}
-
-.profile-upload-label {
-display: inline-block;
-width: 120px;
-height: 120px;
-border-radius: 50%;
-background-color: rgba(66, 167, 90, 0.05);
-border: 3px dashed var(--green);
-cursor: pointer;
-position: relative;
-overflow: hidden;
-transition: all 0.2s ease;
-}
-
-.profile-upload-label:hover {
-background-color: rgba(66, 167, 90, 0.1);
-}
-
-.profile-upload-label .fa {
-position: absolute;
-top: 50%;
-left: 50%;
-transform: translate(-50%, -50%);
-font-size: 36px;
-color: var(--green);
-}
-
-.profile-upload-input {
-display: none;
-}
-
-.preview-image {
-width: 100%;
-height: 100%;
-object-fit: cover;
-display: none;
-}
-
-.btn {
-display: inline-block;
-width: 100%;
-padding: 12px 14px;
-border-radius: 12px;
-background: var(--green);
-color: white;
-border: none;
-font-weight: 700;
-font-size: 15px;
-cursor: pointer;
-margin-top: 8px;
-box-shadow: 0 6px 18px rgba(66,167,90,0.16);
-transition: all 0.2s ease;
-}
-
-.btn:hover {
-background: var(--green-strong);
-}
-
-.btn:disabled {
-background: #BDBDBD;
-cursor: not-allowed;
-}
-
-.btn-secondary {
-background: transparent;
-color: var(--green);
-border: 1px solid var(--green);
-box-shadow: none;
-}
-
-.btn-secondary:hover {
-background: rgba(66, 167, 90, 0.05);
-}
-
-.link {
-display: block;
-text-align: center;
-margin-top: 12px;
-font-size: 13px;
-color: var(--green-strong);
-text-decoration: none;
-font-weight: 600;
-}
-
-.muted {
-text-align: center;
-font-size: 13px;
-color: #777;
-margin-top: 10px;
-}
-
-.big-illustration {
-width: 110px;
-height: 110px;
-margin: 6px auto 8px;
-display: flex;
-align-items: center;
-justify-content: center;
-border-radius: 18px;
-background: linear-gradient(180deg, #ffffff, #f8fff8);
-border: 1px solid rgba(66,167,90,0.08);
-}
-
-.big-illustration .fa {
-font-size: 48px;
-color: var(--green);
-}
-
-.ema-id {
-font-size: 24px;
-font-weight: 700;
-color: var(--green);
-text-align: center;
-margin: 20px 0;
-padding: 16px;
-background-color: rgba(66, 167, 90, 0.05);
-border-radius: 12px;
-}
-
-.note {
-font-size: 13px;
-color: #666;
-text-align: center;
-margin-top: 12px;
-line-height: 1.3;
-}
-
-.footer {
-margin-top: 12px;
-text-align: center;
-font-size: 12px;
-color: #9b9b9b;
-}
-
-.message {
-padding: 12px;
-border-radius: 12px;
-margin-bottom: 16px;
-display: none;
-font-size: 13px;
-}
-
-.message.error {
-background-color: rgba(211, 47, 47, 0.1);
-color: #D32F2F;
-border: 1px solid rgba(211, 47, 47, 0.2);
-}
-
-.message.success {
-background-color: rgba(66, 167, 90, 0.1);
-color: var(--green);
-border: 1px solid rgba(66, 167, 90, 0.2);
-}
-
-.error-text {
-color: #D32F2F;
-font-size: 12px;
-margin-top: 4px;
-display: none;
-}
-
-.loader-overlay {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background-color: rgba(0, 0, 0, 0.5);
-display: flex;
-justify-content: center;
-align-items: center;
-z-index: 9999;
-backdrop-filter: blur(3px);
-opacity: 0;
-visibility: hidden;
-transition: all 0.3s ease;
-}
-
-.loader-overlay.active {
-opacity: 1;
-visibility: visible;
-}
-
-.loader-popup {
-width: 80px;
-height: 80px;
-background-color: var(--glass);
-border-radius: 50%;
-display: flex;
-justify-content: center;
-align-items: center;
-box-shadow: 0 10px 30px rgba(35,35,35,0.2);
-border: 1px solid rgba(18,18,18,0.04);
-}
-
-.loader {
-border: 4px solid rgba(66, 167, 90, 0.1);
-border-top: 4px solid var(--green);
-border-radius: 50%;
-width: 50px;
-height: 50px;
-animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-0% { transform: rotate(0deg); }
-100% { transform: rotate(360deg); }
-}
-
-.translate-container {
-position: fixed;
-bottom: 20px;
-right: 20px;
-z-index: 1000;
-background: var(--glass);
-border-radius: 50px;
-padding: 8px 15px;
-box-shadow: 0 5px 15px rgba(35,35,35,0.1);
-border: 1px solid rgba(18,18,18,0.04);
-display: flex;
-align-items: center;
-gap: 8px;
-transition: all 0.3s ease;
-}
-
-.translate-container:hover {
-transform: translateY(-5px);
-box-shadow: 0 8px 20px rgba(35,35,35,0.15);
-}
-
-.translate-container .fa {
-color: var(--green);
-font-size: 20px;
-}
-
-#google_translate_element {
-display: flex;
-align-items: center;
-}
-
-#google_translate_element select {
-background: transparent;
-border: none;
-color: var(--green);
-font-weight: 600;
-font-size: 13px;
-outline: none;
-cursor: pointer;
-}
-
-#google_translate_element .goog-te-gadget-simple {
-background-color: transparent !important;
-border: none !important;
-font-size: 13px;
-}
-
-#google_translate_element .goog-te-gadget-simple .goog-te-menu-value span {
-color: var(--green) !important;
-}
-
-#google_translate_element .goog-te-gadget-simple .goog-te-menu-value span:first-child {
-display: none;
-}
-
-.goog-te-banner-frame.skiptranslate {
-display: none !important;
-}
-
-body {
-top: 0px !important;
-}
-
-@media (max-width: 420px) {
-body {
-padding: 18px;
-}
-
-.card {
-padding: 18px;
-}
-
-.badge {
-width: 68px;
-height: 68px;
-}
-
-.big-illustration {
-width: 98px;
-height: 98px;
-}
-
-.translate-container {
-bottom: 15px;
-right: 15px;
-padding: 6px 12px;
-}
-}
+:root{--bg-dark:#09090b;--card-bg:rgba(20,20,23,0.85);--card-border:rgba(255,255,255,0.08);--primary:#22c55e;--primary-dim:rgba(34,197,94,0.2);--text-main:#ffffff;--text-muted:#a1a1aa;--input-bg:#18181b;--error:#ef4444;--warning:#f59e0b;--font-head:'Mona Sans',sans-serif;--font-body:'Inter',sans-serif}*{box-sizing:border-box;margin:0;padding:0;outline:0;-webkit-tap-highlight-color:transparent}body{background-color:var(--bg-dark);color:var(--text-main);font-family:var(--font-body);height:100vh;overflow:hidden;display:flex;justify-content:center;align-items:center;position:relative}body::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120vw;height:120vh;background:radial-gradient(circle,rgba(34,197,94,0.25) 0%,rgba(9,9,11,0) 60%);z-index:0;pointer-events:none}@keyframes slideInRight{from{opacity:0;transform:translateX(50px)}to{opacity:1;transform:translateX(0)}}@keyframes slideOutLeft{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(-50px)}}@keyframes fadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}.anim-enter{animation:slideInRight .4s cubic-bezier(.16,1,.3,1) forwards}.anim-exit{animation:slideOutLeft .4s cubic-bezier(.16,1,.3,1) forwards}.app-container{width:100%;max-width:400px;padding:20px;z-index:10;display:none;flex-direction:column;perspective:1000px}.auth-card{background:var(--card-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--card-border);border-radius:24px;padding:32px;box-shadow:0 25px 50px -12px rgba(0,0,0,.5);overflow:hidden}h1{font-family:var(--font-head);font-size:32px;font-weight:700;text-align:center;margin-bottom:8px;background:linear-gradient(180deg,#fff 0%,#a1a1aa 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}p.sub-text{text-align:center;color:var(--text-muted);font-size:14px;margin-bottom:32px}.input-wrapper{position:relative;margin-bottom:16px}.input-field{width:100%;background:var(--input-bg);border:1px solid var(--card-border);padding:16px 16px 16px 48px;border-radius:16px;color:#fff;font-family:var(--font-body);font-size:15px;transition:all .3s ease}select.input-field{appearance:none;background-color:var(--input-bg);color:#fff}select.input-field option{background-color:#18181b;color:#fff;padding:10px}.input-field:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(34,197,94,.1)}.input-icon{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:16px}.status-icon{position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:14px}.fa-check{color:var(--primary)}.fa-xmark{color:var(--error)}.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.1);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite}.action-btn{width:100%;background:var(--primary);color:#000;border:none;padding:16px;border-radius:16px;font-family:var(--font-head);font-weight:700;font-size:16px;cursor:pointer;margin-top:10px;transition:all .3s;display:flex;justify-content:center;align-items:center;gap:8px}.action-btn:active{transform:scale(.98)}.action-btn.disabled{background:#3f3f46;color:#71717a;cursor:not-allowed;pointer-events:none}.link-text{text-align:center;margin-top:24px;color:var(--text-muted);font-size:13px;cursor:pointer}.link-text span{color:var(--primary);font-weight:600}.strength-meter{height:4px;background:#27272a;border-radius:2px;margin:-8px 0 16px 0;overflow:hidden;transition:.3s}.strength-bar{height:100%;width:0%;transition:width .3s,background .3s}.profile-ui{background:rgba(255,255,255,.03);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);border-radius:24px;overflow:hidden;text-align:center;color:#fff;padding-bottom:24px;box-shadow:0 25px 50px -12px rgba(0,0,0,.5)}.pc-banner{height:110px;background:linear-gradient(135deg,rgba(34,197,94,.4) 0%,rgba(22,163,74,.4) 100%);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.1)}.pc-avatar{width:100px;height:100px;border-radius:50%;background:#27272a;border:4px solid rgba(255,255,255,.1);margin:-50px auto 12px;position:relative;cursor:pointer;display:flex;justify-content:center;align-items:center;overflow:hidden;box-shadow:0 10px 20px rgba(0,0,0,.3)}.pc-avatar img{width:100%;height:100%;object-fit:cover;display:none}.pc-avatar i{font-size:24px;color:#a1a1aa}.pc-name{font-family:var(--font-head);font-weight:800;font-size:22px;margin-bottom:4px;color:#fff}.pc-user{color:var(--primary);font-size:14px;margin-bottom:20px;font-weight:500}.pc-input{width:85%;margin:0 auto;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1);padding:12px;border-radius:12px;text-align:center;color:#fff;font-family:var(--font-body)}#splash-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg-dark);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s}#splash-logo{width:100px;margin-bottom:20px}.loader-ring{width:24px;height:24px;border:2px solid rgba(34,197,94,.2);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}#toast-box{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:10000;width:90%;max-width:350px;pointer-events:none}.toast{background:rgba(24,24,27,.95);color:#fff;padding:14px 20px;border-radius:14px;margin-bottom:10px;font-size:14px;border-left:4px solid;box-shadow:0 10px 30px rgba(0,0,0,.5);animation:fadeIn .3s forwards}#fs-loader{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(9,9,11,.95);z-index:10001;display:none;justify-content:center;align-items:center;flex-direction:column}.hidden{display:none!important}
 </style>
 </head>
 <body>
-
-<div class="card" role="main" aria-labelledby="title">
-
-<section id="login-screen" class="screen" aria-hidden="false">
-<div class="badge" aria-hidden="true">
-<img src="https://www.mediafire.com/convkey/9884/4tvqloa9af9utcazg.jpg?size_id=3" alt="EMA Logo">
-</div>
-
-<h1 id="title">Login to EMA</h1>
-<p class="lead">Enter your EMA ID to access the Elephant Monitoring App. | ඔබගේ EMA කේතය ඇතුලත් කරන්න</p>
-
-<div id="loginMessage" class="message"></div>
-
-<form id="login-form" onsubmit="return false" autocomplete="on">
-<div class="field">
-<label for="emaId">EMA ID</label>
-<div class="input">
-<i class="fa fa-id-badge" aria-hidden="true"></i>
-<input id="emaId" type="text" placeholder="කේත 123456 හෝ 123456-E ලෙස ඇතුළත් කළ හැකිය" required />
-</div>
-<div id="emaIdError" class="error-text"></div>
-</div>
-
-<button class="btn" id="loginBtn">LOGIN</button>
+<div id="splash-screen"><img src="https://i.ibb.co/hRcmZz4c/logo-main-rhythm-chat.png" id="splash-logo"><div class="loader-ring"></div></div>
+<div id="toast-box"></div>
+<div id="fs-loader"><div class="loader-ring" style="width:40px;height:40px;border-width:3px"></div><p style="margin-top:15px;font-size:14px;color:var(--primary);letter-spacing:1px;font-weight:600">PROCESSING</p></div>
+<div class="app-container" id="main-ui">
+<div id="view-login" class="auth-card anim-enter">
+<h1>Welcome back</h1><p class="sub-text">Sign in to continue</p>
+<form id="form-login">
+<div class="input-wrapper"><i class="fa-regular fa-envelope input-icon"></i><input type="email" id="log-email" class="input-field" placeholder="Email address" required></div>
+<div class="input-wrapper"><i class="fa-solid fa-lock input-icon"></i><input type="password" id="log-pass" class="input-field" placeholder="Password" required></div>
+<button type="submit" class="action-btn">Log In <i class="fa-solid fa-arrow-right"></i></button>
 </form>
-
-<a class="link" href="#" onclick="showScreen('register-screen');return false;">Create a new account</a>
-<a class="link" href="#" onclick="showScreen('forgot-screen');return false;">Forgot EMA ID?</a>
-
-<div class="footer">Project EMA by Aveesha Ninsara Pelawaththa @2025</div>
-</section>
-
-<section id="register-screen" class="screen" aria-hidden="true" style="display:none;">
-<div class="badge" aria-hidden="true">
-<img src="https://www.mediafire.com/convkey/9884/4tvqloa9af9utcazg.jpg?size_id=3" alt="EMA Logo">
+<div class="link-text" id="goto-reg">New to Rhythm? <span>Create Account</span></div>
 </div>
-
-<h1>Register for EMA</h1>
-<p class="lead">Create your account to help monitor and protect elephants.</p>
-
-<div id="registerMessage" class="message"></div>
-
-<form id="register-form" onsubmit="return false" autocomplete="on">
-<div class="profile-upload-container">
-<label for="profilePicture" class="profile-upload-label">
-<i class="fa fa-user" id="profileIcon"></i>
-<img id="previewImage" class="preview-image">
-</label>
-<input type="file" id="profilePicture" class="profile-upload-input" accept="image/*">
+<div id="view-register" class="auth-card hidden">
+<h1>Create Account</h1>
+<div id="carousel-track">
+<div class="c-step" id="step-1">
+<p class="sub-text">What should we call you?</p>
+<div class="input-wrapper"><i class="fa-regular fa-user input-icon"></i><input type="text" id="reg-name" class="input-field" placeholder="Full Name"></div>
+<div class="input-wrapper"><i class="fa-solid fa-at input-icon"></i><input type="text" id="reg-user" class="input-field" placeholder="Username"><div id="user-status" class="status-icon"></div></div>
+<button class="action-btn disabled" id="btn-step-1" data-current="1">Next</button>
 </div>
-
-<div class="field">
-<label for="fullName">Full Name</label>
-<div class="input">
-<i class="fa fa-user" aria-hidden="true"></i>
-<input id="fullName" type="text" placeholder="Enter your full name" required />
+<div class="c-step hidden" id="step-2">
+<p class="sub-text">Secure your account</p>
+<div class="input-wrapper"><i class="fa-regular fa-envelope input-icon"></i><input type="email" id="reg-email" class="input-field" placeholder="Email Address"></div>
+<div class="input-wrapper"><i class="fa-solid fa-lock input-icon"></i><input type="password" id="reg-pass" class="input-field" placeholder="Password"></div>
+<div class="strength-meter"><div class="strength-bar" id="pass-bar"></div></div>
+<button class="action-btn next-step" data-current="2">Next</button>
 </div>
-<div id="fullNameError" class="error-text"></div>
-</div>
-
-<div class="field">
-<label for="phone">Phone Number</label>
-<div class="input">
-<i class="fa fa-phone" aria-hidden="true"></i>
-<input id="phone" type="tel" placeholder="Enter 10-digit phone number" required />
-</div>
-<div id="phoneError" class="error-text"></div>
-</div>
-
-<div class="field">
-<label for="district">District</label>
-<div class="input">
-<i class="fa fa-location-dot" aria-hidden="true"></i>
-<select id="district" required>
-<option value="">Select District</option>
-<option value="Ampara">Ampara</option>
-<option value="Anuradhapura">Anuradhapura</option>
-<option value="Badulla">Badulla</option>
-<option value="Batticaloa">Batticaloa</option>
-<option value="Colombo">Colombo</option>
-<option value="Galle">Galle</option>
-<option value="Gampaha">Gampaha</option>
-<option value="Hambantota">Hambantota</option>
-<option value="Jaffna">Jaffna</option>
-<option value="Kalutara">Kalutara</option>
-<option value="Kandy">Kandy</option>
-<option value="Kegalle">Kegalle</option>
-<option value="Kilinochchi">Kilinochchi</option>
-<option value="Kurunegala">Kurunegala</option>
-<option value="Mannar">Mannar</option>
-<option value="Matale">Matale</option>
-<option value="Matara">Matara</option>
-<option value="Monaragala">Monaragala</option>
-<option value="Mullaitivu">Mullaitivu</option>
-<option value="Nuwara Eliya">Nuwara Eliya</option>
-<option value="Polonnaruwa">Polonnaruwa</option>
-<option value="Puttalam">Puttalam</option>
-<option value="Ratnapura">Ratnapura</option>
-<option value="Trincomalee">Trincomalee</option>
-<option value="Vavuniya">Vavuniya</option>
-</select>
-</div>
-<div id="districtError" class="error-text"></div>
-</div>
-
-<div class="field">
-<label for="email">Email</label>
-<div class="input">
-<i class="fa fa-envelope" aria-hidden="true"></i>
-<input id="email" type="email" placeholder="Enter your email address" required />
-</div>
-<div id="emailError" class="error-text"></div>
-</div>
-
-<button class="btn" id="registerBtn">CREATE ACCOUNT</button>
-<button type="button" class="btn btn-secondary" id="backToLoginBtn">BACK TO LOGIN</button>
-</form>
-
-<div class="footer">By creating an account you agree to our Terms & Privacy.</div>
-</section>
-
-<section id="success-screen" class="screen" aria-hidden="true" style="display:none;">
-<div class="big-illustration">
-<i class="fa fa-check-circle"></i>
-</div>
-
-<h1>Registration Successful!</h1>
-<p class="lead">Your EMA ID has been generated. Please save it for future logins. | ඔබගේ EMA කේතය නිර්මාණය කර ඇත. වෙනත් දුරක්තනවලදී ඔබගේ ගිනුමග පිවිසීමට මෙම අංකය අවශ්‍ය බැවින් එය සුරකින්න.</p>
-
-<div id="generatedEmaId" class="ema-id"></div>
-
-<button class="btn" id="goToLoginBtn">GO TO LOGIN</button>
-</section>
-
-<section id="forgot-screen" class="screen" aria-hidden="true" style="display:none;">
-<div class="big-illustration">
-<i class="fa fa-id-badge"></i>
-</div>
-
-<h1>Find Your EMA ID</h1>
-<p class="lead">Enter your email and phone number to retrieve your EMA ID.</p>
-
-<div id="forgotIdMessage" class="message"></div>
-
-<form id="forgot-form" onsubmit="return false" autocomplete="on">
-<div class="field">
-<label for="forgotEmail">Email Address</label>
-<div class="input">
-<i class="fa fa-envelope" aria-hidden="true"></i>
-<input id="forgotEmail" type="email" placeholder="Enter your email address" required />
-</div>
-<div id="forgotEmailError" class="error-text"></div>
-</div>
-
-<div class="field">
-<label for="forgotPhone">Phone Number</label>
-<div class="input">
-<i class="fa fa-phone" aria-hidden="true"></i>
-<input id="forgotPhone" type="tel" placeholder="Enter your phone number" required />
-</div>
-<div id="forgotPhoneError" class="error-text"></div>
-</div>
-
-<button class="btn" id="findIdBtn">FIND MY ID</button>
-<button type="button" class="btn btn-secondary" id="backToLoginFromForgotBtn">BACK TO LOGIN</button>
-</form>
-
-<div class="footer">Don't remember your details? Contact us at projectemalk@gmail.com</div>
-</section>
-</div>
-
-<div class="loader-overlay" id="loaderOverlay">
-<div class="loader-popup">
-<div class="loader"></div>
+<div class="c-step hidden" id="step-3">
+<p class="sub-text">Mobile Number</p>
+<div style="display:flex;gap:10px;margin-bottom:16px"><select id="reg-cc" class="input-field" style="width:40%;padding-left:12px;font-size:18px"></select><input type="tel" id="reg-phone" class="input-field" style="width:60%" placeholder="123 456 789"></div>
+<button class="action-btn" id="btn-pre-signup">Continue</button>
 </div>
 </div>
-
-<div class="translate-container">
-<i class="fa fa-language"></i>
-<div id="google_translate_element"></div>
+<div class="link-text" id="goto-log">Already have an account? <span>Log In</span></div>
 </div>
-
-<script>
-document.addEventListener('contextmenu', event => event.preventDefault());
-document.addEventListener('selectstart', event => event.preventDefault());
-document.addEventListener('dragstart', event => event.preventDefault());
-
-const firebaseConfig = {
-apiKey: "AIzaSyCtIvVHA0Q_iuTIFNanoU8RhV4oC60L_YM",
-authDomain: "emausers-9837a.firebaseapp.com",
-projectId: "emausers-9837a",
-storageBucket: "emausers-9837a.firebasestorage.app",
-messagingSenderId: "418180372006",
-appId: "1:418180372006:web:5534a07888222cdb0a78e7",
-measurementId: "G-TRDREJFMQ9",
-databaseURL: "https://emausers-9837a-default-rtdb.asia-southeast1.firebasedatabase.app/"
+<div id="view-profile" class="hidden" style="perspective:1000px">
+<div class="profile-ui anim-enter">
+<div class="pc-banner"></div>
+<div class="pc-avatar" id="pic-trigger"><i class="fa-solid fa-camera"></i><img id="pic-preview" src=""><input type="file" id="pic-file" hidden accept="image/*"></div>
+<h3 class="pc-name" id="disp-name">User</h3><p class="pc-user" id="disp-user">@username</p>
+<input type="text" id="pc-about" class="pc-input" placeholder="About you...">
+<div style="padding:20px"><button class="action-btn" id="btn-finish" style="background:var(--primary);color:#000">All Done</button></div>
+</div>
+</div>
+</div>
+<script type="module">
+const _s = "Salted__"; 
+const _p = [
+    "Q1Z4cmJ4cWw=", "T29wcywgdGhpcyBpcyBub3QgcmVhbA==", "QUl6YVN5Qk9IUEZaWkNhTWdSdHNycmw1Y18zcmV6WlBzaGc5NFA4",
+    "cmh5dGhtY2hhdC1jMTQwZi5maXJlYmFzZWFwcC5jb20=", "aHR0cHM6Ly9yaHl0aG1jaGF0LWMxNDBmLWRlZmF1bHQtcnRkYi5hc2lhLXNvdXRoZWFzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA=",
+    "cmh5dGhtY2hhdC1jMTQwZg==", "cmh5dGhtY2hhdC1jMTQwZi5maXJlYmFzZXN0b3JhZ2UuYXBw", "NDU0MDAzOTYwNTA=",
+    "MTo0NTQwMDM5NjA1MDp3ZWI6ZmE5NTI1NjU4OTg5MmYxOTQwZTNjYg==", "Ry1HUDFTR0RaTDZY"
+];
+const _d = (s) => atob(s);
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+import { getDatabase, ref, set, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+const c = {
+    apiKey: _d(_p[2]), authDomain: _d(_p[3]), databaseURL: _d(_p[4]),
+    projectId: _d(_p[5]), storageBucket: _d(_p[6]), messagingSenderId: _d(_p[7]),
+    appId: _d(_p[8]), measurementId: _d(_p[9])
 };
-
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
-
-document.addEventListener('DOMContentLoaded', function() {
-const emaId = localStorage.getItem('emaId');
-if (emaId) {
-window.location.href = 'home.html';
-}
-
-const loginBtn = document.getElementById('loginBtn');
-const registerBtn = document.getElementById('registerBtn');
-const backToLoginBtn = document.getElementById('backToLoginBtn');
-const goToLoginBtn = document.getElementById('goToLoginBtn');
-const findIdBtn = document.getElementById('findIdBtn');
-const backToLoginFromForgotBtn = document.getElementById('backToLoginFromForgotBtn');
-
-const registerForm = document.getElementById('register-form');
-const forgotForm = document.getElementById('forgot-form');
-const profilePictureInput = document.getElementById('profilePicture');
-const previewImage = document.getElementById('previewImage');
-const profileIcon = document.getElementById('profileIcon');
-const loaderOverlay = document.getElementById('loaderOverlay');
-
-registerBtn.addEventListener('click', handleRegister);
-backToLoginBtn.addEventListener('click', () => showScreen('login-screen'));
-goToLoginBtn.addEventListener('click', () => showScreen('login-screen'));
-findIdBtn.addEventListener('click', handleForgotId);
-backToLoginFromForgotBtn.addEventListener('click', () => showScreen('login-screen'));
-
-profilePictureInput.addEventListener('change', function(e) {
-const file = e.target.files[0];
-if (file) {
-const reader = new FileReader();
-reader.onload = function(event) {
-previewImage.src = event.target.result;
-previewImage.style.display = 'block';
-profileIcon.style.display = 'none';
-};
-reader.readAsDataURL(file);
-}
-});
-
-loginBtn.addEventListener('click', function() {
-const emaIdInput = document.getElementById('emaId').value.trim();
-const loginMessage = document.getElementById('loginMessage');
-const emaIdError = document.getElementById('emaIdError');
-
-if (!emaIdInput) {
-showError('emaIdError', 'Please enter your EMA ID');
-return;
-}
-
-hideError('emaIdError');
-
-let emaIdToCheck = emaIdInput;
-if (!emaIdInput.includes('-E')) {
-emaIdToCheck = emaIdInput + '-E';
-}
-
-showLoader();
-loginBtn.disabled = true;
-
-database.ref('users/' + emaIdToCheck).once('value')
-.then((snapshot) => {
-hideLoader();
-loginBtn.disabled = false;
-
-if (snapshot.exists()) {
-localStorage.setItem('emaId', emaIdToCheck);
-showMessage(loginMessage, 'Login successful! Redirecting...', 'success');
-setTimeout(() => {
-window.location.href = 'home.html';
-}, 1500);
-} else {
-showError('emaIdError', 'Invalid EMA ID. Please try again.');
-}
-})
-.catch((error) => {
-hideLoader();
-loginBtn.disabled = false;
-showError('emaIdError', 'Error: ' + error.message);
-});
-});
-});
-
-function handleRegister() {
-const fullName = document.getElementById('fullName').value.trim();
-const phone = document.getElementById('phone').value.trim();
-const district = document.getElementById('district').value;
-const email = document.getElementById('email').value.trim();
-const profilePicture = document.getElementById('profilePicture').files[0];
-const registerMessage = document.getElementById('registerMessage');
-
-let isValid = true;
-
-if (!fullName) {
-showError('fullNameError', 'Please enter your full name');
-isValid = false;
-} else {
-hideError('fullNameError');
-}
-
-if (!phone) {
-showError('phoneError', 'Please enter your phone number');
-isValid = false;
-} else if (!/^[0-9]{10}$/.test(phone)) {
-showError('phoneError', 'Please enter a valid 10-digit phone number');
-isValid = false;
-} else {
-hideError('phoneError');
-}
-
-if (!district) {
-showError('districtError', 'Please select your district');
-isValid = false;
-} else {
-hideError('districtError');
-}
-
-if (!email) {
-showError('emailError', 'Please enter your email');
-isValid = false;
-} else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-showError('emailError', 'Please enter a valid email address');
-isValid = false;
-} else {
-hideError('emailError');
-}
-
-if (!isValid) return;
-
-showLoader();
-registerBtn.disabled = true;
-
-const emaId = generateEmaId();
-
-const processRegistration = (profilePictureBase64) => {
-const userData = {
-fullName,
-phone,
-district,
-email,
-profilePicture: profilePictureBase64,
-registrationDate: new Date().toISOString()
-};
-
-database.ref('users/' + emaId).set(userData)
-.then(() => {
-hideLoader();
-registerBtn.disabled = false;
-
-document.getElementById('generatedEmaId').textContent = emaId;
-showScreen('success-screen');
-})
-.catch((error) => {
-hideLoader();
-registerBtn.disabled = false;
-showMessage(registerMessage, 'Error: ' + error.message, 'error');
-});
-};
-
-if (profilePicture) {
-compressImage(profilePicture, 0.2)
-.then(compressedImage => {
-const reader = new FileReader();
-reader.onload = function(event) {
-processRegistration(event.target.result);
-};
-reader.readAsDataURL(compressedImage);
-})
-.catch(error => {
-hideLoader();
-registerBtn.disabled = false;
-showMessage(registerMessage, 'Error processing image: ' + error.message, 'error');
-});
-} else {
-processRegistration(null);
-}
-}
-
-function handleForgotId() {
-const email = document.getElementById('forgotEmail').value.trim();
-const phone = document.getElementById('forgotPhone').value.trim();
-const forgotIdMessage = document.getElementById('forgotIdMessage');
-
-let isValid = true;
-
-if (!email) {
-showError('forgotEmailError', 'Please enter your email');
-isValid = false;
-} else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-showError('forgotEmailError', 'Please enter a valid email address');
-isValid = false;
-} else {
-hideError('forgotEmailError');
-}
-
-if (!phone) {
-showError('forgotPhoneError', 'Please enter your phone number');
-isValid = false;
-} else if (!/^[0-9]{10}$/.test(phone)) {
-showError('forgotPhoneError', 'Please enter a valid 10-digit phone number');
-isValid = false;
-} else {
-hideError('forgotPhoneError');
-}
-
-if (!isValid) return;
-
-showLoader();
-findIdBtn.disabled = true;
-
-database.ref('users').orderByChild('email').equalTo(email).once('value')
-.then((snapshot) => {
-hideLoader();
-findIdBtn.disabled = false;
-
-if (snapshot.exists()) {
-let found = false;
-let foundEmaId = '';
-
-snapshot.forEach((childSnapshot) => {
-const userData = childSnapshot.val();
-if (userData.phone === phone) {
-found = true;
-foundEmaId = childSnapshot.key;
-}
-});
-
-if (found) {
-showMessage(forgotIdMessage, `Your EMA ID is: ${foundEmaId}`, 'success');
-} else {
-showError('forgotPhoneError', 'No account found with the provided email and phone number');
-}
-} else {
-showError('forgotEmailError', 'No account found with the provided email');
-}
-})
-.catch((error) => {
-hideLoader();
-findIdBtn.disabled = false;
-showMessage(forgotIdMessage, 'Error: ' + error.message, 'error');
-});
-}
-
-function showScreen(id) {
-const screens = document.querySelectorAll('.screen');
-screens.forEach(s => {
-if (s.id === id) {
-s.style.display = '';
-s.setAttribute('aria-hidden', 'false');
-} else {
-s.style.display = 'none';
-s.setAttribute('aria-hidden', 'true');
-}
-});
-
-setTimeout(() => {
-const firstInput = document.querySelector('#' + id + ' input');
-if (firstInput) firstInput.focus();
-}, 80);
-}
-
-function showMessage(element, message, type) {
-element.textContent = message;
-element.className = 'message ' + type;
-element.style.display = 'block';
-
-setTimeout(() => {
-element.style.display = 'none';
-}, 5000);
-}
-
-function showError(elementId, message) {
-const element = document.getElementById(elementId);
-if (element) {
-element.textContent = message;
-element.style.display = 'block';
-}
-}
-
-function hideError(elementId) {
-const element = document.getElementById(elementId);
-if (element) {
-element.style.display = 'none';
-}
-}
-
-function generateEmaId() {
-const randomNum = Math.floor(100000 + Math.random() * 900000);
-return randomNum + '-E';
-}
-
-function compressImage(file, quality) {
-return new Promise((resolve, reject) => {
-const reader = new FileReader();
-reader.onload = function(event) {
-const img = new Image();
-img.onload = function() {
-const canvas = document.createElement('canvas');
-const ctx = canvas.getContext('2d');
-
-let width = img.width;
-let height = img.height;
-
-if (width > height) {
-if (width > 400) {
-height *= 400 / width;
-width = 400;
-}
-} else {
-if (height > 400) {
-width *= 400 / height;
-height = 400;
-}
-}
-
-canvas.width = width;
-canvas.height = height;
-
-ctx.drawImage(img, 0, 0, width, height);
-
-canvas.toBlob(function(blob) {
-resolve(blob);
-}, 'image/jpeg', quality);
-};
-img.src = event.target.result;
-};
-reader.readAsDataURL(file);
-});
-}
-
-function showLoader() {
-loaderOverlay.classList.add('active');
-}
-
-function hideLoader() {
-loaderOverlay.classList.remove('active');
-}
+const app = initializeApp(c);
+const auth = getAuth(app);
+const db = getDatabase(app);
+const cd = [{f:"🇱🇰",c:"+94"},{f:"🇺🇸",c:"+1"},{f:"🇬🇧",c:"+44"},{f:"🇮🇳",c:"+91"},{f:"🇦🇺",c:"+61"},{f:"🇨🇦",c:"+1"},{f:"🇦🇪",c:"+971"},{f:"🇯🇵",c:"+81"},{f:"🇨🇳",c:"+86"},{f:"🇫🇷",c:"+33"},{f:"🇩🇪",c:"+49"},{f:"🇮🇹",c:"+39"},{f:"🇷🇺",c:"+7"},{f:"🇧🇷",c:"+55"},{f:"🇲🇽",c:"+52"},{f:"🇿🇦",c:"+27"},{f:"🇰🇷",c:"+82"},{f:"🇸🇬",c:"+65"},{f:"🇵🇰",c:"+92"},{f:"🇧🇩",c:"+880"}];
+let rd = {}, pp = "", uv = false, dt;
+const cs = document.getElementById('reg-cc');
+cd.forEach(i=>{const o=document.createElement('option');o.value=i.c;o.textContent=`${i.f} ${i.c}`;cs.appendChild(o)});
+window.addEventListener('load',()=>{const u=localStorage.getItem('rhythm_uid');setTimeout(()=>{const s=document.getElementById('splash-screen');s.style.opacity='0';setTimeout(()=>{s.style.display='none';if(u)window.location.href="home.html";else document.getElementById('main-ui').style.display='flex'},500)},1000)});
+function t(m,y='success'){const b=document.getElementById('toast-box'),e=document.createElement('div');e.className='toast';e.style.borderLeftColor=y==='error'?'#ef4444':'#22c55e';e.innerText=m;b.appendChild(e);setTimeout(()=>e.remove(),3500)}
+const vl=document.getElementById('view-login'),vr=document.getElementById('view-register');
+function sw(h,s){h.classList.remove('anim-enter');h.classList.add('anim-exit');setTimeout(()=>{h.classList.add('hidden');h.classList.remove('anim-exit');s.classList.remove('hidden');s.classList.add('anim-enter')},300)}
+document.getElementById('goto-reg').onclick=()=>sw(vl,vr);document.getElementById('goto-log').onclick=()=>sw(vr,vl);
+const ni=document.getElementById('reg-name'),ui=document.getElementById('reg-user'),us=document.getElementById('user-status'),b1=document.getElementById('btn-step-1');
+ni.addEventListener('input',e=>{const v=e.target.value;if(/[^a-zA-Z\s]/g.test(v))t("Symbols not allowed in name","error");const g=v.toLowerCase().replace(/[^a-z]/g,'');if(ui.value===''||ui.value.length<g.length){ui.value=g;ch(g)}});
+ui.addEventListener('input',e=>ch(e.target.value));
+function ch(v){clearTimeout(dt);uv=false;b1.classList.add('disabled');if(v.length<3){us.innerHTML='';return}us.innerHTML='<div class="spinner"></div>';dt=setTimeout(async()=>{const u=v.trim();try{const q=query(ref(db,'users'),orderByChild('data/username'),equalTo(u));const s=await get(q);if(s.exists()){us.innerHTML='<i class="fa-solid fa-xmark"></i>';t("Username taken","error")}else{us.innerHTML='<i class="fa-solid fa-check"></i>';uv=true;b1.classList.remove('disabled')}}catch(e){console.warn(e);us.innerHTML='<i class="fa-solid fa-check"></i>';uv=true;b1.classList.remove('disabled')}},800)}
+const pi=document.getElementById('reg-pass'),pb=document.getElementById('pass-bar');
+pi.addEventListener('input',e=>{const v=e.target.value;let s=0;if(v.length>5)s+=30;if(v.length>8)s+=20;if(/[A-Z]/.test(v))s+=25;if(/[0-9]/.test(v))s+=25;pb.style.width=s+"%";pb.style.background=s<50?"#ef4444":s<80?"#f59e0b":"#22c55e"});
+const s1=document.getElementById('step-1'),s2=document.getElementById('step-2'),s3=document.getElementById('step-3');
+b1.addEventListener('click',()=>{if(!uv)return;const n=ni.value.trim(),u=ui.value.trim();if(!n)return t("Name required","error");rd.n=n;rd.u=u;s1.classList.add('hidden');s2.classList.remove('hidden');s2.classList.add('anim-enter')});
+document.querySelectorAll('.next-step').forEach(b=>{b.addEventListener('click',e=>{const c=parseInt(e.target.dataset.current);if(c===2){const em=document.getElementById('reg-email').value.trim(),pw=pi.value;if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em))return t("Invalid Email","error");if(pw.length<6)return t("Password weak","error");rd.e=em;rd.p=pw;s2.classList.add('hidden');s3.classList.remove('hidden');s3.classList.add('anim-enter')}})});
+document.getElementById('btn-pre-signup').onclick=()=>{const p=document.getElementById('reg-phone').value.trim();if(!p)return t("Phone required","error");rd.ph=document.getElementById('reg-cc').value+p;vr.classList.add('hidden');document.getElementById('view-profile').classList.remove('hidden');document.getElementById('disp-name').innerText=rd.n;document.getElementById('disp-user').innerText="@"+rd.u};
+document.getElementById('pic-trigger').onclick=()=>document.getElementById('pic-file').click();
+document.getElementById('pic-file').onchange=e=>{const f=e.target.files[0];if(f){const r=new FileReader();r.onload=ev=>{const i=new Image();i.src=ev.target.result;i.onload=()=>{const c=document.createElement('canvas'),x=c.getContext('2d'),z=300;c.width=z;c.height=z;x.drawImage(i,0,0,z,z);pp=c.toDataURL('image/jpeg',0.6);document.getElementById('pic-preview').src=pp;document.getElementById('pic-preview').style.display='block';document.querySelector('.pc-avatar i').style.display='none'}};r.readAsDataURL(f)}};
+document.getElementById('btn-finish').onclick=async()=>{document.getElementById('fs-loader').style.display='flex';try{const u=await createUserWithEmailAndPassword(auth,rd.e,rd.p),i=u.user.uid,k=rd.e.replace(/\./g,',');await set(ref(db,`users/${k}/data`),{uid:i,name:rd.n,username:rd.u,email:rd.e,phone:rd.ph,about:document.getElementById('pc-about').value||"Hey there!",profilePic:pp});localStorage.setItem('rhythm_uid',i);setTimeout(()=>window.location.href="home.html",1000)}catch(e){document.getElementById('fs-loader').style.display='none';let m=e.message;if(m.includes('email-already'))m="Email already in use";t(m,"error")}};
+document.getElementById('form-login').onsubmit=async e=>{e.preventDefault();try{const u=await signInWithEmailAndPassword(auth,document.getElementById('log-email').value,document.getElementById('log-pass').value);localStorage.setItem('rhythm_uid',u.user.uid);window.location.href="home.html"}catch(x){t("Invalid credentials","error")}};
+document.addEventListener('contextmenu',e=>e.preventDefault());
 </script>
 </body>
 </html>
